@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>AURORA AUDIO | 完美音質終極引擎</title>
+    
+    <!-- 外部依賴 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 數學庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.2.0/math.min.js"></script>
+    
+    <style>
+        /* --- 核心視覺 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@300;500;700&display=swap');
+
+        :root {
+            --aurora-blue: #00f0ff;
+            --aurora-purple: #b13eff;
+            --aurora-gold: #ffcc00;
+            --aurora-red: #ff3366;
+            --aurora-green: #00ffaa;
+            --void-black: #050505;
+            --glass-bg: rgba(5, 10, 20, 0.92);
+            --border-glow: rgba(0, 240, 255, 0.25);
+            --panel-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            background-color: var(--void-black);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 15, 40, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(40, 0, 60, 0.6) 0%, transparent 50%),
+                linear-gradient(45deg, rgba(0, 0, 0, 0.9), rgba(5, 5, 15, 1));
+            touch-action: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-tech { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* --- 透明度控制容器 --- */
+        app-container {
+            transition: opacity 0.5s ease;
+            opacity: 1;
+        }
+
+        /* --- 玻璃態面板 --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(0, 240, 255, 0.05);
+        }
+
+        /* --- 完美音質按鈕 --- */
+        .perfection-btn {
+            background: linear-gradient(135deg, #ffcc00, #ff3366, #b13eff, #00f0ff);
+            background-size: 300% 300%;
+            animation: gradient-shift 4s ease infinite;
+            border: none;
+            color: white;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 
+                0 10px 30px rgba(255, 204, 0, 0.3),
+                0 0 30px rgba(255, 51, 102, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .perfection-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .perfection-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .perfection-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 40px rgba(255, 204, 0, 0.5),
+                0 0 40px rgba(255, 51, 102, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .perfection-btn:active {
+            transform: translateY(0);
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 音質指示器 --- */
+        .quality-indicator {
+            position: relative;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .quality-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f0ff, #b13eff, #ff3366, #ffcc00);
+            border-radius: 3px;
+            transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        /* --- 音質等級標記 --- */
+        .quality-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 12px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* --- 音質卡片 --- */
+        .quality-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .quality-card:hover {
+            border-color: var(--aurora-blue);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .quality-card.active {
+            border-color: var(--aurora-gold);
+            background: rgba(255, 204, 0, 0.1);
+            box-shadow: 0 5px 25px rgba(255, 204, 0, 0.3);
+        }
+
+        /* --- 滑桿樣式 --- */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            width: 100%;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #001122, var(--aurora-blue), #b13eff);
+            border-radius: 2px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--aurora-blue);
+            box-shadow: 0 0 15px var(--aurora-blue);
+            margin-top: -8px;
+            transition: all 0.2s;
+        }
+
+        input[type=range]:active::-webkit-slider-thumb {
+            transform: scale(1.3);
+            box-shadow: 0 0 25px var(--aurora-blue);
+        }
+
+        /* --- 透明度控制 --- */
+        .opacity-control {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 10px 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* --- 音質效果標籤 --- */
+        .quality-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--aurora-blue);
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* --- 音質動畫 --- */
+        @keyframes quality-pulse {
+            0% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.8), 0 0 50px rgba(177, 62, 255, 0.5); }
+            100% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+        }
+
+        .quality-active {
+            animation: quality-pulse 2s infinite;
+            border-color: var(--aurora-blue) !important;
+        }
+
+        /* --- 響應式設計 --- */
+        @media (max-width: 768px) {
+            .mobile-stack { flex-direction: column !important; }
+            .mobile-hidden { display: none !important; }
+            .mobile-full { width: 100% !important; }
+            .mobile-text-sm { font-size: 12px !important; }
+        }
+
+        /* --- Mobile-first layout ---
+           小螢幕不使用 fixed viewport 裁切內容，讓面板可以自然垂直捲動。
+           所有主要操作維持至少 44px 觸控尺寸，避免手機誤觸。 */
+        html { min-width: 320px; background: var(--void-black); }
+        body { min-height: 100dvh; overflow-x: hidden !important; overflow-y: auto !important; touch-action: pan-y; }
+        #app-container { min-height: 100dvh; height: auto !important; padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+        .mobile-tabs { display: none; }
+        button, input[type="range"], .preset-card, .visual-btn { min-height: 44px; }
+        button { touch-action: manipulation; }
+
+        @media (max-width: 768px) {
+            #app-container { padding: 8px 8px calc(82px + env(safe-area-inset-bottom)); gap: 10px; }
+            .glass-panel { border-radius: 16px; }
+            #app-container > .glass-panel:first-child { position: sticky; top: 8px; z-index: 20; padding: 10px; }
+            #app-container > .glass-panel:first-child h1 { font-size: 16px; letter-spacing: .08em; }
+            #app-container > .glass-panel:first-child .gap-3 { gap: 8px; }
+            #perfect-quality-btn { width: 44px; height: 44px; padding: 0; justify-content: center; }
+            #workspace { display: block !important; overflow: visible !important; }
+            #workspace > .mobile-panel { display: none; width: 100%; }
+            #workspace > .mobile-panel.is-active { display: flex; }
+            #player-panel { gap: 10px; }
+            #quality-panel, #analysis-panel { gap: 14px; }
+            #main-visualizer-wrap { height: min(56vw, 300px); min-height: 230px; flex: none; }
+            #main-visualizer-wrap .absolute.top-4 { top: 10px; left: 10px; font-size: 10px; }
+            #play-pause { width: 72px; height: 72px; }
+            #play-pause i { font-size: 28px; }
+            #visual-mode + .flex { flex-wrap: wrap; justify-content: center; }
+            .mobile-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 50; padding: 5px; background: rgba(5, 10, 20, .94); border: 1px solid var(--border-glow); border-radius: 16px; backdrop-filter: blur(18px); }
+            .mobile-tabs button { min-height: 48px; padding: 5px 3px; color: #94a3b8; background: transparent; border: 0; border-radius: 11px; font-size: 11px; line-height: 1.2; }
+            .mobile-tabs button i { display: block; margin-bottom: 4px; font-size: 16px; }
+            .mobile-tabs button.is-active { color: #00f0ff; background: rgba(0, 240, 255, .14); box-shadow: inset 0 0 0 1px rgba(0, 240, 255, .28); }
+            #quality-panel, #analysis-panel, #player-panel { min-height: 0; }
+            #quality-panel .grid, #analysis-panel .grid { gap: 8px; }
+            .preset-card { padding: 10px; }
+            #quality-panel .mt-auto { margin-top: 0; }
+            #spectrum-analyzer { min-height: 132px; }
+            #bottom-status { position: relative; }
+            #bottom-status > div { width: 100%; justify-content: space-between; }
+            #bottom-status > div:nth-child(2) { order: 3; }
+            #bottom-status > div:nth-child(3) { width: auto; }
+        }
+
+        @media (min-width: 769px) {
+            #main-visualizer-wrap { min-height: 0; }
+        }
+
+        /* --- 視覺化容器 --- */
+        #visualization-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* --- 音質預設卡片 --- */
+        .preset-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .preset-card:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: var(--aurora-blue);
+            transform: translateY(-3px);
+        }
+
+        .preset-card.active {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: var(--aurora-blue);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden">
+    
+    <!-- 視覺化層 -->
+    <div id="visualization-container"></div>
+
+    <!-- 主容器 -->
+    <div id="app-container" class="h-full w-full flex flex-col p-2 md:p-4 gap-3 md:gap-4">
+        
+        <!-- 頂部控制欄 -->
+        <div class="glass-panel p-3 md:p-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div id="quality-status" class="w-3 h-3 bg-gray-500 rounded-full animate-pulse"></div>
+                <div>
+                    <h1 class="font-tech text-xl md:text-3xl tracking-wider">
+                        <span class="text-white">AURORA</span>
+                        <span class="text-cyan-400">AUDIO</span>
+                        <span class="text-purple-400">PRO</span>
+                    </h1>
+                    <div id="system-status" class="font-mono text-xs text-gray-400">完美音質引擎待命中</div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <!-- 透明度控制 -->
+                <div class="opacity-control flex items-center gap-2 mobile-hidden">
+                    <i class="fa-solid fa-layer-group text-gray-400 text-sm"></i>
+                    <div class="text-xs text-gray-400">透明度</div>
+                    <input type="range" id="opacity-control" min="30" max="100" value="100" class="w-20">
+                    <div id="opacity-value" class="text-xs text-cyan-300 w-8">100%</div>
+                </div>
+                
+                <!-- 一鍵完美音質按鈕 -->
+                <button id="perfect-quality-btn" class="perfection-btn px-5 py-2.5 rounded-full flex items-center gap-2">
+                    <i class="fa-solid fa-crown"></i>
+                    <span class="mobile-hidden">一鍵完美音質</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 手機底部主導航：保留三個核心工作區，避免長頁面操作迷失 -->
+        <nav class="mobile-tabs" aria-label="播放器主功能">
+            <button type="button" class="is-active" data-mobile-tab="player"><i class="fa-solid fa-play"></i><span>播放</span></button>
+            <button type="button" data-mobile-tab="quality"><i class="fa-solid fa-sliders"></i><span>音質</span></button>
+            <button type="button" data-mobile-tab="analysis"><i class="fa-solid fa-chart-simple"></i><span>分析</span></button>
+        </nav>
+
+        <!-- 主內容區域 -->
+        <div id="workspace" class="flex-1 flex flex-col md:flex-row gap-3 md:gap-4 overflow-hidden">
+            
+            <!-- 左側：音質控制面板 -->
+            <div id="quality-panel" class="mobile-panel glass-panel p-4 w-full md:w-1/3 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-tech text-lg text-white">音質強化矩陣</h2>
+                    <div class="text-xs text-cyan-400 font-mono" id="quality-score">0/100</div>
+                </div>
+                
+                <!-- 音質等級指示器 -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-400 mb-2">
+                        <span>音質等級</span>
+                        <span id="quality-level">普通</span>
+                    </div>
+                    <div class="quality-indicator relative">
+                        <div id="quality-fill" class="quality-fill w-0"></div>
+                        <div class="quality-marker" style="left: 25%;"></div>
+                        <div class="quality-marker" style="left: 50%;"></div>
+                        <div class="quality-marker" style="left: 75%;"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-gray-500 mt-1">
+                        <span>普通</span>
+                        <span>良好</span>
+                        <span>優秀</span>
+                        <span>完美</span>
+                    </div>
+                </div>
+                
+                <!-- 音質效果標籤 -->
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-2">已啟用效果</div>
+                    <div id="active-effects" class="flex flex-wrap gap-1">
+                        <div class="quality-tag">等響度補償</div>
+                        <div class="quality-tag">雷聲低音</div>
+                        <div class="quality-tag">水晶高音</div>
+                    </div>
+                </div>
+                
+                <!-- 音質預設 -->
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-2">音質預設</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="preset-card active" data-preset="perfect">
+                            <div class="font-bold text-sm text-gold-400">完美無瑕</div>
+                            <div class="text-[10px] text-gray-500">所有效果最大化</div>
+                        </div>
+                        <div class="preset-card" data-preset="vocal">
+                            <div class="font-bold text-sm text-cyan-400">人聲增強</div>
+                            <div class="text-[10px] text-gray-500">清晰人聲優化</div>
+                        </div>
+                        <div class="preset-card" data-preset="bass">
+                            <div class="font-bold text-sm text-purple-400">雷霆低音</div>
+                            <div class="text-[10px] text-gray-500">深度低音強化</div>
+                        </div>
+                        <div class="preset-card" data-preset="crystal">
+                            <div class="font-bold text-sm text-green-400">水晶高音</div>
+                            <div class="text-[10px] text-gray-500">透亮高音優化</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 當前播放 -->
+                <div class="mt-auto border-t border-white/10 pt-4">
+                    <div class="text-xs text-gray-400 mb-2">當前播放</div>
+                    <div id="now-playing" class="font-medium text-white truncate">等待音訊輸入</div>
+                    <div class="flex items-center gap-2 mt-2">
+                        <div class="text-xs text-gray-400" id="current-time">00:00</div>
+                        <div class="flex-1 h-1.5 bg-gray-800 rounded overflow-hidden">
+                            <div id="song-progress" class="h-full bg-gradient-to-r from-cyan-500 to-purple-500 w-0"></div>
+                        </div>
+                        <div class="text-xs text-gray-400" id="song-duration">00:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中央：視覺化與播放控制 -->
+            <div id="player-panel" class="mobile-panel is-active flex-1 flex flex-col gap-4">
+                <!-- 主視覺化區域 -->
+                <div id="main-visualizer-wrap" class="glass-panel flex-1 relative overflow-hidden">
+                    <canvas id="main-visualizer" class="absolute inset-0 w-full h-full"></canvas>
+                    
+                    <!-- 中心播放控制 -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-center gap-4">
+                            <button id="play-pause" class="w-24 h-24 rounded-full border-2 border-cyan-500/60 bg-black/60 backdrop-blur-lg flex items-center justify-center hover:scale-110 hover:bg-cyan-500/20 transition-all duration-300">
+                                <i class="fa-solid fa-play text-4xl text-cyan-300 pl-2"></i>
+                            </button>
+                            <div class="text-center">
+                                <div id="visual-mode" class="font-mono text-xs text-cyan-300 mb-1">頻譜視覺化</div>
+                                <div class="flex gap-2">
+                                    <button class="visual-btn text-xs px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 rounded" data-mode="spectrum">頻譜</button>
+                                    <button class="visual-btn text-xs px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 rounded" data-mode="wave">波形</button>
+                                    <button class="visual-btn text-xs px-3 py-1 bg-gold-500/20 hover:bg-gold-500/30 rounded" data-mode="particles">粒子</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 音質資訊顯示 -->
+                    <div class="absolute top-4 left-4 font-mono text-xs space-y-1 text-cyan-300/80">
+                        <div>動態範圍: <span id="dynamic-range">96dB</span></div>
+                        <div>諧波失真: <span id="harmonic-distortion">0.001%</span></div>
+                        <div>信噪比: <span id="signal-noise">120dB</span></div>
+                    </div>
+                </div>
+
+                <!-- 音質強化控制 -->
+                <div class="glass-panel p-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- 等響度控制 -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">等響度補償</span>
+                                <span id="loudness-val" class="text-cyan-300">0%</span>
+                            </div>
+                            <input type="range" id="loudness-control" min="0" max="100" value="0" class="w-full">
+                        </div>
+                        
+                        <!-- 雷聲低音 -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">雷聲低音</span>
+                                <span id="thunder-bass-val" class="text-purple-300">0%</span>
+                            </div>
+                            <input type="range" id="thunder-bass-control" min="0" max="100" value="0" class="w-full">
+                        </div>
+                        
+                        <!-- 水晶高音 -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">水晶高音</span>
+                                <span id="crystal-highs-val" class="text-gold-300">0%</span>
+                            </div>
+                            <input type="range" id="crystal-highs-control" min="0" max="100" value="0" class="w-full">
+                        </div>
+                        
+                        <!-- 空間維度 -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">空間維度</span>
+                                <span id="spatial-val" class="text-green-300">0%</span>
+                            </div>
+                            <input type="range" id="spatial-control" min="0" max="100" value="0" class="w-full">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側：音質分析與詳細控制 -->
+            <div id="analysis-panel" class="mobile-panel glass-panel p-4 w-full md:w-1/3 flex flex-col">
+                <h2 class="font-tech text-lg text-white mb-4">音質分析儀</h2>
+                
+                <!-- 頻譜分析 -->
+                <div class="mb-6">
+                    <div class="flex justify-between text-xs text-gray-400 mb-2">
+                        <span>即時頻譜分析</span>
+                        <span id="frequency-display">20Hz - 20kHz</span>
+                    </div>
+                    <div class="h-32 bg-black/40 rounded overflow-hidden">
+                        <canvas id="spectrum-analyzer" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 音質參數 -->
+                <div class="space-y-3 mb-6">
+                    <div class="text-xs text-gray-400">音質參數</div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-300">低音響應</span>
+                            <span id="bass-response" class="text-cyan-300">20Hz</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-800 rounded overflow-hidden">
+                            <div id="bass-bar" class="h-full bg-cyan-500 w-0"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-300">高音延伸</span>
+                            <span id="highs-extension" class="text-purple-300">10kHz</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-800 rounded overflow-hidden">
+                            <div id="highs-bar" class="h-full bg-purple-500 w-0"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-300">聲場寬度</span>
+                            <span id="soundstage-width" class="text-gold-300">100°</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-800 rounded overflow-hidden">
+                            <div id="soundstage-bar" class="h-full bg-gold-500 w-0"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 高級控制 -->
+                <div class="mt-auto">
+                    <div class="text-xs text-gray-400 mb-2">高級控制</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="upload-btn" class="text-xs px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-upload"></i> 上傳音訊
+                        </button>
+                        <input type="file" id="audio-upload" accept="audio/*" class="hidden">
+                        
+                        <button id="reset-btn" class="text-xs px-3 py-2 bg-gray-700/50 hover:bg-gray-700 rounded flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-undo"></i> 重置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部狀態欄 -->
+        <div id="bottom-status" class="glass-panel p-3 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+                <div class="text-xs text-gray-400 hidden md:block">完美音質引擎 v3.0</div>
+                <div id="cpu-usage" class="text-xs px-2 py-1 bg-cyan-500/20 rounded">CPU: 8%</div>
+                <div id="memory-usage" class="text-xs px-2 py-1 bg-purple-500/20 rounded">RAM: 280MB</div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="text-xs text-gray-400">音量</div>
+                <input type="range" id="volume-control" min="0" max="100" value="80" class="w-24">
+                <div id="volume-value" class="text-xs text-cyan-300 w-8">80%</div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <div class="text-xs text-gray-400">音質模式:</div>
+                <div id="audio-mode" class="text-xs text-cyan-300">標準</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音訊元素 -->
+    <audio id="audio-player" crossorigin="anonymous"></audio>
+    
+    <!-- 檔案輸入 -->
+    <input type="file" id="file-upload" accept="audio/*" multiple class="hidden">
+    
+    <!-- 完美音質引擎核心 -->
+    <script>
+        // ============================================
+        // 完美音質終極引擎
+        // ============================================
+        
+        // 系統狀態
+        const AUDIO_STATE = {
+            isPlaying: false,
+            currentTrack: null,
+            playlist: [],
+            visualMode: 'spectrum',
+            audioContext: null,
+            audioSource: null,
+            analyser: null,
+            gainNode: null,
+            dataArray: null,
+            bufferLength: null,
+            lastUpdate: 0,
+            qualityLevel: 0, // 0-100
+            activePreset: 'perfect',
+            // 音質參數
+            qualityParams: {
+                loudness: 0,     // 等響度補償
+                thunderBass: 0,  // 雷聲低音
+                crystalHighs: 0, // 水晶高音
+                spatial: 0,      // 空間維度
+                dynamicRange: 96,
+                harmonicDistortion: 0.5,
+                signalNoise: 90
+            }
+        };
+
+        // Canvas 上下文
+        const CANVAS = {
+            main: document.getElementById('main-visualizer').getContext('2d'),
+            spectrum: document.getElementById('spectrum-analyzer').getContext('2d')
+        };
+
+        // 初始化 Canvas
+        Object.values(CANVAS).forEach(ctx => {
+            ctx.canvas.width = ctx.canvas.offsetWidth * window.devicePixelRatio;
+            ctx.canvas.height = ctx.canvas.offsetHeight * window.devicePixelRatio;
+        });
+
+        // UI 引用
+        const UI = {
+            playPause: document.getElementById('play-pause'),
+            perfectQualityBtn: document.getElementById('perfect-quality-btn'),
+            qualityStatus: document.getElementById('quality-status'),
+            systemStatus: document.getElementById('system-status'),
+            qualityScore: document.getElementById('quality-score'),
+            qualityLevel: document.getElementById('quality-level'),
+            qualityFill: document.getElementById('quality-fill'),
+            activeEffects: document.getElementById('active-effects'),
+            nowPlaying: document.getElementById('now-playing'),
+            currentTime: document.getElementById('current-time'),
+            songDuration: document.getElementById('song-duration'),
+            songProgress: document.getElementById('song-progress'),
+            visualMode: document.getElementById('visual-mode'),
+            // 音質參數顯示
+            dynamicRange: document.getElementById('dynamic-range'),
+            harmonicDistortion: document.getElementById('harmonic-distortion'),
+            signalNoise: document.getElementById('signal-noise'),
+            bassResponse: document.getElementById('bass-response'),
+            highsExtension: document.getElementById('highs-extension'),
+            soundstageWidth: document.getElementById('soundstage-width'),
+            // 控制元素
+            opacityControl: document.getElementById('opacity-control'),
+            opacityValue: document.getElementById('opacity-value'),
+            volumeControl: document.getElementById('volume-control'),
+            volumeValue: document.getElementById('volume-value'),
+            // 音質控制滑桿
+            loudnessControl: document.getElementById('loudness-control'),
+            loudnessVal: document.getElementById('loudness-val'),
+            thunderBassControl: document.getElementById('thunder-bass-control'),
+            thunderBassVal: document.getElementById('thunder-bass-val'),
+            crystalHighsControl: document.getElementById('crystal-highs-control'),
+            crystalHighsVal: document.getElementById('crystal-highs-val'),
+            spatialControl: document.getElementById('spatial-control'),
+            spatialVal: document.getElementById('spatial-val'),
+            // 按鈕
+            uploadBtn: document.getElementById('upload-btn'),
+            resetBtn: document.getElementById('reset-btn'),
+            audioUpload: document.getElementById('audio-upload'),
+            fileUpload: document.getElementById('file-upload')
+        };
+
+        // ============================================
+        // 系統初始化
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initAudioSystem();
+            initUIEvents();
+            initMobileTabs();
+            initVisualization();
+            startAnimationLoop();
+            updateSystemStatus('完美音質引擎就緒', 'green');
+            console.log('完美音質引擎初始化完成');
+        });
+
+        // 手機主導航：只切換可視面板，不中斷音訊與 Canvas 動畫。
+        function initMobileTabs() {
+            const tabs = document.querySelectorAll('[data-mobile-tab]');
+            const panels = {
+                player: document.getElementById('player-panel'),
+                quality: document.getElementById('quality-panel'),
+                analysis: document.getElementById('analysis-panel')
+            };
+
+            tabs.forEach(tab => tab.addEventListener('click', () => {
+                const target = tab.dataset.mobileTab;
+                tabs.forEach(item => item.classList.toggle('is-active', item === tab));
+                Object.entries(panels).forEach(([name, panel]) => {
+                    if (panel) panel.classList.toggle('is-active', name === target);
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }));
+        }
+
+        // 初始化音訊系統
+        function initAudioSystem() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                AUDIO_STATE.audioContext = new AudioContext();
+                
+                // 創建分析器
+                AUDIO_STATE.analyser = AUDIO_STATE.audioContext.createAnalyser();
+                AUDIO_STATE.analyser.fftSize = 32768; // 超高解析度
+                AUDIO_STATE.analyser.smoothingTimeConstant = 0.85;
+                
+                AUDIO_STATE.bufferLength = AUDIO_STATE.analyser.frequencyBinCount;
+                AUDIO_STATE.dataArray = new Uint8Array(AUDIO_STATE.bufferLength);
+                
+                // 創建增益節點
+                AUDIO_STATE.gainNode = AUDIO_STATE.audioContext.createGain();
+                AUDIO_STATE.gainNode.gain.value = 0.8;
+                
+                // 連接音訊元素
+                const audioElement = document.getElementById('audio-player');
+                AUDIO_STATE.audioSource = AUDIO_STATE.audioContext.createMediaElementSource(audioElement);
+                
+                // 創建音質處理鏈
+                createQualityProcessingChain();
+                
+                console.log('音訊系統初始化成功');
+            } catch (error) {
+                console.error('音訊系統初始化失敗:', error);
+                updateSystemStatus('音訊系統錯誤', 'red');
+            }
+        }
+
+        // 創建音質處理鏈
+        function createQualityProcessingChain() {
+            if (!AUDIO_STATE.audioContext) return;
+            
+            try {
+                AUDIO_STATE.audioSource.disconnect();
+            } catch(e) {}
+            
+            // 創建多段EQ用於音質強化
+            const eqNodes = [
+                { type: 'lowshelf', frequency: 60, gain: 0, Q: 1 },    // 超低音
+                { type: 'peaking', frequency: 120, gain: 0, Q: 0.5 },  // 低音
+                { type: 'peaking', frequency: 1000, gain: 0, Q: 1 },   // 中音
+                { type: 'peaking', frequency: 3000, gain: 0, Q: 1 },   // 中高音
+                { type: 'peaking', frequency: 8000, gain: 0, Q: 1 },    //高音
+                { type: 'highshelf', frequency: 12000, gain: 0, Q: 1 }  //超高音
+            ].map(band => {
+                const filter = AUDIO_STATE.audioContext.createBiquadFilter();
+                filter.type = band.type;
+                filter.frequency.value = band.frequency;
+                filter.gain.value = band.gain;
+                filter.Q.value = band.Q;
+                return filter;
+            });
+            
+            // 創建動態處理器
+            const compressor = AUDIO_STATE.audioContext.createDynamicsCompressor();
+            compressor.threshold.value = -24;
+            compressor.knee.value = 30;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0.003;
+            compressor.release.value = 0.25;
+            
+            // 創建等響度濾波器 (模擬人耳聽覺曲線)
+            const loudnessFilter = AUDIO_STATE.audioContext.createBiquadFilter();
+            loudnessFilter.type = 'peaking';
+            loudnessFilter.frequency.value = 1000;
+            loudnessFilter.gain.value = 0;
+            loudnessFilter.Q.value = 0.7;
+            
+            // 創建混響效果
+            const reverbNode = AUDIO_STATE.audioContext.createConvolver();
+            
+            // 連接處理鏈
+            let currentNode = AUDIO_STATE.audioSource;
+            
+            // 等響度濾波器
+            currentNode.connect(loudnessFilter);
+            currentNode = loudnessFilter;
+            
+            // EQ鏈
+            eqNodes.forEach(eq => {
+                currentNode.connect(eq);
+                currentNode = eq;
+            });
+            
+            // 動態處理
+            currentNode.connect(compressor);
+            currentNode = compressor;
+            
+            // 連接到分析器和輸出
+            currentNode.connect(AUDIO_STATE.gainNode);
+            AUDIO_STATE.gainNode.connect(AUDIO_STATE.analyser);
+            AUDIO_STATE.analyser.connect(AUDIO_STATE.audioContext.destination);
+            
+            // 保存節點引用
+            AUDIO_STATE.audioChain = {
+                eqNodes,
+                compressor,
+                loudnessFilter,
+                reverbNode
+            };
+        }
+
+        // ============================================
+        // 一鍵完美音質功能
+        // ============================================
+        
+        // 設置完美音質
+        function setPerfectQuality() {
+            // 更新UI狀態
+            UI.perfectQualityBtn.classList.add('quality-active');
+            updateSystemStatus('完美音質啟動中...', 'gold');
+            
+            // 設置所有音質參數到最大值
+            AUDIO_STATE.qualityParams.loudness = 100;
+            AUDIO_STATE.qualityParams.thunderBass = 100;
+            AUDIO_STATE.qualityParams.crystalHighs = 100;
+            AUDIO_STATE.qualityParams.spatial = 100;
+            
+            // 更新UI控制
+            UI.loudnessControl.value = 100;
+            UI.loudnessVal.textContent = '100%';
+            UI.thunderBassControl.value = 100;
+            UI.thunderBassVal.textContent = '100%';
+            UI.crystalHighsControl.value = 100;
+            UI.crystalHighsVal.textContent = '100%';
+            UI.spatialControl.value = 100;
+            UI.spatialVal.textContent = '100%';
+            
+            // 更新音質等級
+            updateQualityLevel(100);
+            
+            // 更新音質參數顯示
+            AUDIO_STATE.qualityParams.dynamicRange = 144;
+            AUDIO_STATE.qualityParams.harmonicDistortion = 0.0001;
+            AUDIO_STATE.qualityParams.signalNoise = 130;
+            
+            UI.dynamicRange.textContent = '144dB';
+            UI.harmonicDistortion.textContent = '0.0001%';
+            UI.signalNoise.textContent = '130dB';
+            
+            // 更新音質效果標籤
+            updateActiveEffects([
+                '等響度補償 MAX',
+                '雷聲低音 MAX',
+                '水晶高音 MAX',
+                '空間維度 MAX',
+                '動態範圍 144dB',
+                '諧波失真 0.0001%'
+            ]);
+            
+            // 應用音質參數到音訊處理鏈
+            applyQualityParameters();
+            
+            // 更新音訊模式
+            document.getElementById('audio-mode').textContent = '完美無瑕';
+            
+            // 播放音效確認
+            playQualityConfirmSound();
+            
+            // 更新狀態
+            setTimeout(() => {
+                updateSystemStatus('完美音質已啟動', 'green');
+                UI.perfectQualityBtn.classList.remove('quality-active');
+            }, 1500);
+            
+            console.log('完美音質已啟動');
+        }
+
+        // 更新音質等級
+        function updateQualityLevel(level) {
+            AUDIO_STATE.qualityLevel = Math.min(100, Math.max(0, level));
+            
+            // 更新UI
+            UI.qualityScore.textContent = `${AUDIO_STATE.qualityLevel}/100`;
+            UI.qualityFill.style.width = `${AUDIO_STATE.qualityLevel}%`;
+            
+            // 更新音質等級文字
+            let levelText = '普通';
+            if (AUDIO_STATE.qualityLevel >= 80) levelText = '完美';
+            else if (AUDIO_STATE.qualityLevel >= 60) levelText = '優秀';
+            else if (AUDIO_STATE.qualityLevel >= 30) levelText = '良好';
+            
+            UI.qualityLevel.textContent = levelText;
+            
+            // 更新狀態指示燈
+            const statusLight = UI.qualityStatus;
+            statusLight.classList.remove('bg-gray-500', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-purple-500');
+            
+            if (AUDIO_STATE.qualityLevel >= 80) {
+                statusLight.classList.add('bg-purple-500');
+                statusLight.style.animationDuration = '0.5s';
+            } else if (AUDIO_STATE.qualityLevel >= 60) {
+                statusLight.classList.add('bg-green-500');
+                statusLight.style.animationDuration = '1s';
+            } else if (AUDIO_STATE.qualityLevel >= 30) {
+                statusLight.classList.add('bg-yellow-500');
+                statusLight.style.animationDuration = '1.5s';
+            } else {
+                statusLight.classList.add('bg-gray-500');
+                statusLight.style.animationDuration = '2s';
+            }
+        }
+
+        // 更新活動效果標籤
+        function updateActiveEffects(effects) {
+            UI.activeEffects.innerHTML = '';
+            effects.forEach(effect => {
+                const tag = document.createElement('div');
+                tag.className = 'quality-tag';
+                tag.textContent = effect;
+                UI.activeEffects.appendChild(tag);
+            });
+        }
+
+        // 應用音質參數到音訊處理鏈
+        function applyQualityParameters() {
+            if (!AUDIO_STATE.audioChain) return;
+            
+            const params = AUDIO_STATE.qualityParams;
+            const ctx = AUDIO_STATE.audioContext;
+            
+            // 等響度補償 (Fletcher-Munson曲線模擬)
+            if (AUDIO_STATE.audioChain.loudnessFilter) {
+                const gain = (params.loudness / 100) * 15; // 最大15dB增益
+                AUDIO_STATE.audioChain.loudnessFilter.gain.setTargetAtTime(gain, ctx.currentTime, 0.1);
+            }
+            
+            // 雷聲低音 (超低音增強)
+            if (AUDIO_STATE.audioChain.eqNodes[0]) {
+                const bassGain = (params.thunderBass / 100) * 20; // 最大20dB
+                AUDIO_STATE.audioChain.eqNodes[0].gain.setTargetAtTime(bassGain, ctx.currentTime, 0.1);
+                AUDIO_STATE.audioChain.eqNodes[1].gain.setTargetAtTime(bassGain * 0.7, ctx.currentTime, 0.1);
+            }
+            
+            // 水晶高音 (高音延伸)
+            if (AUDIO_STATE.audioChain.eqNodes[5]) {
+                const highsGain = (params.crystalHighs / 100) * 12; // 最大12dB
+                AUDIO_STATE.audioChain.eqNodes[5].gain.setTargetAtTime(highsGain, ctx.currentTime, 0.1);
+                AUDIO_STATE.audioChain.eqNodes[4].gain.setTargetAtTime(highsGain * 0.8, ctx.currentTime, 0.1);
+            }
+            
+            // 空間維度 (聲場擴展)
+            if (AUDIO_STATE.audioChain.compressor) {
+                const spatial = params.spatial / 100;
+                // 調整壓縮器來創造空間感
+                AUDIO_STATE.audioChain.compressor.threshold.setTargetAtTime(-30 + spatial * 10, ctx.currentTime, 0.1);
+                AUDIO_STATE.audioChain.compressor.ratio.setTargetAtTime(8 + spatial * 4, ctx.currentTime, 0.1);
+            }
+            
+            // 更新音質參數顯示
+            updateQualityParametersDisplay();
+        }
+
+        // 更新音質參數顯示
+        function updateQualityParametersDisplay() {
+            const params = AUDIO_STATE.qualityParams;
+            
+            // 低音響應 (Hz)
+            const bassResponse = 20 + (params.thunderBass / 100) * 40; // 20-60Hz
+            UI.bassResponse.textContent = `${Math.round(bassResponse)}Hz`;
+            document.getElementById('bass-bar').style.width = `${params.thunderBass}%`;
+            
+            // 高音延伸 (kHz)
+            const highsExtension = 10 + (params.crystalHighs / 100) * 30; // 10-40kHz
+            UI.highsExtension.textContent = `${Math.round(highsExtension)}kHz`;
+            document.getElementById('highs-bar').style.width = `${params.crystalHighs}%`;
+            
+            // 聲場寬度 (度)
+            const soundstageWidth = 100 + (params.spatial / 100) * 80; // 100-180度
+            UI.soundstageWidth.textContent = `${Math.round(soundstageWidth)}°`;
+            document.getElementById('soundstage-bar').style.width = `${params.spatial}%`;
+        }
+
+        // 播放音質確認音效
+        function playQualityConfirmSound() {
+            if (!AUDIO_STATE.audioContext) return;
+            
+            try {
+                const ctx = AUDIO_STATE.audioContext;
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                // 完美音質確認音效
+                oscillator.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+                oscillator.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.3); // C6
+                
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                
+                oscillator.start();
+                oscillator.stop(ctx.currentTime + 0.5);
+            } catch(e) {
+                console.log('音效播放失敗:', e);
+            }
+        }
+
+        // ============================================
+        // 透明度控制
+        // ============================================
+        
+        function initOpacityControl() {
+            UI.opacityControl.addEventListener('input', (e) => {
+                const opacity = e.target.value / 100;
+                document.getElementById('app-container').style.opacity = opacity;
+                UI.opacityValue.textContent = `${e.target.value}%`;
+            });
+        }
+
+        // ============================================
+        // 音訊播放控制
+        // ============================================
+        
+        function togglePlayPause() {
+            const audio = document.getElementById('audio-player');
+            
+            if (!AUDIO_STATE.currentTrack && AUDIO_STATE.playlist.length > 0) {
+                setCurrentTrack(AUDIO_STATE.playlist[0]);
+            }
+            
+            if (!AUDIO_STATE.currentTrack) {
+                updateSystemStatus('請先上傳音訊文件', 'yellow');
+                return;
+            }
+            
+            // 確保音訊上下文處於運行狀態
+            if (AUDIO_STATE.audioContext && AUDIO_STATE.audioContext.state === 'suspended') {
+                AUDIO_STATE.audioContext.resume();
+            }
+            
+            if (audio.paused) {
+                audio.play()
+                    .then(() => {
+                        AUDIO_STATE.isPlaying = true;
+                        UI.playPause.innerHTML = '<i class="fa-solid fa-pause text-4xl text-cyan-300"></i>';
+                        updateSystemStatus('播放中 - 音質分析進行中', 'cyan');
+                    })
+                    .catch(error => {
+                        console.error('播放失敗:', error);
+                        updateSystemStatus('播放失敗', 'red');
+                    });
+            } else {
+                audio.pause();
+                AUDIO_STATE.isPlaying = false;
+                UI.playPause.innerHTML = '<i class="fa-solid fa-play text-4xl text-cyan-300 pl-2"></i>';
+                updateSystemStatus('已暫停', 'gray');
+            }
+        }
+
+        function handleAudioUpload(event) {
+            const files = Array.from(event.target.files);
+            if (files.length === 0) return;
+            
+            files.forEach((file, index) => {
+                const url = URL.createObjectURL(file);
+                const track = {
+                    id: Date.now() + index,
+                    name: file.name.replace(/\.[^/.]+$/, ""),
+                    url: url,
+                    file: file,
+                    duration: 0
+                };
+                
+                AUDIO_STATE.playlist.push(track);
+                
+                if (AUDIO_STATE.playlist.length === 1) {
+                    setCurrentTrack(track);
+                }
+            });
+            
+            updateSystemStatus(`已添加 ${files.length} 首曲目`, 'cyan');
+            event.target.value = '';
+        }
+
+        function setCurrentTrack(track) {
+            AUDIO_STATE.currentTrack = track;
+            const audio = document.getElementById('audio-player');
+            
+            audio.src = track.url;
+            audio.load();
+            
+            UI.nowPlaying.textContent = track.name;
+            
+            audio.addEventListener('loadedmetadata', () => {
+                track.duration = audio.duration;
+                UI.songDuration.textContent = formatTime(audio.duration);
+            }, { once: true });
+        }
+
+        // ============================================
+        // 視覺化系統
+        // ============================================
+        
+        function initVisualization() {
+            // Three.js 視覺化
+            const container = document.getElementById('visualization-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+            
+            // 創建粒子系統
+            const particleCount = 2000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 20;
+                positions[i3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i3 + 2] = (Math.random() - 0.5) * 20;
+                
+                colors[i3] = Math.random() * 0.5 + 0.5;
+                colors[i3 + 1] = Math.random() * 0.5 + 0.5;
+                colors[i3 + 2] = Math.random() * 0.8 + 0.2;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.1,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+            
+            camera.position.z = 15;
+            
+            // 動畫循環
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                if (particles && AUDIO_STATE.isPlaying && AUDIO_STATE.dataArray) {
+                    const positions = particles.geometry.attributes.position.array;
+                    
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const dataIndex = Math.floor((i / positions.length) * AUDIO_STATE.bufferLength);
+                        const intensity = (AUDIO_STATE.dataArray[dataIndex] || 0) / 255;
+                        
+                        positions[i] += Math.sin(Date.now() * 0.001 + i * 0.01) * intensity * 0.05;
+                        positions[i + 1] += Math.cos(Date.now() * 0.001 + i * 0.01) * intensity * 0.05;
+                        positions[i + 2] += Math.sin(Date.now() * 0.002 + i * 0.02) * intensity * 0.03;
+                    }
+                    
+                    particles.geometry.attributes.position.needsUpdate = true;
+                }
+                
+                particles.rotation.x += 0.001;
+                particles.rotation.y += 0.002;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // 窗口大小調整
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // 主視覺化循環
+        function startAnimationLoop() {
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                const now = Date.now();
+                if (now - AUDIO_STATE.lastUpdate < 16) return;
+                AUDIO_STATE.lastUpdate = now;
+                
+                // 更新音訊數據
+                if (AUDIO_STATE.analyser && AUDIO_STATE.isPlaying) {
+                    AUDIO_STATE.analyser.getByteFrequencyData(AUDIO_STATE.dataArray);
+                    updateQualityAnalysis();
+                }
+                
+                // 繪製視覺化
+                drawMainVisualization();
+                drawSpectrumAnalyzer();
+                
+                // 更新時間顯示
+                updateTimeDisplay();
+            }
+            
+            animate();
+        }
+
+        function drawMainVisualization() {
+            const ctx = CANVAS.main;
+            const width = ctx.canvas.width;
+            const height = ctx.canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            if (!AUDIO_STATE.dataArray || !AUDIO_STATE.isPlaying) {
+                // 顯示待機畫面
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.fillRect(0, 0, width, height);
+                
+                ctx.font = 'bold 24px Orbitron';
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.3)';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('AURORA AUDIO', width/2, height/2);
+                return;
+            }
+            
+            // 根據視覺模式繪製
+            switch (AUDIO_STATE.visualMode) {
+                case 'spectrum':
+                    drawSpectrumVisualization(ctx, width, height);
+                    break;
+                case 'wave':
+                    drawWaveformVisualization(ctx, width, height);
+                    break;
+                case 'particles':
+                    drawParticleVisualization(ctx, width, height);
+                    break;
+            }
+        }
+
+        function drawSpectrumVisualization(ctx, width, height) {
+            const barWidth = (width / AUDIO_STATE.bufferLength) * 3;
+            let x = 0;
+            
+            // 根據音質等級調整顏色
+            const qualityFactor = AUDIO_STATE.qualityLevel / 100;
+            const hueShift = qualityFactor * 180;
+            
+            for (let i = 0; i < AUDIO_STATE.bufferLength; i++) {
+                const barHeight = (AUDIO_STATE.dataArray[i] / 255) * height;
+                
+                // 動態顏色
+                const hue = (i / AUDIO_STATE.bufferLength) * 180 + hueShift;
+                const saturation = 80 + (AUDIO_STATE.dataArray[i] / 255) * 20;
+                const lightness = 40 + (AUDIO_STATE.dataArray[i] / 255) * 40;
+                
+                ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+                
+                x += barWidth + 1;
+            }
+        }
+
+        function drawWaveformVisualization(ctx, width, height) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${0.5 + AUDIO_STATE.qualityLevel/200})`;
+            ctx.lineWidth = 2;
+            ctx.lineJoin = 'round';
+            
+            const sliceWidth = width / AUDIO_STATE.bufferLength;
+            let x = 0;
+            
+            for (let i = 0; i < AUDIO_STATE.bufferLength; i++) {
+                const v = AUDIO_STATE.dataArray[i] / 255.0;
+                const y = (v * height) / 2;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, height/2 + y);
+                } else {
+                    ctx.lineTo(x, height/2 + y);
+                }
+                
+                x += sliceWidth;
+            }
+            
+            ctx.stroke();
+            
+            // 填充漸變
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, `rgba(0, 240, 255, ${0.1 + AUDIO_STATE.qualityLevel/500})`);
+            gradient.addColorStop(1, 'transparent');
+            
+            ctx.fillStyle = gradient;
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawParticleVisualization(ctx, width, height) {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // 繪製圓形粒子場
+            const particleCount = 200;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const dataIndex = Math.floor((i / particleCount) * AUDIO_STATE.bufferLength);
+                const intensity = AUDIO_STATE.dataArray[dataIndex] / 255;
+                
+                if (intensity < 0.1) continue;
+                
+                const angle = (i / particleCount) * Math.PI * 2 + Date.now() * 0.001;
+                const radius = 100 + intensity * 200;
+                
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                // 根據音質等級調整粒子大小和顏色
+                const particleSize = 2 + intensity * 6 + AUDIO_STATE.qualityLevel/50;
+                const hue = (AUDIO_STATE.qualityLevel + i * 10) % 360;
+                
+                ctx.beginPath();
+                ctx.fillStyle = `hsla(${hue}, 100%, 60%, ${0.3 + intensity * 0.5})`;
+                ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawSpectrumAnalyzer() {
+            const ctx = CANVAS.spectrum;
+            const width = ctx.canvas.width;
+            const height = ctx.canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            if (!AUDIO_STATE.dataArray) return;
+            
+            // 繪製頻譜分析器
+            const barCount = 32;
+            const barWidth = width / barCount;
+            
+            for (let i = 0; i < barCount; i++) {
+                const start = Math.floor(Math.pow(i / barCount, 2) * AUDIO_STATE.bufferLength);
+                const end = Math.floor(Math.pow((i + 1) / barCount, 2) * AUDIO_STATE.bufferLength);
+                let sum = 0;
+                
+                for (let j = start; j < end; j++) {
+                    sum += AUDIO_STATE.dataArray[j] || 0;
+                }
+                
+                const avg = sum / (end - start);
+                const barHeight = (avg / 255) * height;
+                
+                // 創建漸變
+                const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height);
+                gradient.addColorStop(0, `hsl(${200 + i * 5}, 100%, 60%)`);
+                gradient.addColorStop(1, `hsl(${200 + i * 5}, 100%, 20%)`);
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+            }
+        }
+
+        // 更新音質分析
+        function updateQualityAnalysis() {
+            if (!AUDIO_STATE.dataArray) return;
+            
+            // 計算頻譜特徵
+            let bassEnergy = 0, midEnergy = 0, highEnergy = 0;
+            const bassRange = Math.floor(AUDIO_STATE.bufferLength * 0.02); // 低頻 (0-2%)
+            const midRange = Math.floor(AUDIO_STATE.bufferLength * 0.3); // 中頻 (2-30%)
+            const highRange = Math.floor(AUDIO_STATE.bufferLength * 1.0); // 高頻 (30-100%)
+            
+            for (let i = 0; i < AUDIO_STATE.bufferLength; i++) {
+                if (i < bassRange) bassEnergy += AUDIO_STATE.dataArray[i];
+                else if (i < midRange) midEnergy += AUDIO_STATE.dataArray[i];
+                else highEnergy += AUDIO_STATE.dataArray[i];
+            }
+            
+            // 計算音質分數
+            const totalEnergy = bassEnergy + midEnergy + highEnergy;
+            const balanceScore = 100 - Math.abs(bassEnergy - midEnergy) / totalEnergy * 50 - Math.abs(midEnergy - highEnergy) / totalEnergy * 50;
+            
+            // 根據音質參數調整分數
+            const qualityBonus = (AUDIO_STATE.qualityParams.loudness + 
+                                AUDIO_STATE.qualityParams.thunderBass + 
+                                AUDIO_STATE.qualityParams.crystalHighs + 
+                                AUDIO_STATE.qualityParams.spatial) / 4;
+            
+            const finalScore = Math.min(100, balanceScore + qualityBonus * 0.3);
+            
+            // 更新音質等級
+            updateQualityLevel(finalScore);
+        }
+
+        // ============================================
+        // UI 事件初始化
+        // ============================================
+        
+        function initUIEvents() {
+            // 播放/暫停
+            UI.playPause.addEventListener('click', togglePlayPause);
+            
+            // 一鍵完美音質
+            UI.perfectQualityBtn.addEventListener('click', setPerfectQuality);
+            
+            // 透明度控制
+            initOpacityControl();
+            
+            // 音量控制
+            UI.volumeControl.addEventListener('input', (e) => {
+                const value = e.target.value;
+                UI.volumeValue.textContent = `${value}%`;
+                if (AUDIO_STATE.gainNode) {
+                    AUDIO_STATE.gainNode.gain.value = value / 100;
+                }
+            });
+            
+            // 音質控制滑桿
+            const qualitySliders = [
+                { id: 'loudness-control', param: 'loudness', display: 'loudness-val' },
+                { id: 'thunder-bass-control', param: 'thunderBass', display: 'thunder-bass-val' },
+                { id: 'crystal-highs-control', param: 'crystalHighs', display: 'crystal-highs-val' },
+                { id: 'spatial-control', param: 'spatial', display: 'spatial-val' }
+            ];
+            
+            qualitySliders.forEach(slider => {
+                const element = document.getElementById(slider.id);
+                const display = document.getElementById(slider.display);
+                
+                element.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    display.textContent = `${value}%`;
+                    AUDIO_STATE.qualityParams[slider.param] = parseInt(value);
+                    
+                    // 計算音質等級
+                    const qualityLevel = (
+                        AUDIO_STATE.qualityParams.loudness +
+                        AUDIO_STATE.qualityParams.thunderBass +
+                        AUDIO_STATE.qualityParams.crystalHighs +
+                        AUDIO_STATE.qualityParams.spatial
+                    ) / 4;
+                    
+                    updateQualityLevel(qualityLevel);
+                    
+                    // 應用音質參數
+                    applyQualityParameters();
+                });
+            });
+            
+            // 視覺模式切換
+            document.querySelectorAll('.visual-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    AUDIO_STATE.visualMode = btn.dataset.mode;
+                    UI.visualMode.textContent = 
+                        AUDIO_STATE.visualMode === 'spectrum' ? '頻譜視覺化' :
+                        AUDIO_STATE.visualMode === 'wave' ? '波形視覺化' : '粒子視覺化';
+                    
+                    document.querySelectorAll('.visual-btn').forEach(b => {
+                        b.classList.remove('bg-cyan-500/30', 'bg-purple-500/30', 'bg-gold-500/30');
+                    });
+                    btn.classList.add(
+                        AUDIO_STATE.visualMode === 'spectrum' ? 'bg-cyan-500/30' :
+                        AUDIO_STATE.visualMode === 'wave' ? 'bg-purple-500/30' : 'bg-gold-500/30'
+                    );
+                });
+            });
+            
+            // 音質預設
+            document.querySelectorAll('.preset-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    
+                    const preset = card.dataset.preset;
+                    AUDIO_STATE.activePreset = preset;
+                    
+                    // 應用預設
+                    applyQualityPreset(preset);
+                });
+            });
+            
+            // 上傳按鈕
+            UI.uploadBtn.addEventListener('click', () => UI.fileUpload.click());
+            UI.fileUpload.addEventListener('change', handleAudioUpload);
+            
+            // 重置按鈕
+            UI.resetBtn.addEventListener('click', resetQualitySettings);
+            
+            // 窗口大小調整
+            window.addEventListener('resize', () => {
+                Object.values(CANVAS).forEach(ctx => {
+                    ctx.canvas.width = ctx.canvas.offsetWidth * window.devicePixelRatio;
+                    ctx.canvas.height = ctx.canvas.offsetHeight * window.devicePixelRatio;
+                });
+            });
+            
+            // 音訊事件
+            const audio = document.getElementById('audio-player');
+            audio.addEventListener('timeupdate', updateTimeDisplay);
+            audio.addEventListener('ended', () => {
+                AUDIO_STATE.isPlaying = false;
+                UI.playPause.innerHTML = '<i class="fa-solid fa-play text-4xl text-cyan-300 pl-2"></i>';
+                updateSystemStatus('播放結束', 'gray');
+            });
+        }
+
+        // 應用音質預設
+        function applyQualityPreset(preset) {
+            let params = { loudness: 0, thunderBass: 0, crystalHighs: 0, spatial: 0 };
+            
+            switch(preset) {
+                case 'perfect':
+                    params = { loudness: 100, thunderBass: 100, crystalHighs: 100, spatial: 100 };
+                    break;
+                case 'vocal':
+                    params = { loudness: 80, thunderBass: 40, crystalHighs: 90, spatial: 70 };
+                    break;
+                case 'bass':
+                    params = { loudness: 60, thunderBass: 100, crystalHighs: 30, spatial: 50 };
+                    break;
+                case 'crystal':
+                    params = { loudness: 70, thunderBass: 20, crystalHighs: 100, spatial: 80 };
+                    break;
+            }
+            
+            // 更新參數
+            Object.keys(params).forEach(key => {
+                AUDIO_STATE.qualityParams[key] = params[key];
+                const control = document.getElementById(`${key}-control`);
+                const display = document.getElementById(`${key}-val`);
+                
+                if (control && display) {
+                    control.value = params[key];
+                    display.textContent = `${params[key]}%`;
+                }
+            });
+            
+            // 應用參數
+            applyQualityParameters();
+            
+            // 更新音質等級
+            const qualityLevel = (
+                params.loudness + params.thunderBass + params.crystalHighs + params.spatial
+            ) / 4;
+            
+            updateQualityLevel(qualityLevel);
+            
+            // 更新狀態
+            updateSystemStatus(`已切換到${getPresetName(preset)}模式`, 'cyan');
+        }
+
+        function getPresetName(preset) {
+            switch(preset) {
+                case 'perfect': return '完美無瑕';
+                case 'vocal': return '人聲增強';
+                case 'bass': return '雷霆低音';
+                case 'crystal': return '水晶高音';
+                default: return '標準';
+            }
+        }
+
+        // 重置音質設置
+        function resetQualitySettings() {
+            // 重置所有滑桿到0
+            const sliders = [
+                'loudness-control', 'thunder-bass-control', 
+                'crystal-highs-control', 'spatial-control'
+            ];
+            
+            sliders.forEach(id => {
+                const slider = document.getElementById(id);
+                const display = document.getElementById(id.replace('control', 'val'));
+                
+                if (slider && display) {
+                    slider.value = 0;
+                    display.textContent = '0%';
+                }
+            });
+            
+            // 重置參數
+            AUDIO_STATE.qualityParams = {
+                loudness: 0,
+                thunderBass: 0,
+                crystalHighs: 0,
+                spatial: 0,
+                dynamicRange: 96,
+                harmonicDistortion: 0.5,
+                signalNoise: 90
+            };
+            
+            // 重置音質等級
+            updateQualityLevel(0);
+            
+            // 重置顯示
+            UI.dynamicRange.textContent = '96dB';
+            UI.harmonicDistortion.textContent = '0.5%';
+            UI.signalNoise.textContent = '90dB';
+            
+            // 應用參數
+            applyQualityParameters();
+            
+            // 重置預設
+            document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+            document.querySelector('.preset-card[data-preset="perfect"]').classList.add('active');
+            AUDIO_STATE.activePreset = 'perfect';
+            
+            updateSystemStatus('音質設置已重置', 'gray');
+        }
+
+        // 更新時間顯示
+        function updateTimeDisplay() {
+            const audio = document.getElementById('audio-player');
+            if (!audio.duration) return;
+            
+            UI.currentTime.textContent = formatTime(audio.currentTime);
+            UI.songDuration.textContent = formatTime(audio.duration);
+            
+            const progress = (audio.currentTime / audio.duration) * 100;
+            UI.songProgress.style.width = `${progress}%`;
+        }
+
+        // 格式化時間
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // 更新系統狀態
+        function updateSystemStatus(message, color) {
+            UI.systemStatus.textContent = message;
+            UI.qualityStatus.style.backgroundColor = 
+                color === 'green' ? '#10B981' :
+                color === 'cyan' ? '#00f0ff' :
+                color === 'gold' ? '#ffcc00' :
+                color === 'yellow' ? '#F59E0B' :
+                color === 'red' ? '#EF4444' : '#6B7280';
+        }
+
+        // 初始化完成
+        console.log('完美音質引擎完全初始化');
+    </script>
+</body>
+</html>
