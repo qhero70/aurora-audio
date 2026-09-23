@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
+    <meta name="description" content="AURORA AUDIO PRO — mobile-first Hi-Fi PWA player">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
     <title>AURORA AUDIO | 完美音質終極引擎</title>
     
     <!-- 外部依賴 -->
@@ -286,6 +290,41 @@
             #main-visualizer-wrap { min-height: 0; }
         }
 
+        /* --- PWA player workspace --- */
+        #pwa-dock { display: grid; grid-template-columns: 1.35fr 1fr; gap: 12px; }
+        .pwa-card { min-width: 0; }
+        .pwa-card h3 { letter-spacing: .08em; }
+        .pwa-track-list { display: flex; flex-direction: column; gap: 6px; max-height: 190px; overflow-y: auto; }
+        .pwa-track { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(255,255,255,.08); border-radius: 10px; background: rgba(0,0,0,.28); }
+        .pwa-track.active { border-color: rgba(0,240,255,.65); background: rgba(0,240,255,.1); }
+        .pwa-track button { min-height: 34px; width: 34px; padding: 0; }
+        .pwa-eq { display: inline-flex; align-items: end; gap: 2px; height: 18px; }
+        .pwa-eq i { display: block; width: 3px; height: 6px; background: var(--aurora-blue); border-radius: 2px; }
+        .pwa-track.active .pwa-eq i { animation: pwa-eq .75s ease-in-out infinite alternate; }
+        .pwa-track.active .pwa-eq i:nth-child(2) { animation-delay: .15s; height: 13px; }
+        .pwa-track.active .pwa-eq i:nth-child(3) { animation-delay: .3s; height: 9px; }
+        @keyframes pwa-eq { to { transform: scaleY(.35); opacity: .45; } }
+        .pwa-cover { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; background: radial-gradient(circle, #00f0ff, #b13eff 52%, #050505); }
+        .pwa-transport { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .pwa-transport button { width: 42px; min-height: 42px; border-radius: 50%; }
+        .pwa-transport #pwa-play { width: 54px; min-height: 54px; background: linear-gradient(135deg, #00f0ff, #b13eff); color: #000; }
+        .pwa-control-row { display: flex; align-items: center; gap: 8px; }
+        .pwa-control-row input[type=range] { flex: 1; }
+        .pwa-chip { min-height: 34px !important; padding: 5px 9px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(255,255,255,.06); color: #cbd5e1; font-size: 11px; }
+        .pwa-chip.active { border-color: var(--aurora-blue); color: var(--aurora-blue); background: rgba(0,240,255,.12); }
+        .pwa-tabs { display: flex; gap: 6px; border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom: 8px; }
+        .pwa-tabs button { min-height: 36px; padding: 5px 9px; color: #94a3b8; background: transparent; border: 0; font-size: 11px; }
+        .pwa-tabs button.active { color: var(--aurora-blue); border-bottom: 2px solid var(--aurora-blue); }
+        .pwa-tab-panel { display: none; }
+        .pwa-tab-panel.active { display: block; }
+        #video-preview { width: 100%; max-height: 220px; border-radius: 12px; background: #000; display: none; }
+        @media (max-width: 768px) {
+            #pwa-dock { display: flex; flex-direction: column; gap: 10px; }
+            .pwa-track-list { max-height: 220px; }
+            .pwa-card { padding: 12px; }
+            .pwa-cover { width: 48px; height: 48px; }
+        }
+
         /* --- 視覺化容器 --- */
         #visualization-container {
             position: fixed;
@@ -423,6 +462,22 @@
                         <div class="preset-card" data-preset="crystal">
                             <div class="font-bold text-sm text-green-400">水晶高音</div>
                             <div class="text-[10px] text-gray-500">透亮高音優化</div>
+                        </div>
+                        <div class="preset-card" data-preset="pop">
+                            <div class="font-bold text-sm text-pink-400">流行</div>
+                            <div class="text-[10px] text-gray-500">人聲與低頻平衡</div>
+                        </div>
+                        <div class="preset-card" data-preset="classical">
+                            <div class="font-bold text-sm text-amber-300">古典</div>
+                            <div class="text-[10px] text-gray-500">寬廣自然動態</div>
+                        </div>
+                        <div class="preset-card" data-preset="rock">
+                            <div class="font-bold text-sm text-red-400">搖滾</div>
+                            <div class="text-[10px] text-gray-500">鼓點與吉他衝擊</div>
+                        </div>
+                        <div class="preset-card" data-preset="jazz">
+                            <div class="font-bold text-sm text-emerald-300">爵士獨唱</div>
+                            <div class="text-[10px] text-gray-500">中頻暖度與空氣感</div>
                         </div>
                     </div>
                 </div>
@@ -581,6 +636,71 @@
             </div>
         </div>
 
+        <!-- PWA 播放工作區：背景播放、佇列、收藏、影音與詳細資訊 -->
+        <section id="pwa-dock" aria-label="PWA 播放控制">
+            <div class="pwa-card glass-panel p-4">
+                <div class="flex items-center gap-3 mb-3">
+                    <img id="pwa-cover" class="pwa-cover" alt="專輯封面">
+                    <div class="min-w-0 flex-1">
+                        <div id="pwa-track-title" class="font-tech text-sm text-white truncate">尚未選擇曲目</div>
+                        <div id="pwa-track-artist" class="text-xs text-gray-400 truncate">AURORA AUDIO PRO</div>
+                        <div class="flex gap-1 mt-2 flex-wrap">
+                            <button class="pwa-chip active" data-pwa-mode="repeat-list">列表循環</button>
+                            <button class="pwa-chip" data-pwa-mode="repeat-one">單曲循環</button>
+                            <button class="pwa-chip" data-pwa-mode="shuffle">隨機</button>
+                        </div>
+                    </div>
+                    <button id="pwa-share" class="pwa-chip" aria-label="分享目前歌曲"><i class="fa-solid fa-share-nodes"></i></button>
+                </div>
+                <div class="pwa-control-row text-[10px] text-gray-400">
+                    <span id="pwa-current-time">00:00</span>
+                    <input id="pwa-seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="播放進度">
+                    <span id="pwa-duration">00:00</span>
+                </div>
+                <div class="pwa-transport mt-2">
+                    <button id="pwa-prev" class="pwa-chip" aria-label="上一首"><i class="fa-solid fa-backward-step"></i></button>
+                    <button id="pwa-fade-prev" class="pwa-chip" aria-label="淡出上一首"><i class="fa-solid fa-backward"></i></button>
+                    <button id="pwa-play" aria-label="播放或暫停"><i class="fa-solid fa-play"></i></button>
+                    <button id="pwa-fade-next" class="pwa-chip" aria-label="淡出下一首"><i class="fa-solid fa-forward"></i></button>
+                    <button id="pwa-next" class="pwa-chip" aria-label="下一首"><i class="fa-solid fa-forward-step"></i></button>
+                </div>
+                <div class="pwa-control-row mt-2">
+                    <i class="fa-solid fa-volume-low text-xs text-gray-500"></i>
+                    <input id="pwa-volume" type="range" min="0" max="100" value="80" aria-label="音量">
+                    <i class="fa-solid fa-volume-high text-xs text-gray-500"></i>
+                </div>
+                <video id="video-preview" controls playsinline></video>
+            </div>
+
+            <div class="pwa-card glass-panel p-4">
+                <div class="pwa-tabs" role="tablist">
+                    <button class="active" data-pwa-tab="queue">♫ 音樂庫</button>
+                    <button data-pwa-tab="favorites">★ 收藏</button>
+                    <button data-pwa-tab="info">ⓘ 資訊</button>
+                </div>
+                <div id="pwa-tab-queue" class="pwa-tab-panel active">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-400">待播佇列</span>
+                        <div class="flex gap-1">
+                            <button id="pwa-add-files" class="pwa-chip"><i class="fa-solid fa-plus"></i> 加入歌曲</button>
+                            <button id="pwa-add-video" class="pwa-chip"><i class="fa-solid fa-film"></i> 加入影片</button>
+                        </div>
+                    </div>
+                    <div id="pwa-track-list" class="pwa-track-list"><div class="text-xs text-gray-500 py-3">請先加入音訊或影片檔案</div></div>
+                </div>
+                <div id="pwa-tab-favorites" class="pwa-tab-panel"><div id="pwa-favorites-list" class="pwa-track-list"><div class="text-xs text-gray-500 py-3">尚未收藏曲目</div></div></div>
+                <div id="pwa-tab-info" class="pwa-tab-panel text-xs text-gray-300 space-y-2">
+                    <div><span class="text-gray-500">播放引擎：</span>Web Audio API + Media Session</div>
+                    <div><span class="text-gray-500">背景播放：</span><span id="pwa-background-status">等待音訊</span></div>
+                    <div><span class="text-gray-500">淡出時間：</span><span id="pwa-fade-duration">900ms</span></div>
+                    <div><span class="text-gray-500">AirPlay：</span><button id="pwa-airplay" class="pwa-chip">裝置投放</button> <button id="pwa-install" class="pwa-chip">安裝 App</button></div>
+                    <div class="text-gray-500">提示：iOS 鎖定畫面控制會在開始播放後透過 Media Session 顯示；AirPlay 需使用 Safari 相容裝置。</div>
+                </div>
+            </div>
+        </section>
+
+        <input id="pwa-file-input" type="file" accept="audio/*,video/*" multiple class="hidden">
+
         <!-- 底部狀態欄 -->
         <div id="bottom-status" class="glass-panel p-3 flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-3">
@@ -703,6 +823,7 @@
             initAudioSystem();
             initUIEvents();
             initMobileTabs();
+            initPWAFeatures();
             initVisualization();
             startAnimationLoop();
             updateSystemStatus('完美音質引擎就緒', 'green');
@@ -1107,6 +1228,7 @@
             });
             
             updateSystemStatus(`已添加 ${files.length} 首曲目`, 'cyan');
+            if (typeof renderPwaTrackList === 'function') renderPwaTrackList();
             event.target.value = '';
         }
 
@@ -1118,6 +1240,7 @@
             audio.load();
             
             UI.nowPlaying.textContent = track.name;
+            if (typeof syncPwaTrack === 'function') syncPwaTrack(track);
             
             audio.addEventListener('loadedmetadata', () => {
                 track.duration = audio.duration;
@@ -1536,6 +1659,20 @@
             });
         }
 
+        // 以頻譜能量分布為基礎的快速 EQ 場景；順序對應 60/120/1k/3k/8k/12kHz。
+        const PWA_EQ_SCENES = {
+            pop: [3, 1, 1, 3, 2, 2], classical: [-2, -1, 0, 1, 2, 3],
+            rock: [5, 3, 1, 4, 3, 2], jazz: [2, 1, 3, 2, 1, 2]
+        };
+
+        function applyPwaEqScene(preset) {
+            const gains = PWA_EQ_SCENES[preset];
+            const nodes = AUDIO_STATE.audioChain?.eqNodes || [];
+            if (!gains || !nodes.length) return;
+            gains.forEach((gain, index) => nodes[index]?.gain.setTargetAtTime(gain, AUDIO_STATE.audioContext.currentTime, 0.08));
+            updateActiveEffects([`${getPresetName(preset)} EQ`, 'FFT 頻譜最佳化', '防爆音限制器']);
+        }
+
         // 應用音質預設
         function applyQualityPreset(preset) {
             let params = { loudness: 0, thunderBass: 0, crystalHighs: 0, spatial: 0 };
@@ -1553,6 +1690,18 @@
                 case 'crystal':
                     params = { loudness: 70, thunderBass: 20, crystalHighs: 100, spatial: 80 };
                     break;
+                case 'pop':
+                    params = { loudness: 62, thunderBass: 42, crystalHighs: 52, spatial: 42 };
+                    break;
+                case 'classical':
+                    params = { loudness: 25, thunderBass: 18, crystalHighs: 38, spatial: 78 };
+                    break;
+                case 'rock':
+                    params = { loudness: 52, thunderBass: 76, crystalHighs: 66, spatial: 46 };
+                    break;
+                case 'jazz':
+                    params = { loudness: 44, thunderBass: 30, crystalHighs: 46, spatial: 62 };
+                    break;
             }
             
             // 更新參數
@@ -1569,6 +1718,7 @@
             
             // 應用參數
             applyQualityParameters();
+            applyPwaEqScene(preset);
             
             // 更新音質等級
             const qualityLevel = (
@@ -1587,6 +1737,10 @@
                 case 'vocal': return '人聲增強';
                 case 'bass': return '雷霆低音';
                 case 'crystal': return '水晶高音';
+                case 'pop': return '流行';
+                case 'classical': return '古典';
+                case 'rock': return '搖滾';
+                case 'jazz': return '爵士獨唱';
                 default: return '標準';
             }
         }
@@ -1668,6 +1822,183 @@
                 color === 'gold' ? '#ffcc00' :
                 color === 'yellow' ? '#F59E0B' :
                 color === 'red' ? '#EF4444' : '#6B7280';
+        }
+
+        // ============================================
+        // PWA 播放功能模組
+        // ============================================
+        const PWA_STATE = {
+            mode: 'repeat-list',
+            volume: 0.8,
+            fadeMs: 900,
+            favorites: JSON.parse(localStorage.getItem('aurora-favorites') || '[]'),
+            deferredInstall: null
+        };
+
+        function pwaCoverData(title = 'AURORA') {
+            const safeTitle = String(title).slice(0, 12).replace(/[<&>]/g, '');
+            return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00f0ff"/><stop offset=".52" stop-color="#b13eff"/><stop offset="1" stop-color="#050505"/></linearGradient></defs><rect width="512" height="512" rx="64" fill="#050505"/><circle cx="256" cy="256" r="210" fill="url(#g)" opacity=".72"/><path d="M80 290 Q150 180 220 285 T360 270 T470 220" fill="none" stroke="#fff" stroke-width="10" opacity=".82"/><text x="256" y="420" fill="#fff" font-family="Arial" font-size="34" text-anchor="middle" letter-spacing="5">${safeTitle}</text></svg>`)}`;
+        }
+
+        function initPWAFeatures() {
+            const audio = document.getElementById('audio-player');
+            const fileInput = document.getElementById('pwa-file-input');
+            const video = document.getElementById('video-preview');
+            const seek = document.getElementById('pwa-seek');
+
+            document.getElementById('pwa-play').addEventListener('click', togglePlayPause);
+            document.getElementById('pwa-prev').addEventListener('click', () => pwaMoveTrack(-1, false));
+            document.getElementById('pwa-next').addEventListener('click', () => pwaMoveTrack(1, false));
+            document.getElementById('pwa-fade-prev').addEventListener('click', () => pwaMoveTrack(-1, true));
+            document.getElementById('pwa-fade-next').addEventListener('click', () => pwaMoveTrack(1, true));
+            document.getElementById('pwa-volume').addEventListener('input', e => {
+                PWA_STATE.volume = Number(e.target.value) / 100;
+                audio.volume = PWA_STATE.volume;
+                if (AUDIO_STATE.gainNode) AUDIO_STATE.gainNode.gain.value = PWA_STATE.volume;
+            });
+            document.getElementById('pwa-add-files').addEventListener('click', () => fileInput.click());
+            document.getElementById('pwa-add-video').addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handlePwaFiles);
+            document.getElementById('pwa-share').addEventListener('click', shareCurrentTrack);
+            document.getElementById('pwa-airplay').addEventListener('click', () => {
+                if (video && typeof video.webkitShowPlaybackTargetPicker === 'function') video.webkitShowPlaybackTargetPicker();
+                else updateSystemStatus('請使用 Safari 的 AirPlay 裝置選擇器', 'yellow');
+            });
+            document.getElementById('pwa-install').addEventListener('click', async () => {
+                if (!PWA_STATE.deferredInstall) { updateSystemStatus('請使用瀏覽器的加入主畫面功能', 'yellow'); return; }
+                PWA_STATE.deferredInstall.prompt(); await PWA_STATE.deferredInstall.userChoice; PWA_STATE.deferredInstall = null;
+            });
+
+            document.querySelectorAll('[data-pwa-mode]').forEach(btn => btn.addEventListener('click', () => {
+                PWA_STATE.mode = btn.dataset.pwaMode;
+                document.querySelectorAll('[data-pwa-mode]').forEach(b => b.classList.toggle('active', b === btn));
+                updateSystemStatus(`播放模式：${btn.textContent.trim()}`, 'cyan');
+            }));
+            document.querySelectorAll('[data-pwa-tab]').forEach(btn => btn.addEventListener('click', () => {
+                const tab = btn.dataset.pwaTab;
+                document.querySelectorAll('[data-pwa-tab]').forEach(b => b.classList.toggle('active', b === btn));
+                document.querySelectorAll('.pwa-tab-panel').forEach(panel => panel.classList.toggle('active', panel.id === `pwa-tab-${tab}`));
+            }));
+
+            seek.addEventListener('input', e => {
+                if (Number.isFinite(audio.duration)) audio.currentTime = (Number(e.target.value) / 100) * audio.duration;
+                if (video.src) video.currentTime = audio.currentTime;
+            });
+            audio.addEventListener('play', () => { syncPwaPlayState(true); video?.play().catch(() => {}); });
+            audio.addEventListener('pause', () => { syncPwaPlayState(false); video?.pause(); });
+            audio.addEventListener('timeupdate', () => {
+                if (!Number.isFinite(audio.duration)) return;
+                seek.value = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('pwa-current-time').textContent = formatTime(audio.currentTime);
+                document.getElementById('pwa-duration').textContent = formatTime(audio.duration);
+                if (navigator.mediaSession && navigator.mediaSession.setPositionState && audio.duration > 0) {
+                    try { navigator.mediaSession.setPositionState({ duration: audio.duration, playbackRate: audio.playbackRate || 1, position: Math.min(audio.currentTime, audio.duration) }); } catch (_) {}
+                }
+            });
+            audio.addEventListener('ended', () => {
+                if (PWA_STATE.mode === 'repeat-one') { audio.currentTime = 0; audio.play(); return; }
+                pwaMoveTrack(1, true);
+            });
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setActionHandler('play', () => audio.play());
+                navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+                navigator.mediaSession.setActionHandler('seekbackward', () => { audio.currentTime = Math.max(0, audio.currentTime - 10); });
+                navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 10); });
+                navigator.mediaSession.setActionHandler('previoustrack', () => pwaMoveTrack(-1, true));
+                navigator.mediaSession.setActionHandler('nexttrack', () => pwaMoveTrack(1, true));
+            }
+            window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); PWA_STATE.deferredInstall = event; });
+            if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.warn('PWA service worker:', err));
+            renderPwaTrackList();
+            syncPwaPlayState(false);
+        }
+
+        function handlePwaFiles(event) {
+            Array.from(event.target.files).forEach((file, index) => {
+                const isVideo = file.type.startsWith('video/');
+                const parts = file.name.replace(/\.[^/.]+$/, '').split(' - ');
+                AUDIO_STATE.playlist.push({ id: `${Date.now()}-${index}`, name: parts.pop(), artist: parts.join(' - ') || '本機曲目', url: URL.createObjectURL(file), file, isVideo, duration: 0 });
+            });
+            if (!AUDIO_STATE.currentTrack && AUDIO_STATE.playlist.length) setCurrentTrack(AUDIO_STATE.playlist[0]);
+            renderPwaTrackList();
+            updateSystemStatus(`已加入 ${event.target.files.length} 個媒體`, 'cyan');
+            event.target.value = '';
+        }
+
+        function syncPwaTrack(track) {
+            const audio = document.getElementById('audio-player');
+            const video = document.getElementById('video-preview');
+            document.getElementById('pwa-track-title').textContent = track?.name || '尚未選擇曲目';
+            document.getElementById('pwa-track-artist').textContent = track?.artist || 'AURORA AUDIO PRO';
+            const cover = document.getElementById('pwa-cover');
+            cover.src = track?.cover || pwaCoverData(track?.name || 'AURORA');
+            if (track?.isVideo) { video.src = track.url; video.style.display = 'block'; }
+            else { video.removeAttribute('src'); video.style.display = 'none'; }
+            if (navigator.mediaSession) navigator.mediaSession.metadata = new MediaMetadata({ title: track?.name || 'AURORA AUDIO', artist: track?.artist || 'AURORA AUDIO PRO', album: 'AURORA AUDIO PRO', artwork: [{ src: cover.src, sizes: '512x512', type: 'image/svg+xml' }] });
+            renderPwaTrackList();
+        }
+
+        function renderPwaTrackList() {
+            const list = document.getElementById('pwa-track-list');
+            if (!list) return;
+            if (!AUDIO_STATE.playlist.length) { list.innerHTML = '<div class="text-xs text-gray-500 py-3">請先加入音訊或影片檔案</div>'; return; }
+            list.innerHTML = AUDIO_STATE.playlist.map((track, index) => {
+                const favorite = PWA_STATE.favorites.includes(track.name);
+                return `<div class="pwa-track ${track === AUDIO_STATE.currentTrack ? 'active' : ''}"><span class="pwa-eq"><i></i><i></i><i></i></span><button class="text-left truncate text-xs text-white" data-pwa-play-track="${index}">${track.isVideo ? '▣ ' : ''}${track.name}<small class="block text-gray-500">${track.artist || '本機曲目'}</small></button><button class="pwa-chip ${favorite ? 'active' : ''}" data-pwa-favorite="${index}" aria-label="收藏"><i class="fa-${favorite ? 'solid' : 'regular'} fa-star"></i></button></div>`;
+            }).join('');
+            list.querySelectorAll('[data-pwa-play-track]').forEach(btn => btn.addEventListener('click', () => { setCurrentTrack(AUDIO_STATE.playlist[Number(btn.dataset.pwaPlayTrack)]); document.getElementById('audio-player').play(); }));
+            list.querySelectorAll('[data-pwa-favorite]').forEach(btn => btn.addEventListener('click', () => toggleFavorite(AUDIO_STATE.playlist[Number(btn.dataset.pwaFavorite)])));
+        }
+
+        function toggleFavorite(track) {
+            const i = PWA_STATE.favorites.indexOf(track.name);
+            if (i >= 0) PWA_STATE.favorites.splice(i, 1); else PWA_STATE.favorites.push(track.name);
+            localStorage.setItem('aurora-favorites', JSON.stringify(PWA_STATE.favorites));
+            renderPwaTrackList();
+            const fav = document.getElementById('pwa-favorites-list');
+            fav.innerHTML = PWA_STATE.favorites.length ? PWA_STATE.favorites.map(name => `<div class="pwa-track"><span class="text-yellow-300">★</span><span class="truncate text-xs">${name}</span></div>`).join('') : '<div class="text-xs text-gray-500 py-3">尚未收藏曲目</div>';
+        }
+
+        function pwaMoveTrack(step, fade) {
+            if (!AUDIO_STATE.playlist.length) return;
+            let index = Math.max(0, AUDIO_STATE.playlist.indexOf(AUDIO_STATE.currentTrack));
+            if (PWA_STATE.mode === 'shuffle') index = Math.floor(Math.random() * AUDIO_STATE.playlist.length);
+            else index = (index + step + AUDIO_STATE.playlist.length) % AUDIO_STATE.playlist.length;
+            const next = AUDIO_STATE.playlist[index];
+            if (fade) return fadeToTrack(next);
+            setCurrentTrack(next); document.getElementById('audio-player').play();
+        }
+
+        function fadeToTrack(next) {
+            const audio = document.getElementById('audio-player');
+            if (!next) return;
+            const target = PWA_STATE.volume;
+            const start = audio.volume;
+            const started = performance.now();
+            const fadeOut = now => {
+                const p = Math.min(1, (now - started) / PWA_STATE.fadeMs);
+                audio.volume = start * (1 - p);
+                if (p < 1) requestAnimationFrame(fadeOut);
+                else { audio.pause(); setCurrentTrack(next); audio.volume = 0; audio.play().then(() => fadeIn()).catch(() => { audio.volume = target; }); }
+            };
+            const fadeIn = () => { const t = performance.now(); const step = now => { const p = Math.min(1, (now - t) / PWA_STATE.fadeMs); audio.volume = target * p; if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); };
+            requestAnimationFrame(fadeOut);
+        }
+
+        function syncPwaPlayState(playing) {
+            const button = document.getElementById('pwa-play');
+            if (button) button.innerHTML = `<i class="fa-solid fa-${playing ? 'pause' : 'play'}"></i>`;
+            const status = document.getElementById('pwa-background-status');
+            if (status) status.textContent = playing ? '背景播放已啟用' : '等待音訊';
+            renderPwaTrackList();
+        }
+
+        async function shareCurrentTrack() {
+            const track = AUDIO_STATE.currentTrack;
+            if (!track) return;
+            const data = { title: track.name, text: `${track.name} — ${track.artist || 'AURORA AUDIO PRO'}`, url: location.href };
+            try { if (navigator.share) await navigator.share(data); else await navigator.clipboard.writeText(location.href); updateSystemStatus('分享連結已準備', 'green'); } catch (_) {}
         }
 
         // 初始化完成
