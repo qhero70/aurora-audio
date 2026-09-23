@@ -693,7 +693,7 @@
                     <div><span class="text-gray-500">播放引擎：</span>Web Audio API + Media Session</div>
                     <div><span class="text-gray-500">背景播放：</span><span id="pwa-background-status">等待音訊</span></div>
                     <div><span class="text-gray-500">淡出時間：</span><span id="pwa-fade-duration">900ms</span></div>
-                    <div><span class="text-gray-500">AirPlay：</span><button id="pwa-airplay" class="pwa-chip">裝置投放</button> <button id="pwa-install" class="pwa-chip">安裝 App</button></div>
+                    <div><span class="text-gray-500">影音：</span><button id="pwa-airplay" class="pwa-chip">裝置投放</button> <button id="pwa-pip" class="pwa-chip">子母畫面</button> <button id="pwa-install" class="pwa-chip">安裝 App</button></div>
                     <div class="text-gray-500">提示：iOS 鎖定畫面控制會在開始播放後透過 Media Session 顯示；AirPlay 需使用 Safari 相容裝置。</div>
                 </div>
             </div>
@@ -1863,6 +1863,11 @@
             document.getElementById('pwa-airplay').addEventListener('click', () => {
                 if (video && typeof video.webkitShowPlaybackTargetPicker === 'function') video.webkitShowPlaybackTargetPicker();
                 else updateSystemStatus('請使用 Safari 的 AirPlay 裝置選擇器', 'yellow');
+            });
+            document.getElementById('pwa-pip').addEventListener('click', async () => {
+                if (video && document.pictureInPictureEnabled && video.src) {
+                    try { await video.requestPictureInPicture(); } catch (_) { updateSystemStatus('目前瀏覽器無法啟用子母畫面', 'yellow'); }
+                } else updateSystemStatus('請先加入影片曲目，再使用子母畫面', 'yellow');
             });
             document.getElementById('pwa-install').addEventListener('click', async () => {
                 if (!PWA_STATE.deferredInstall) { updateSystemStatus('請使用瀏覽器的加入主畫面功能', 'yellow'); return; }
