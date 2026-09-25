@@ -318,6 +318,43 @@
         .pwa-tab-panel { display: none; }
         .pwa-tab-panel.active { display: block; }
         #video-preview { width: 100%; max-height: 220px; border-radius: 12px; background: #000; display: none; }
+        /* --- Mobile Hi-Fi shell v4 --- */
+        #mobile-pro-shell { display: none; }
+        .pro-shell { min-height: calc(100dvh - 112px); padding: 10px 2px 86px; }
+        .pro-card { background: linear-gradient(145deg, rgba(17,25,45,.96), rgba(5,8,18,.96)); border: 1px solid rgba(117,235,255,.18); border-radius: 24px; padding: 16px; box-shadow: 0 18px 45px rgba(0,0,0,.35); }
+        .pro-hero { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+        .pro-orb { width:54px; height:54px; border-radius:18px; display:grid; place-items:center; color:#021014; background:linear-gradient(135deg,#65f6ff,#a477ff); box-shadow:0 0 28px rgba(0,240,255,.3); }
+        .pro-kicker { font-size:10px; letter-spacing:.18em; color:#6ee7f9; text-transform:uppercase; }
+        .pro-heading { font-family:Orbitron,sans-serif; font-size:18px; font-weight:800; }
+        .pro-view { display:none; }
+        .pro-view.active { display:block; }
+        .pro-record { min-height:220px; display:grid; place-items:center; text-align:center; border-radius:22px; background:radial-gradient(circle at 50% 38%, rgba(0,240,255,.2), transparent 38%), linear-gradient(160deg,rgba(0,0,0,.42),rgba(24,11,54,.6)); border:1px solid rgba(0,240,255,.14); }
+        .pro-mic { width:92px; height:92px; border-radius:50%; border:1px solid rgba(255,255,255,.35); background:linear-gradient(135deg,#00f0ff,#b13eff); color:#050505; font-size:30px; box-shadow:0 0 0 10px rgba(0,240,255,.08), 0 0 55px rgba(0,240,255,.35); }
+        .pro-mic.recording { animation: pro-pulse 1.1s infinite; background:linear-gradient(135deg,#ff4b7d,#ffcc00); }
+        @keyframes pro-pulse { 50% { transform:scale(1.08); box-shadow:0 0 0 22px rgba(255,51,102,.05),0 0 60px rgba(255,51,102,.5); } }
+        .pro-status { margin-top:12px; font-size:12px; color:#b8c5d9; }
+        .pro-track-row { display:grid; grid-template-columns:44px 1fr auto; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.07); }
+        .pro-track-row:last-child { border-bottom:0; }
+        .pro-thumb { width:44px; height:44px; border-radius:13px; background:linear-gradient(135deg,#00f0ff,#b13eff); }
+        .pro-label { font-size:11px; color:#8fa3bb; }
+        .pro-value { font-size:13px; color:#fff; font-weight:700; }
+        .pro-meter { height:7px; border-radius:99px; background:#131d2d; overflow:hidden; margin-top:7px; }
+        .pro-meter > i { display:block; width:82%; height:100%; background:linear-gradient(90deg,#00f0ff,#b13eff); border-radius:inherit; }
+        .pro-eq-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .pro-eq { padding:12px; background:rgba(255,255,255,.035); border-radius:16px; }
+        .pro-eq input { margin-top:6px; }
+        .pro-nav { position:fixed; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); z-index:80; display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:6px; border-radius:20px; background:rgba(6,11,23,.96); border:1px solid rgba(117,235,255,.2); backdrop-filter:blur(20px); }
+        .pro-nav button { min-height:50px; border:0; border-radius:15px; background:transparent; color:#72839b; font-size:11px; }
+        .pro-nav button i { display:block; font-size:17px; margin-bottom:4px; }
+        .pro-nav button.active { color:#7eefff; background:rgba(0,240,255,.13); }
+        .pro-pill { border:1px solid rgba(255,255,255,.14); border-radius:99px; background:rgba(255,255,255,.05); color:#b9c8d9; padding:8px 11px; font-size:11px; }
+        @media (max-width: 768px) {
+            #mobile-pro-shell { display:block; }
+            #workspace, #bottom-status, .mobile-tabs { display:none !important; }
+            #app-container { padding:8px 8px calc(88px + env(safe-area-inset-bottom)); }
+            #app-container > .glass-panel:first-child { position:relative; top:auto; }
+            #app-container > .glass-panel:first-child .opacity-control { display:none; }
+        }
         @media (max-width: 768px) {
             #pwa-dock { display: flex; flex-direction: column; gap: 10px; }
             .pwa-track-list { max-height: 220px; }
@@ -395,6 +432,46 @@
                 </button>
             </div>
         </div>
+
+        <!-- 手機優先新版主介面：辨識 / 播放 / 歌本 -->
+        <section id="mobile-pro-shell" class="pro-shell">
+            <div class="pro-hero">
+                <div class="pro-orb"><i class="fa-solid fa-wave-square"></i></div>
+                <div><div class="pro-kicker">AURORA HI-FI ENGINE</div><div class="pro-heading">穩定音質工作台</div></div>
+                <span id="pro-output-badge" class="pro-pill" style="margin-left:auto">LIMITER ON</span>
+            </div>
+
+            <div id="pro-view-recognize" class="pro-view active">
+                <div class="pro-card pro-record">
+                    <div>
+                        <button id="pro-recognize-btn" class="pro-mic" aria-label="開始辨識歌曲"><i class="fa-solid fa-microphone"></i></button>
+                        <div id="pro-recognize-status" class="pro-status">點擊開始聆聽 8 秒，從你的歌本與本機曲目辨識</div>
+                        <div id="pro-recognize-meter" class="pro-meter" style="display:none"><i style="width:0%"></i></div>
+                    </div>
+                </div>
+                <div id="pro-match-result" class="pro-card" style="margin-top:12px;display:none">
+                    <div class="pro-label">辨識結果</div><div id="pro-match-name" class="pro-value" style="font-size:18px;margin-top:5px">尚未找到</div>
+                    <div class="pro-label" style="margin-top:4px">本機頻譜指紋相似度 <span id="pro-match-score">0%</span></div>
+                    <button id="pro-add-songbook" class="pro-pill" style="margin-top:12px">＋ 加入歌本</button>
+                </div>
+            </div>
+
+            <div id="pro-view-play" class="pro-view">
+                <div class="pro-card">
+                    <div class="pro-label">NOW PLAYING</div>
+                    <div class="pro-track-row"><div class="pro-thumb"></div><div><div id="pro-now-title" class="pro-value">尚未選擇曲目</div><div id="pro-now-artist" class="pro-label">AURORA AUDIO PRO</div></div><button id="pro-play-toggle" class="pro-pill"><i class="fa-solid fa-play"></i></button></div>
+                    <input id="pro-progress" type="range" min="0" max="100" value="0" aria-label="播放進度">
+                    <div style="display:flex;justify-content:space-between" class="pro-label"><span id="pro-time">00:00</span><span id="pro-duration">00:00</span></div>
+                    <div style="display:flex;justify-content:center;gap:8px;margin-top:12px"><button id="pro-prev" class="pro-pill">上一首</button><button id="pro-next" class="pro-pill">下一首</button><button id="pro-add-media" class="pro-pill">＋ 匯入</button></div>
+                </div>
+                <div class="pro-card" style="margin-top:12px"><div class="pro-label">穩定輸出控制</div><div class="pro-eq-grid" style="margin-top:10px"><label class="pro-eq"><span class="pro-label">低音穩定</span><input id="pro-bass" type="range" min="0" max="100" value="58"><span id="pro-bass-val" class="pro-value">58%</span></label><label class="pro-eq"><span class="pro-label">高音清晰</span><input id="pro-treble" type="range" min="0" max="100" value="52"><span id="pro-treble-val" class="pro-value">52%</span></label></div><div class="pro-label" style="margin-top:10px">安全限幅器：-1 dBTP　｜　動態壓縮：穩定模式</div></div>
+            </div>
+
+            <div id="pro-view-songbook" class="pro-view">
+                <div class="pro-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="pro-label">MY SONGBOOK</div><div class="pro-heading" style="font-size:16px">我的歌本</div></div><button id="pro-songbook-import" class="pro-pill">＋ 匯入曲目</button></div><div id="pro-songbook-list" style="margin-top:10px"></div></div>
+            </div>
+            <nav class="pro-nav" aria-label="手機主功能"><button class="active" data-pro-view="recognize"><i class="fa-solid fa-fingerprint"></i>辨識</button><button data-pro-view="play"><i class="fa-solid fa-headphones"></i>播放</button><button data-pro-view="songbook"><i class="fa-solid fa-book-open"></i>歌本</button></nav>
+        </section>
 
         <!-- 手機底部主導航：保留三個核心工作區，避免長頁面操作迷失 -->
         <nav class="mobile-tabs" aria-label="播放器主功能">
@@ -824,6 +901,7 @@
             initUIEvents();
             initMobileTabs();
             initPWAFeatures();
+            initProMobileUI();
             initVisualization();
             startAnimationLoop();
             updateSystemStatus('完美音質引擎就緒', 'green');
@@ -913,6 +991,14 @@
             compressor.ratio.value = 12;
             compressor.attack.value = 0.003;
             compressor.release.value = 0.25;
+
+            // 安全限幅：避免低音增益與高頻峰值造成爆音，保留穩定輸出餘裕。
+            const limiter = AUDIO_STATE.audioContext.createDynamicsCompressor();
+            limiter.threshold.value = -1;
+            limiter.knee.value = 0;
+            limiter.ratio.value = 20;
+            limiter.attack.value = 0.001;
+            limiter.release.value = 0.08;
             
             // 創建等響度濾波器 (模擬人耳聽覺曲線)
             const loudnessFilter = AUDIO_STATE.audioContext.createBiquadFilter();
@@ -940,6 +1026,8 @@
             // 動態處理
             currentNode.connect(compressor);
             currentNode = compressor;
+            currentNode.connect(limiter);
+            currentNode = limiter;
             
             // 連接到分析器和輸出
             currentNode.connect(AUDIO_STATE.gainNode);
@@ -950,6 +1038,7 @@
             AUDIO_STATE.audioChain = {
                 eqNodes,
                 compressor,
+                limiter,
                 loudnessFilter,
                 reverbNode
             };
@@ -1221,6 +1310,7 @@
                 };
                 
                 AUDIO_STATE.playlist.push(track);
+                makeProFingerprint(file).then(fingerprint => { track.fingerprint = fingerprint; });
                 
                 if (AUDIO_STATE.playlist.length === 1) {
                     setCurrentTrack(track);
@@ -1241,6 +1331,7 @@
             
             UI.nowPlaying.textContent = track.name;
             if (typeof syncPwaTrack === 'function') syncPwaTrack(track);
+            if (typeof syncProTrack === 'function') syncProTrack(track);
             
             audio.addEventListener('loadedmetadata', () => {
                 track.duration = audio.duration;
@@ -1923,7 +2014,9 @@
             Array.from(event.target.files).forEach((file, index) => {
                 const isVideo = file.type.startsWith('video/');
                 const parts = file.name.replace(/\.[^/.]+$/, '').split(' - ');
-                AUDIO_STATE.playlist.push({ id: `${Date.now()}-${index}`, name: parts.pop(), artist: parts.join(' - ') || '本機曲目', url: URL.createObjectURL(file), file, isVideo, duration: 0 });
+                const track = { id: `${Date.now()}-${index}`, name: parts.pop(), artist: parts.join(' - ') || '本機曲目', url: URL.createObjectURL(file), file, isVideo, duration: 0 };
+                AUDIO_STATE.playlist.push(track);
+                if (!isVideo) makeProFingerprint(file).then(fingerprint => { track.fingerprint = fingerprint; });
             });
             if (!AUDIO_STATE.currentTrack && AUDIO_STATE.playlist.length) setCurrentTrack(AUDIO_STATE.playlist[0]);
             renderPwaTrackList();
@@ -2004,6 +2097,114 @@
             if (!track) return;
             const data = { title: track.name, text: `${track.name} — ${track.artist || 'AURORA AUDIO PRO'}`, url: location.href };
             try { if (navigator.share) await navigator.share(data); else await navigator.clipboard.writeText(location.href); updateSystemStatus('分享連結已準備', 'green'); } catch (_) {}
+        }
+
+        // ============================================
+        // 手機辨識／歌本／穩定 Hi-Fi 控制
+        // ============================================
+        const PRO_STATE = { recorder: null, chunks: [], recording: false, match: null, songbook: JSON.parse(localStorage.getItem('aurora-songbook') || '[]') };
+
+        function initProMobileUI() {
+            const mic = document.getElementById('pro-recognize-btn');
+            if (!mic) return;
+            document.querySelectorAll('[data-pro-view]').forEach(btn => btn.addEventListener('click', () => {
+                const name = btn.dataset.proView;
+                document.querySelectorAll('[data-pro-view]').forEach(item => item.classList.toggle('active', item === btn));
+                document.querySelectorAll('.pro-view').forEach(view => view.classList.toggle('active', view.id === `pro-view-${name}`));
+                if (name === 'songbook') renderProSongbook();
+            }));
+            mic.addEventListener('click', startProRecognition);
+            document.getElementById('pro-add-songbook').addEventListener('click', addCurrentToSongbook);
+            document.getElementById('pro-play-toggle').addEventListener('click', togglePlayPause);
+            document.getElementById('pro-prev').addEventListener('click', () => pwaMoveTrack(-1, true));
+            document.getElementById('pro-next').addEventListener('click', () => pwaMoveTrack(1, true));
+            document.getElementById('pro-add-media').addEventListener('click', () => document.getElementById('pwa-file-input').click());
+            document.getElementById('pro-songbook-import').addEventListener('click', () => document.getElementById('pwa-file-input').click());
+            document.getElementById('pro-progress').addEventListener('input', e => { const audio = document.getElementById('audio-player'); if (audio.duration) audio.currentTime = Number(e.target.value) / 100 * audio.duration; });
+            [['pro-bass', 0, 'pro-bass-val'], ['pro-treble', 5, 'pro-treble-val']].forEach(([id, node, valueId]) => document.getElementById(id).addEventListener('input', e => {
+                document.getElementById(valueId).textContent = `${e.target.value}%`;
+                const filter = AUDIO_STATE.audioChain?.eqNodes?.[node];
+                if (filter && AUDIO_STATE.audioContext) filter.gain.setTargetAtTime((Number(e.target.value) - 50) * (node === 0 ? .16 : .1), AUDIO_STATE.audioContext.currentTime, .06);
+            }));
+            document.getElementById('audio-player').addEventListener('timeupdate', syncProProgress);
+            renderProSongbook();
+        }
+
+        async function startProRecognition() {
+            if (PRO_STATE.recording) return;
+            const status = document.getElementById('pro-recognize-status');
+            const meter = document.getElementById('pro-recognize-meter');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+                const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+                PRO_STATE.recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+                PRO_STATE.chunks = []; PRO_STATE.recording = true;
+                document.getElementById('pro-recognize-btn').classList.add('recording');
+                meter.style.display = 'block'; meter.firstElementChild.style.width = '0%';
+                status.textContent = '正在聆聽… 請保持音樂清楚播放';
+                PRO_STATE.recorder.ondataavailable = e => e.data.size && PRO_STATE.chunks.push(e.data);
+                PRO_STATE.recorder.onstop = async () => {
+                    stream.getTracks().forEach(track => track.stop());
+                    document.getElementById('pro-recognize-btn').classList.remove('recording');
+                    const blob = new Blob(PRO_STATE.chunks, { type: PRO_STATE.recorder.mimeType || 'audio/webm' });
+                    status.textContent = '正在建立頻譜指紋…';
+                    const fingerprint = await makeProFingerprint(blob);
+                    const result = await findProMatch(fingerprint);
+                    PRO_STATE.match = result;
+                    document.getElementById('pro-match-result').style.display = 'block';
+                    document.getElementById('pro-match-name').textContent = result ? result.name : '未在本機歌本找到';
+                    document.getElementById('pro-match-score').textContent = result ? `${Math.round(result.score * 100)}%` : '—';
+                    status.textContent = result ? '完成辨識：以本機歌本進行比對' : '完成分析；請將曲目加入歌本後再辨識';
+                    meter.style.display = 'none';
+                };
+                PRO_STATE.recorder.start();
+                const started = performance.now();
+                const tick = now => { const p = Math.min(1, (now - started) / 8000); meter.firstElementChild.style.width = `${p * 100}%`; if (p < 1 && PRO_STATE.recording) requestAnimationFrame(tick); else if (PRO_STATE.recording) { PRO_STATE.recording = false; PRO_STATE.recorder.stop(); } };
+                requestAnimationFrame(tick);
+            } catch (error) { status.textContent = '無法使用麥克風，請允許瀏覽器的錄音權限'; updateSystemStatus('辨識需要麥克風權限', 'yellow'); }
+        }
+
+        async function makeProFingerprint(blob) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const buffer = await ctx.decodeAudioData(await blob.arrayBuffer());
+                const data = buffer.getChannelData(0); const bands = 32; const size = Math.max(1, Math.floor(data.length / bands));
+                const values = Array.from({ length: bands }, (_, i) => { let sum = 0; const end = Math.min(data.length, (i + 1) * size); for (let j = i * size; j < end; j += 4) sum += data[j] * data[j]; return Math.sqrt(sum / Math.max(1, Math.floor((end - i * size) / 4))); });
+                const peak = Math.max(...values, 0.0001); await ctx.close(); return values.map(v => Math.round(v / peak * 100));
+            } catch (_) { return null; }
+        }
+
+        async function findProMatch(fingerprint) {
+            if (!fingerprint) return null;
+            const candidates = [...PRO_STATE.songbook, ...AUDIO_STATE.playlist.filter(track => track.fingerprint)];
+            let best = null;
+            candidates.forEach(item => { const fp = item.fingerprint; if (!fp || fp.length !== fingerprint.length) return; const distance = fp.reduce((sum, value, i) => sum + Math.abs(value - fingerprint[i]), 0) / (fp.length * 100); const score = Math.max(0, 1 - distance); if (!best || score > best.score) best = { ...item, score }; });
+            return best && best.score >= .58 ? best : null;
+        }
+
+        function addCurrentToSongbook() {
+            const track = AUDIO_STATE.currentTrack || PRO_STATE.match;
+            if (!track) return updateSystemStatus('請先選擇曲目或完成辨識', 'yellow');
+            if (!PRO_STATE.songbook.some(item => item.name === track.name)) { PRO_STATE.songbook.unshift({ name: track.name, artist: track.artist || '本機曲目', fingerprint: track.fingerprint || null, addedAt: Date.now() }); localStorage.setItem('aurora-songbook', JSON.stringify(PRO_STATE.songbook.slice(0, 100))); }
+            renderProSongbook(); updateSystemStatus('已加入我的歌本', 'green');
+        }
+
+        function renderProSongbook() {
+            const list = document.getElementById('pro-songbook-list'); if (!list) return;
+            list.innerHTML = PRO_STATE.songbook.length ? PRO_STATE.songbook.map((item, index) => `<div class="pro-track-row"><div class="pro-thumb"></div><div><div class="pro-value">${item.name}</div><div class="pro-label">${item.artist || '本機曲目'}</div></div><button class="pro-pill" data-pro-song="${index}">播放</button></div>`).join('') : '<div class="pro-label" style="padding:24px 0;text-align:center">你的歌本還是空的，先匯入曲目或完成一次辨識。</div>';
+            list.querySelectorAll('[data-pro-song]').forEach(button => button.addEventListener('click', () => { const item = PRO_STATE.songbook[Number(button.dataset.proSong)]; const track = AUDIO_STATE.playlist.find(candidate => candidate.name === item.name); if (track) { setCurrentTrack(track); document.getElementById('audio-player').play(); } else updateSystemStatus('歌本只保存曲目資料，請重新匯入原始音訊', 'yellow'); }));
+        }
+
+        function syncProTrack(track) {
+            if (!track) return;
+            document.getElementById('pro-now-title').textContent = track.name || '未命名曲目';
+            document.getElementById('pro-now-artist').textContent = track.artist || '本機曲目';
+        }
+
+        function syncProProgress() {
+            const audio = document.getElementById('audio-player'); if (!audio || !audio.duration) return;
+            document.getElementById('pro-progress').value = audio.currentTime / audio.duration * 100;
+            document.getElementById('pro-time').textContent = formatTime(audio.currentTime); document.getElementById('pro-duration').textContent = formatTime(audio.duration);
         }
 
         // 初始化完成
