@@ -333,6 +333,17 @@
         .pro-mic.recording { animation: pro-pulse 1.1s infinite; background:linear-gradient(135deg,#ff4b7d,#ffcc00); }
         @keyframes pro-pulse { 50% { transform:scale(1.08); box-shadow:0 0 0 22px rgba(255,51,102,.05),0 0 60px rgba(255,51,102,.5); } }
         .pro-status { margin-top:12px; font-size:12px; color:#b8c5d9; }
+        .pro-recognition-tools { display:flex; justify-content:center; gap:7px; flex-wrap:wrap; margin-top:12px; }
+        .pro-signal { display:flex; align-items:end; justify-content:center; gap:3px; height:28px; margin-top:12px; }
+        .pro-signal i { width:4px; height:7px; border-radius:3px; background:#62f4ff; opacity:.35; }
+        .pro-signal.live i { animation: pro-signal 720ms ease-in-out infinite alternate; opacity:1; }
+        .pro-signal.live i:nth-child(2n) { animation-delay:120ms; } .pro-signal.live i:nth-child(3n) { animation-delay:240ms; }
+        @keyframes pro-signal { to { height:26px; background:#b28cff; } }
+        .pro-config { display:none; margin-top:10px; padding:12px; border-radius:16px; background:rgba(255,255,255,.04); text-align:left; }
+        .pro-config.open { display:block; }
+        .pro-config input, .pro-config select { width:100%; min-height:38px; margin-top:5px; border-radius:10px; border:1px solid rgba(255,255,255,.14); background:#0a1020; color:#fff; padding:8px; }
+        .pro-history { margin-top:12px; }
+        .pro-history-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.07); }
         .pro-track-row { display:grid; grid-template-columns:44px 1fr auto; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.07); }
         .pro-track-row:last-child { border-bottom:0; }
         .pro-thumb { width:44px; height:44px; border-radius:13px; background:linear-gradient(135deg,#00f0ff,#b13eff); }
@@ -445,15 +456,21 @@
                 <div class="pro-card pro-record">
                     <div>
                         <button id="pro-recognize-btn" class="pro-mic" aria-label="開始辨識歌曲"><i class="fa-solid fa-microphone"></i></button>
-                        <div id="pro-recognize-status" class="pro-status">點擊開始聆聽 8 秒，從你的歌本與本機曲目辨識</div>
+                        <div id="pro-recognize-status" class="pro-status">點擊開始聆聽 12 秒，雲端辨識優先、離線自動回退</div>
+                        <div id="pro-recognize-countdown" class="pro-kicker" style="margin-top:8px">READY</div>
+                        <div id="pro-signal" class="pro-signal"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="pro-recognition-tools"><span id="pro-provider-badge" class="pro-pill">LOCAL FALLBACK</span><button id="pro-recognition-settings" class="pro-pill">辨識設定</button></div>
+                        <div id="pro-recognition-config" class="pro-config"><label class="pro-label">辨識路徑<select id="pro-provider"><option value="auto">雲端優先＋本機回退</option><option value="audd">只使用 AudD 雲端</option><option value="local">只使用本機指紋</option></select></label><label class="pro-label" style="display:block;margin-top:10px">AudD API Token<input id="pro-audd-token" type="password" autocomplete="off" placeholder="貼上你的 AudD token"></label><div class="pro-label" style="margin-top:8px">Token 只保存在此瀏覽器的 Local Storage；純靜態網站無法安全隱藏第三方金鑰。<a href="https://dashboard.audd.io/" target="_blank" rel="noreferrer" style="color:#70efff">取得 Token</a></div><button id="pro-save-recognition" class="pro-pill" style="margin-top:10px">儲存設定</button></div>
                         <div id="pro-recognize-meter" class="pro-meter" style="display:none"><i style="width:0%"></i></div>
                     </div>
                 </div>
                 <div id="pro-match-result" class="pro-card" style="margin-top:12px;display:none">
                     <div class="pro-label">辨識結果</div><div id="pro-match-name" class="pro-value" style="font-size:18px;margin-top:5px">尚未找到</div>
-                    <div class="pro-label" style="margin-top:4px">本機頻譜指紋相似度 <span id="pro-match-score">0%</span></div>
+                    <div id="pro-match-meta" class="pro-label" style="margin-top:4px">辨識來源：本機指紋　｜　信心分數 <span id="pro-match-score">0%</span></div>
+                    <div id="pro-match-links" class="pro-recognition-tools" style="justify-content:flex-start"></div>
                     <button id="pro-add-songbook" class="pro-pill" style="margin-top:12px">＋ 加入歌本</button>
                 </div>
+                <div class="pro-card pro-history"><div style="display:flex;justify-content:space-between;align-items:center"><div class="pro-label">最近辨識</div><button id="pro-clear-history" class="pro-pill">清除</button></div><div id="pro-recognition-history"></div></div>
             </div>
 
             <div id="pro-view-play" class="pro-view">
@@ -2153,7 +2170,7 @@
         // ============================================
         // 手機辨識／歌本／穩定 Hi-Fi 控制
         // ============================================
-        const PRO_STATE = { recorder: null, chunks: [], recording: false, match: null, songbook: JSON.parse(localStorage.getItem('aurora-songbook') || '[]') };
+        const PRO_STATE = { recorder: null, chunks: [], recording: false, match: null, songbook: JSON.parse(localStorage.getItem('aurora-songbook') || '[]'), provider: localStorage.getItem('aurora-recognition-provider') || 'auto', auddToken: localStorage.getItem('aurora-audd-token') || '', history: JSON.parse(localStorage.getItem('aurora-recognition-history') || '[]') };
 
         function initProMobileUI() {
             const mic = document.getElementById('pro-recognize-btn');
@@ -2165,6 +2182,11 @@
                 if (name === 'songbook') renderProSongbook();
             }));
             mic.addEventListener('click', startProRecognition);
+            document.getElementById('pro-recognition-settings').addEventListener('click', () => document.getElementById('pro-recognition-config').classList.toggle('open'));
+            document.getElementById('pro-provider').value = PRO_STATE.provider;
+            document.getElementById('pro-audd-token').value = PRO_STATE.auddToken;
+            document.getElementById('pro-save-recognition').addEventListener('click', saveRecognitionSettings);
+            document.getElementById('pro-clear-history').addEventListener('click', () => { PRO_STATE.history = []; localStorage.removeItem('aurora-recognition-history'); renderRecognitionHistory(); });
             document.getElementById('pro-add-songbook').addEventListener('click', addCurrentToSongbook);
             document.getElementById('pro-play-toggle').addEventListener('click', togglePlayPause);
             document.getElementById('pro-prev').addEventListener('click', () => pwaMoveTrack(-1, true));
@@ -2189,6 +2211,24 @@
             }));
             document.getElementById('audio-player').addEventListener('timeupdate', syncProProgress);
             renderProSongbook();
+            updateRecognitionProviderBadge();
+            renderRecognitionHistory();
+        }
+
+        function saveRecognitionSettings() {
+            PRO_STATE.provider = document.getElementById('pro-provider').value;
+            PRO_STATE.auddToken = document.getElementById('pro-audd-token').value.trim();
+            localStorage.setItem('aurora-recognition-provider', PRO_STATE.provider);
+            if (PRO_STATE.auddToken) localStorage.setItem('aurora-audd-token', PRO_STATE.auddToken); else localStorage.removeItem('aurora-audd-token');
+            updateRecognitionProviderBadge();
+            document.getElementById('pro-recognition-config').classList.remove('open');
+            updateSystemStatus(PRO_STATE.provider === 'local' ? '已切換本機辨識' : '雲端辨識設定已儲存', 'green');
+        }
+
+        function updateRecognitionProviderBadge(active = false) {
+            const badge = document.getElementById('pro-provider-badge');
+            if (!badge) return;
+            badge.textContent = active ? active.toUpperCase() : (PRO_STATE.provider === 'local' ? 'LOCAL ONLY' : PRO_STATE.auddToken ? 'CLOUD READY' : 'LOCAL FALLBACK');
         }
 
         async function startProRecognition() {
@@ -2202,27 +2242,65 @@
                 PRO_STATE.chunks = []; PRO_STATE.recording = true;
                 document.getElementById('pro-recognize-btn').classList.add('recording');
                 meter.style.display = 'block'; meter.firstElementChild.style.width = '0%';
-                status.textContent = '正在聆聽… 請保持音樂清楚播放';
+                status.textContent = PRO_STATE.provider === 'local' ? '正在聆聽… 將使用本機指紋比對' : PRO_STATE.auddToken ? '正在聆聽… 完成後送至 AudD 辨識' : '正在聆聽… 未設定 Token，完成後使用本機回退';
                 PRO_STATE.recorder.ondataavailable = e => e.data.size && PRO_STATE.chunks.push(e.data);
                 PRO_STATE.recorder.onstop = async () => {
                     stream.getTracks().forEach(track => track.stop());
                     document.getElementById('pro-recognize-btn').classList.remove('recording');
                     const blob = new Blob(PRO_STATE.chunks, { type: PRO_STATE.recorder.mimeType || 'audio/webm' });
-                    status.textContent = '正在建立頻譜指紋…';
-                    const fingerprint = await makeProFingerprint(blob);
-                    const result = await findProMatch(fingerprint);
+                    status.textContent = '正在辨識歌曲…';
+                    const result = await recognizeWithBestPath(blob);
                     PRO_STATE.match = result;
                     document.getElementById('pro-match-result').style.display = 'block';
-                    document.getElementById('pro-match-name').textContent = result ? result.name : '未在本機歌本找到';
+                    document.getElementById('pro-match-name').textContent = result ? result.name : '未找到相符歌曲';
                     document.getElementById('pro-match-score').textContent = result ? `${Math.round(result.score * 100)}%` : '—';
-                    status.textContent = result ? '完成辨識：以本機歌本進行比對' : '完成分析；請將曲目加入歌本後再辨識';
+                    document.getElementById('pro-match-meta').innerHTML = result ? `辨識來源：${result.source === 'audd' ? 'AudD 全球曲庫' : '本機指紋'}　｜　信心分數 <span id="pro-match-score">${Math.round(result.score * 100)}%</span>` : '沒有找到相符歌曲';
+                    const links = document.getElementById('pro-match-links'); links.innerHTML = result?.links ? Object.entries(result.links).filter(([, url]) => url).map(([name, url]) => `<a class="pro-pill" href="${url}" target="_blank" rel="noreferrer">${name}</a>`).join('') : '';
+                    status.textContent = result ? `完成辨識：${result.source === 'audd' ? 'AudD 雲端曲庫' : '本機回退'}` : '完成分析；請確認音樂音量或補充歌本';
+                    document.getElementById('pro-recognize-countdown').textContent = 'READY';
+                    document.getElementById('pro-signal').classList.remove('live');
+                    if (result) { PRO_STATE.history.unshift({ name: result.name, artist: result.artist, score: result.score, source: result.source, time: Date.now() }); PRO_STATE.history = PRO_STATE.history.slice(0, 8); localStorage.setItem('aurora-recognition-history', JSON.stringify(PRO_STATE.history)); renderRecognitionHistory(); }
                     meter.style.display = 'none';
                 };
                 PRO_STATE.recorder.start();
                 const started = performance.now();
-                const tick = now => { const p = Math.min(1, (now - started) / 8000); meter.firstElementChild.style.width = `${p * 100}%`; if (p < 1 && PRO_STATE.recording) requestAnimationFrame(tick); else if (PRO_STATE.recording) { PRO_STATE.recording = false; PRO_STATE.recorder.stop(); } };
+                document.getElementById('pro-signal').classList.add('live');
+                const tick = now => { const p = Math.min(1, (now - started) / 12000); meter.firstElementChild.style.width = `${p * 100}%`; document.getElementById('pro-recognize-countdown').textContent = `${Math.max(0, Math.ceil(12 - p * 12))}s LISTENING`; if (p < 1 && PRO_STATE.recording) requestAnimationFrame(tick); else if (PRO_STATE.recording) { PRO_STATE.recording = false; PRO_STATE.recorder.stop(); } };
                 requestAnimationFrame(tick);
             } catch (error) { status.textContent = '無法使用麥克風，請允許瀏覽器的錄音權限'; updateSystemStatus('辨識需要麥克風權限', 'yellow'); }
+        }
+
+        async function recognizeWithBestPath(blob) {
+            if (PRO_STATE.provider !== 'local' && PRO_STATE.auddToken) {
+                try { return await recognizeWithAudD(blob); }
+                catch (error) { console.warn('AudD recognition failed, using local fallback:', error); updateSystemStatus('雲端辨識失敗，改用本機回退', 'yellow'); }
+            }
+            const fingerprint = await makeProFingerprint(blob);
+            const local = await findProMatch(fingerprint);
+            return local ? { ...local, source: 'local' } : null;
+        }
+
+        async function recognizeWithAudD(blob) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 15000);
+            try {
+                const form = new FormData();
+                form.append('api_token', PRO_STATE.auddToken);
+                form.append('file', blob, 'aurora-listen.webm');
+                form.append('return', 'apple_music,spotify,deezer');
+                const response = await fetch('https://api.audd.io/', { method: 'POST', body: form, signal: controller.signal });
+                if (!response.ok) throw new Error(`AudD HTTP ${response.status}`);
+                const payload = await response.json();
+                if (payload.status !== 'success' || !payload.result) throw new Error(payload.error?.error_message || 'No match');
+                const item = payload.result;
+                const links = { Apple: item.apple_music?.url, Spotify: item.spotify?.external_urls?.spotify || item.spotify?.url, Deezer: item.deezer?.link };
+                return { name: item.title || '未命名歌曲', artist: item.artist || '未知藝人', album: item.album || '', score: Number(item.score || item.confidence || 0.92), source: 'audd', links, fingerprint: null };
+            } finally { clearTimeout(timeout); }
+        }
+
+        function renderRecognitionHistory() {
+            const list = document.getElementById('pro-recognition-history'); if (!list) return;
+            list.innerHTML = PRO_STATE.history.length ? PRO_STATE.history.map(item => `<div class="pro-history-item"><div class="pro-thumb"></div><div style="flex:1;min-width:0"><div class="pro-value" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</div><div class="pro-label">${item.artist || '未知藝人'} · ${item.source === 'audd' ? 'AudD' : '本機'} · ${Math.round(item.score * 100)}%</div></div><div class="pro-label">${new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div></div>`).join('') : '<div class="pro-label" style="padding:18px 0;text-align:center">尚無辨識紀錄</div>';
         }
 
         async function makeProFingerprint(blob) {
