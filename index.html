@@ -464,7 +464,7 @@
                     <div style="display:flex;justify-content:space-between" class="pro-label"><span id="pro-time">00:00</span><span id="pro-duration">00:00</span></div>
                     <div style="display:flex;justify-content:center;gap:8px;margin-top:12px"><button id="pro-prev" class="pro-pill">上一首</button><button id="pro-next" class="pro-pill">下一首</button><button id="pro-add-media" class="pro-pill">＋ 匯入</button></div>
                 </div>
-                <div class="pro-card" style="margin-top:12px"><div class="pro-label">穩定輸出控制</div><div class="pro-eq-grid" style="margin-top:10px"><label class="pro-eq"><span class="pro-label">低音穩定</span><input id="pro-bass" type="range" min="0" max="100" value="58"><span id="pro-bass-val" class="pro-value">58%</span></label><label class="pro-eq"><span class="pro-label">高音清晰</span><input id="pro-treble" type="range" min="0" max="100" value="52"><span id="pro-treble-val" class="pro-value">52%</span></label></div><div class="pro-label" style="margin-top:10px">安全限幅器：-1 dBTP　｜　動態壓縮：穩定模式</div></div>
+                <div class="pro-card" style="margin-top:12px"><div class="pro-label">穩定輸出控制</div><div class="pro-eq-grid" style="margin-top:10px"><label class="pro-eq"><span class="pro-label">低音穩定</span><input id="pro-bass" type="range" min="0" max="100" value="58"><span id="pro-bass-val" class="pro-value">58%</span></label><label class="pro-eq"><span class="pro-label">高音清晰</span><input id="pro-treble" type="range" min="0" max="100" value="52"><span id="pro-treble-val" class="pro-value">52%</span></label></div><div class="pro-label" style="margin-top:14px">進階殘響與空間</div><div class="pro-eq-grid" style="margin-top:8px"><label class="pro-eq"><span class="pro-label">殘響濕度 <b id="pro-reverb-val" class="pro-value">18%</b></span><input id="pro-reverb" type="range" min="0" max="60" value="18"></label><label class="pro-eq"><span class="pro-label">房間尺寸 <b id="pro-room-val" class="pro-value">42%</b></span><input id="pro-room" type="range" min="0" max="100" value="42"></label><label class="pro-eq"><span class="pro-label">Pre-delay <b id="pro-predelay-val" class="pro-value">24ms</b></span><input id="pro-predelay" type="range" min="0" max="80" value="24"></label><label class="pro-eq"><span class="pro-label">空間寬度 <b id="pro-width-val" class="pro-value">65%</b></span><input id="pro-width" type="range" min="0" max="100" value="65"></label></div><div class="pro-label" style="margin-top:10px">安全限幅器：-1 dBTP　｜　乾聲優先混合　｜　動態壓縮：穩定模式</div></div>
             </div>
 
             <div id="pro-view-songbook" class="pro-view">
@@ -1007,8 +1007,17 @@
             loudnessFilter.gain.value = 0;
             loudnessFilter.Q.value = 0.7;
             
-            // 創建混響效果
+            // 進階殘響：預延遲 + 程序化立體聲 IR + 乾濕混合，避免外部音訊資源造成延遲。
             const reverbNode = AUDIO_STATE.audioContext.createConvolver();
+            const reverbPreDelay = AUDIO_STATE.audioContext.createDelay(0.08);
+            const reverbWet = AUDIO_STATE.audioContext.createGain();
+            const reverbDry = AUDIO_STATE.audioContext.createGain();
+            const spacePanner = AUDIO_STATE.audioContext.createStereoPanner();
+            reverbWet.gain.value = 0.18;
+            reverbDry.gain.value = 0.82;
+            reverbPreDelay.delayTime.value = 0.024;
+            spacePanner.pan.value = 0;
+            reverbNode.buffer = createReverbImpulse(AUDIO_STATE.audioContext, 1.65, 2.4);
             
             // 連接處理鏈
             let currentNode = AUDIO_STATE.audioSource;
@@ -1026,7 +1035,14 @@
             // 動態處理
             currentNode.connect(compressor);
             currentNode = compressor;
-            currentNode.connect(limiter);
+            // 分成乾聲與殘響聲，最後再回到安全限幅器。
+            currentNode.connect(reverbDry);
+            currentNode.connect(reverbPreDelay);
+            reverbPreDelay.connect(reverbNode);
+            reverbNode.connect(spacePanner);
+            spacePanner.connect(reverbWet);
+            reverbDry.connect(limiter);
+            reverbWet.connect(limiter);
             currentNode = limiter;
             
             // 連接到分析器和輸出
@@ -1040,8 +1056,41 @@
                 compressor,
                 limiter,
                 loudnessFilter,
-                reverbNode
+                reverbNode,
+                reverbPreDelay,
+                reverbWet,
+                reverbDry,
+                spacePanner,
+                reverbSettings: { wet: 0.18, room: 0.42, preDelay: 0.024, width: 0.65 }
             };
+        }
+
+        function createReverbImpulse(ctx, seconds, decay) {
+            const length = Math.max(1, Math.floor(ctx.sampleRate * seconds));
+            const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+            for (let channel = 0; channel < 2; channel++) {
+                const data = impulse.getChannelData(channel);
+                for (let i = 0; i < length; i++) {
+                    const envelope = Math.pow(1 - i / length, decay);
+                    data[i] = (Math.random() * 2 - 1) * envelope * (channel === 0 ? 1 : 0.94);
+                }
+            }
+            return impulse;
+        }
+
+        function applyReverbSettings(settings = {}) {
+            const chain = AUDIO_STATE.audioChain;
+            const ctx = AUDIO_STATE.audioContext;
+            if (!chain || !ctx) return;
+            const next = { ...chain.reverbSettings, ...settings };
+            chain.reverbSettings = next;
+            const wet = Math.min(0.55, Math.max(0, next.wet));
+            chain.reverbWet.gain.setTargetAtTime(wet, ctx.currentTime, 0.06);
+            chain.reverbDry.gain.setTargetAtTime(1 - wet * 0.72, ctx.currentTime, 0.06);
+            chain.reverbPreDelay.delayTime.setTargetAtTime(Math.min(0.08, Math.max(0, next.preDelay)), ctx.currentTime, 0.06);
+            chain.spacePanner.pan.setTargetAtTime((Math.min(1, Math.max(0, next.width)) - 0.5) * 0.5, ctx.currentTime, 0.08);
+            const seconds = 0.65 + Math.min(1, Math.max(0, next.room)) * 2.4;
+            chain.reverbNode.buffer = createReverbImpulse(ctx, seconds, 1.7 + (1 - next.room) * 1.8);
         }
 
         // ============================================
@@ -1761,6 +1810,8 @@
             const nodes = AUDIO_STATE.audioChain?.eqNodes || [];
             if (!gains || !nodes.length) return;
             gains.forEach((gain, index) => nodes[index]?.gain.setTargetAtTime(gain, AUDIO_STATE.audioContext.currentTime, 0.08));
+            const roomProfiles = { pop: { wet: 0.12, room: 0.28, preDelay: 0.016, width: 0.56 }, classical: { wet: 0.28, room: 0.82, preDelay: 0.034, width: 0.82 }, rock: { wet: 0.1, room: 0.35, preDelay: 0.012, width: 0.62 }, jazz: { wet: 0.2, room: 0.55, preDelay: 0.026, width: 0.72 } };
+            if (roomProfiles[preset]) applyReverbSettings(roomProfiles[preset]);
             updateActiveEffects([`${getPresetName(preset)} EQ`, 'FFT 頻譜最佳化', '防爆音限制器']);
         }
 
@@ -2125,6 +2176,16 @@
                 document.getElementById(valueId).textContent = `${e.target.value}%`;
                 const filter = AUDIO_STATE.audioChain?.eqNodes?.[node];
                 if (filter && AUDIO_STATE.audioContext) filter.gain.setTargetAtTime((Number(e.target.value) - 50) * (node === 0 ? .16 : .1), AUDIO_STATE.audioContext.currentTime, .06);
+            }));
+            const spatialControls = [
+                ['pro-reverb', 'pro-reverb-val', value => `${value}%`, value => ({ wet: Number(value) / 100 })],
+                ['pro-room', 'pro-room-val', value => `${value}%`, value => ({ room: Number(value) / 100 })],
+                ['pro-predelay', 'pro-predelay-val', value => `${value}ms`, value => ({ preDelay: Number(value) / 1000 })],
+                ['pro-width', 'pro-width-val', value => `${value}%`, value => ({ width: Number(value) / 100 })]
+            ];
+            spatialControls.forEach(([id, valueId, label, toSettings]) => document.getElementById(id).addEventListener('input', e => {
+                document.getElementById(valueId).textContent = label(e.target.value);
+                applyReverbSettings(toSettings(e.target.value));
             }));
             document.getElementById('audio-player').addEventListener('timeupdate', syncProProgress);
             renderProSongbook();
