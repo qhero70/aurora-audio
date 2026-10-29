@@ -51,7 +51,7 @@ function 顯示頁面(名稱,寫入歷史=true) {
     }
   }
   if(寫入歷史 && location.hash !== '#' + encodeURIComponent(名稱)) history.pushState({頁面:名稱},'', '#' + encodeURIComponent(名稱));
-  window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo({top:0,behavior:'auto'});
   if (名稱 === '音樂' && !音訊.paused) 開始頻譜();
   else 停止頻譜();
 }
@@ -301,7 +301,7 @@ function 建立曲目列表(){
     載入歌曲(目前歌曲);
     顯示訊息('已載入 '+已配對+' 首本機歌曲，可直接播放。');
   }else 顯示訊息('歌曲檔名未符合三首正式作品，請選擇原始 MP3。');
-  event.target.value='';
+  事件.target.value='';
 });
 if('mediaSession' in navigator){
   try{
