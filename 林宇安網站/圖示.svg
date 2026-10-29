@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#101922"/><circle cx="256" cy="256" r="192" fill="none" stroke="#b99a75" stroke-width="4"/><path d="M163 290c35-58 74-38 97-82 24-46 58-45 88 0 13 20 29 40 48 44" fill="none" stroke="#e2c49f" stroke-width="9" stroke-linecap="round"/><text x="256" y="358" fill="#e2c49f" text-anchor="middle" font-family="serif" font-size="55" letter-spacing="12">LYA</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="林宇安音樂網站圖示">
+<defs><linearGradient id="晨霧" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#253C78"/><stop offset=".57" stop-color="#2B59C3"/><stop offset="1" stop-color="#D36582"/></linearGradient><radialGradient id="玫瑰"><stop stop-color="#D36582" stop-opacity=".7"/><stop offset="1" stop-color="#FFEECF" stop-opacity="0"/></radialGradient></defs>
+<rect width="512" height="512" rx="112" fill="url(#晨霧)"/>
+<circle cx="383" cy="138" r="165" fill="url(#玫瑰)"/>
+<circle cx="256" cy="256" r="181" fill="#fff" fill-opacity=".08" stroke="#FFEECF" stroke-opacity=".7" stroke-width="3"/>
+<path d="M139 278c41-69 86-35 119-74 27-33 52-42 86 10 15 22 25 35 43 42" fill="none" stroke="#FFEECF" stroke-width="10" stroke-linecap="round"/>
+<text x="256" y="355" font-family="serif" font-size="58" text-anchor="middle" letter-spacing="9" fill="#FFEECF">LYA</text></svg>

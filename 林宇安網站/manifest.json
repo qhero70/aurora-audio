@@ -1,19 +1,30 @@
 {
-  "name": "林宇安｜官方音樂網站",
+  "name": "林宇安｜晨霧微光・官方音樂網站",
   "short_name": "林宇安音樂",
   "lang": "zh-TW",
-  "description": "林宇安 AI 虛擬女歌手・三首原創音樂與藝術寫真",
+  "description": "林宇安原創音樂、MV 與藝術寫真",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f0e8",
-  "theme_color": "#101922",
+  "display_override": [
+    "standalone"
+  ],
+  "theme_color": "#253C78",
+  "background_color": "#253C78",
   "icons": [
     {
       "src": "./圖示.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "聽音樂",
+      "short_name": "音樂",
+      "url": "./#音樂",
+      "description": "直接開啟林宇安三首原創歌曲"
     }
   ]
 }

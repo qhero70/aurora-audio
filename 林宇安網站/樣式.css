@@ -1,1 +1,257 @@
-:root{--墨:#101922;--深:#192632;--米:#f5f0e8;--紙:#eee9e1;--金:#ba9870;--字:#26313a;--輔:#68727b;--邊:#ded7cd;--serif:'Noto Serif TC',serif;--sans:'Noto Sans TC',sans}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--米);color:var(--字);font-family:var(--sans);padding-bottom:110px}button,input{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}.略過導覽{position:absolute;left:-10000px;top:0}.略過導覽:focus{left:8px;background:white;padding:10px;z-index:100}.頂部{height:88px;background:#f8f5ef;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(20px,5vw,90px);border-bottom:1px solid var(--邊);position:sticky;top:0;z-index:15;box-shadow:0 6px 25px #16232e0b}.品牌{display:flex;flex-direction:column;gap:2px;white-space:nowrap}.品牌 strong{font:600 23px var(--serif);letter-spacing:.4em}.品牌 small{color:#9e8165;letter-spacing:.21em;font:11px 'Cormorant Garamond',serif}.導覽{display:flex;align-items:center;gap:clamp(10px,2.6vw,38px);height:100%}.導覽 button{background:transparent;border:0;height:100%;padding:0 5px;color:#64707a;font-size:13px;position:relative;white-space:nowrap}.導覽 button:hover,.導覽 button.選中{color:#1d2935;font-weight:700}.導覽 button.選中:after{content:'';height:2px;background:var(--金);position:absolute;bottom:0;left:8px;right:8px}.分享鈕,.本機鈕{border:1px solid #c6b49e;background:transparent;border-radius:40px;padding:10px 18px;color:#7e6141;white-space:nowrap;font-size:12px}.頁面{max-width:1900px;margin:0 auto}.頁面[hidden]{display:none!important}.英雄版{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(340px,.72fr);min-height:650px}.英雄畫面{position:relative;background:#17212a;min-height:680px;overflow:hidden}.英雄畫面>img{width:100%;height:100%;object-fit:cover;object-position:center 35%;position:absolute}.暗角{position:absolute;inset:0;background:linear-gradient(90deg,#14202bda 0%,#14202b56 55%,transparent 100%),linear-gradient(0deg,#101720aa,transparent 68%)}.英雄文字{position:relative;z-index:1;top:50%;transform:translateY(-45%);color:white;padding:40px clamp(30px,7vw,110px)}.英眉,.小章{font-size:11px;letter-spacing:.22em;font-weight:600;color:var(--金)}.英眉{border-left:2px solid #e1bd90;padding-left:14px;margin-bottom:23px}.英雄文字 h1{font:500 clamp(58px,6vw,114px)/1.3 var(--serif);letter-spacing:.13em;margin:0 0 20px}.英雄文字 h1 span{display:block;font:400 23px 'Cormorant Garamond',serif;letter-spacing:.3em;color:#e1c4a6;margin-top:10px}.英雄文字 p:not(.英眉){line-height:2.3;font-size:15px;letter-spacing:.11em;color:#e8e7e3;margin-bottom:33px}.主鈕{background:#c9a87e;color:#19222a;border:0;border-radius:2px;padding:15px 22px;font-size:13px;letter-spacing:.08em;min-height:46px}.主鈕:hover{background:#e9c9a3}.主鈕 span{padding-left:20px}.右介紹{background:#e8e2d9;padding:clamp(30px,4vw,74px) clamp(25px,4vw,70px);overflow:hidden}.右介紹 h2,.底部序列 h2{font:500 clamp(33px,3vw,53px)/1.6 var(--serif);margin:22px 0;color:#29333d}.右介紹 h2 em{color:#a6825d;font-style:normal}.右介紹>p,.底部序列 p{font-size:13px;line-height:2.2;color:#6b716f}.唱片{margin:27px 0;height:154px;width:154px;border-radius:100%;background:repeating-radial-gradient(circle,#17222e 0 2px,#26313e 3px 4px,#131b25 5px 7px);box-shadow:8px 12px 30px #15203035;display:grid;place-items:center;animation:轉動 23s linear infinite}.唱片芯{background:radial-gradient(circle,#18222d 0 9px,#b88f63 10px 12px,#b89167 13px 39px,#17222e 40px);height:80px;width:80px;border-radius:50%}@keyframes 轉動{to{transform:rotate(360deg)}}.快捷曲目{border-top:1px solid #c7c0b6;margin-top:15px}.快捷曲目 button{width:100%;background:transparent;text-align:left;border:0;border-bottom:1px solid #c7c0b6;display:flex;align-items:center;gap:12px;padding:17px 2px;color:#333c44;font-size:13px}.快捷曲目 button span:first-child{color:#a4886c}.快捷曲目 button span:last-child{margin-left:auto;color:#8a6b49}.文字鈕{margin-top:24px;background:none;border:0;color:#88684d;border-bottom:1px solid #bc9c79;padding:8px 0;font-size:13px}.底部序列{display:grid;grid-template-columns:1.3fr repeat(3,1fr);min-height:270px;background:#f4efe7;gap:12px;padding:34px clamp(20px,5vw,70px)}.底部序列>div{padding:8px}.底部序列 h2{font-size:28px}.底部序列 img{width:100%;height:260px;object-fit:cover;object-position:top}.頁首{padding:65px max(28px,7vw) 35px}.頁首 h1{font:500 clamp(36px,4.3vw,64px) var(--serif);margin:15px 0;color:#1e2d3a}.頁首>p:last-child{color:var(--輔);font-size:14px;line-height:1.9}.音樂版{display:grid;grid-template-columns:minmax(260px,.75fr) minmax(420px,1.4fr);gap:clamp(25px,5vw,95px);padding:0 max(28px,7vw) 45px}.專輯視覺{position:relative;min-height:400px;background:#101b24;box-shadow:16px 18px 35px #101b2430}.專輯視覺 img{width:100%;height:100%;position:absolute;object-fit:cover;object-position:center}.專輯角標{position:absolute;bottom:20px;left:20px;color:white;letter-spacing:.2em;font-size:12px;text-shadow:0 2px 12px black}.功能標題{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 25px}.歌曲列{display:grid;grid-template-columns:50px 1fr 100px 50px;align-items:center;gap:12px;padding:19px 5px;border-top:1px solid var(--邊);min-height:88px}.歌曲列:last-child{border-bottom:1px solid var(--邊)}.歌曲列.正在聽{background:#e7ded3}.歌曲列 .序號{font:25px 'Cormorant Garamond',serif;color:var(--金)}.歌曲列 strong{display:block;font:500 17px var(--serif)}.歌曲列 small{display:block;font-size:11px;color:#879092;margin-top:6px}.歌曲列 .時長{color:#899091;font-size:12px}.歌曲列 button{width:43px;height:43px;border-radius:50%;background:transparent;border:1px solid #c1a788;color:#967453}.歌曲列 button:hover{background:#caa982;color:white}.說明字{font-size:12px;color:#777;line-height:1.85;margin-top:28px}.音效面板{background:#1d2a36;color:#fff;margin:10px max(28px,7vw) 60px;padding:27px;display:grid;grid-template-columns:1fr 2fr;gap:35px}.音效面板 h2{font:24px var(--serif);font-weight:400}.音效控制{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:18px;align-items:center}.音效控制 label{display:flex;flex-direction:column;font-size:12px;gap:12px}.音效控制 output{color:#c9a87e}.重設鈕{background:transparent;border:1px solid #c9a87e;color:#dab88d;padding:12px 14px}.相簿格{padding:0 max(28px,7vw) 70px;display:grid;grid-template-columns:repeat(3,1fr);gap:19px}.相簿格 figure{margin:0;position:relative;min-height:300px;background:#ddd;overflow:hidden}.相簿格 img{width:100%;height:440px;object-fit:cover;object-position:top;transition:transform .6s}.相簿格 img:hover{transform:scale(1.045)}.相簿格 figcaption{position:absolute;bottom:0;left:0;right:0;padding:25px;background:linear-gradient(0deg,#0b141ddb,transparent);color:white;font-size:12px;letter-spacing:.16em}.相簿格 .寬照{grid-column:span 2}.相簿格 .寬照 img{object-position:center 32%}.影片佔位{margin:0 max(28px,7vw) 80px;position:relative;min-height:560px;background:#121d27;display:flex;align-items:center;justify-content:center;color:white}.影片佔位 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.35)}.影片佔位>div{position:relative;text-align:center;padding:30px}.影片佔位 h2{font:42px var(--serif)}.影片佔位 p{line-height:2.2;color:#ddd}.關於格{display:grid;grid-template-columns:1fr 1fr;gap:5vw;padding:70px max(28px,8vw);align-items:center}.關於照片{min-height:620px;background:#ddd}.關於照片 img{height:650px;width:100%;object-fit:cover;object-position:top}.關於內容 h1{font:60px var(--serif);margin:20px 0 0}.英字{font:30px 'Cormorant Garamond',serif;letter-spacing:.3em;color:var(--金);margin-bottom:30px}.關於內容 p{line-height:2.5;color:#626b71;font-size:15px;max-width:490px}.播放器{position:fixed;bottom:0;left:0;right:0;z-index:20;min-height:92px;background:#12202c;color:#fff;display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:center;gap:24px;padding:12px max(18px,3.5vw);box-shadow:0 -6px 25px #0003}.現在歌曲{display:flex;gap:13px;align-items:center;min-width:0}.現在歌曲 img{width:60px;height:60px;object-fit:cover;border-radius:2px}.現在歌曲 div{min-width:0}.現在歌曲 strong{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.現在歌曲 small{display:block;color:#adacac;font-size:11px;margin-top:6px}.播放操作{text-align:center}.播放鍵組{display:flex;justify-content:center;align-items:center;gap:20px}.播放鍵組 button,.聲音控制 button{background:transparent;color:#fff;border:0;font-size:19px;min-width:35px;min-height:35px}.播放鍵組 .播放主鍵{background:#d4b189;color:#14212c;border-radius:50%;width:38px;height:38px;font-size:14px}.進度組{display:flex;gap:10px;align-items:center;margin-top:7px}.進度組 span{color:#9fa7ac;font-size:10px;width:35px}.進度組 input{flex:1}.聲音控制{display:flex;align-items:center;gap:14px;justify-content:flex-end}.聲音控制 span{font-size:11px;color:#b3b9ba}input[type=range]{accent-color:#c9a87e;cursor:pointer;width:100%}.聲音控制 input{width:95px}footer{text-align:center;padding:25px;font-size:10px;letter-spacing:.14em;color:#8d8a84}#訊息{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);padding:11px 22px;background:#293947;color:#fff;border-radius:8px;z-index:30;font-size:13px;box-shadow:0 4px 20px #0004;display:none;max-width:90vw;text-align:center}#訊息.顯示{display:block}@media(max-width:1000px){.英雄版{grid-template-columns:1fr}.英雄畫面{min-height:630px}.右介紹{display:grid;grid-template-columns:1fr 1fr;gap:0 30px;padding:35px}.右介紹 h2,.右介紹>p{grid-column:1}.右介紹 .唱片{grid-column:2;grid-row:1/span 3;place-self:center}.右介紹 .快捷曲目,.右介紹>span:last-of-type,.右介紹>.文字鈕{grid-column:1/-1}.音樂版{grid-template-columns:1fr 1.2fr}.底部序列{grid-template-columns:1fr 1fr}.底部序列 img:last-child{display:none}.音效面板{grid-template-columns:1fr}.關於格{padding:40px;gap:30px}}@media(max-width:680px){body{padding-bottom:133px}.頂部{height:105px;padding:12px 18px 0;display:flex;flex-wrap:wrap;gap:0}.品牌 strong{font-size:17px}.品牌 small{font-size:9px}.分享鈕{font-size:11px;padding:8px 12px}.導覽{order:3;width:100%;height:47px;justify-content:space-between;gap:3px}.導覽 button{font-size:12px;padding:0 2px}.英雄畫面{min-height:630px}.英雄畫面>img{object-position:63% center}.暗角{background:linear-gradient(90deg,#111a24c7,#111a2480),linear-gradient(0deg,#101720ac,transparent)}.英雄文字{padding:35px;top:48%}.英雄文字 h1{font-size:59px}.英雄文字 h1 span{font-size:19px}.右介紹{display:block;padding:33px}.右介紹 h2{font-size:37px}.唱片{height:120px;width:120px}.底部序列{grid-template-columns:1fr 1fr;padding:20px}.底部序列>div{grid-column:1/-1}.底部序列 img{height:180px}.頁首{padding:37px 22px 23px}.頁首 h1{font-size:37px}.音樂版{grid-template-columns:1fr;padding:0 22px 25px;gap:25px}.專輯視覺{min-height:350px}.歌曲列{grid-template-columns:25px 1fr 47px;gap:6px;padding:16px 2px}.歌曲列 .時長{display:none}.歌曲列 strong{font-size:14px}.功能標題{flex-wrap:wrap}.音效面板{margin:12px 20px 30px;padding:19px}.音效控制{grid-template-columns:1fr 1fr}.相簿格{grid-template-columns:1fr 1fr;padding:0 19px 30px;gap:12px}.相簿格 figure{min-height:170px}.相簿格 img{height:260px}.相簿格 .寬照{grid-column:span 2}.相簿格 figcaption{font-size:10px;padding:15px}.影片佔位{min-height:400px;margin:0 20px 30px}.影片佔位 h2{font-size:27px}.關於格{grid-template-columns:1fr;padding:24px}.關於照片{min-height:410px}.關於照片 img{height:430px}.關於內容 h1{font-size:46px}.播放器{min-height:116px;grid-template-columns:1fr 1.2fr;gap:5px 9px;padding:8px 15px calc(8px + env(safe-area-inset-bottom))}.現在歌曲 img{width:43px;height:43px}.現在歌曲 strong{font-size:12px}.現在歌曲 small{font-size:9px}.播放操作{display:contents}.播放鍵組{grid-column:2;grid-row:1;gap:12px}.進度組{grid-column:1/-1;grid-row:2;margin-top:3px}.聲音控制{display:none}#訊息{bottom:140px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+/* 林宇安 V2.0：晨霧微光・電影敘事・柔霧玻璃。所有視覺命名採繁體中文。 */
+:root{
+  --晨光藍:#2B59C3;--夜幕藍:#253C78;--玫瑰粉:#D36582;--奶油白:#FFEECF;--暖霧棕:#C9A690;
+  --深海:#132542;--深夜:#142034;--霧白:#fffaf3;--霧字:#e7e8f5;
+  --黑字:#1b2941;--淺字:#fef5ea;--無障礙焦點:#ffe4aa;
+  --玻璃:rgba(255,255,255,.17);--玻璃線:rgba(255,255,255,.35);
+  --玻璃陰影:0 18px 70px rgba(18,31,58,.18),inset 0 1px 0 rgba(255,255,255,.23);
+  --襯線:'Noto Serif TC',serif;--無襯線:'Noto Sans TC',sans;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#162642}
+body{margin:0;min-height:100vh;overflow-x:clip;font-family:var(--無襯線);color:var(--淺字);padding:0 0 158px;
+  background:
+   radial-gradient(ellipse at 93% 12%,rgba(211,101,130,.22) 0,transparent 39%),
+   radial-gradient(ellipse at 12% 29%,rgba(43,89,195,.32),transparent 37%),
+   radial-gradient(ellipse at 93% 68%,rgba(255,238,207,.13),transparent 38%),
+   linear-gradient(150deg,#233967 0%,#1f355b 40%,#15233c 76%,#27375a 100%);
+}
+body.禁止捲動{overflow:hidden}
+button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+a{color:inherit;text-decoration:none}button,a,input{touch-action:manipulation}
+:focus-visible{outline:3px solid var(--無障礙焦點);outline-offset:4px}
+[hidden]{display:none!important}
+.略過導覽{position:fixed;top:-200px;left:16px;background:#fff;color:#13223d;padding:14px;z-index:200}
+.略過導覽:focus{top:15px}
+.背景光{position:fixed;z-index:0;pointer-events:none;filter:blur(65px);opacity:.6;transform:translateZ(0)}
+.背景光一{width:40vw;height:38vw;min-width:320px;min-height:320px;top:20%;left:-17%;background:radial-gradient(circle,rgba(255,238,207,.16),transparent 68%)}
+.背景光二{width:42vw;height:42vw;min-width:370px;min-height:370px;bottom:12%;right:-18%;background:radial-gradient(circle,rgba(211,101,130,.30),transparent 68%)}
+.霧玻璃{background:var(--玻璃);border:1px solid var(--玻璃線);border-radius:26px;box-shadow:var(--玻璃陰影);-webkit-backdrop-filter:blur(22px) saturate(1.23);backdrop-filter:blur(22px) saturate(1.23)}
+.頂部{position:sticky;z-index:50;top:14px;margin:14px auto 22px;width:min(1300px,calc(100% - 36px));min-height:74px;padding:9px 23px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;
+ border:1px solid rgba(255,255,255,.43);border-radius:28px;box-shadow:0 12px 35px #0d1d3333,inset 0 1px #ffffff4d;
+ -webkit-backdrop-filter:blur(23px) saturate(1.35);backdrop-filter:blur(23px) saturate(1.35);background:rgba(33,50,88,.45)}
+.品牌{white-space:nowrap;display:flex;flex-direction:column;gap:3px;width:max-content}
+.品牌 strong{font:600 21px var(--襯線);letter-spacing:.32em;padding-left:.32em;color:#fff7ef}
+.品牌 small{font:400 11px 'Cormorant Garamond',serif;letter-spacing:.20em;color:#f8dad4}
+.導覽{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}
+.導覽 button{border:1px solid transparent;border-radius:18px;background:transparent;color:#f1ebef;font-size:13px;white-space:nowrap;min-height:44px;padding:10px 16px;transition:background .25s,transform .25s,border .25s,box-shadow .25s}
+.導覽 button:hover{background:rgba(255,238,207,.14);transform:translateY(-1px)}
+.導覽 button.選中{background:linear-gradient(130deg,rgba(211,101,130,.35),rgba(255,238,207,.20));border-color:rgba(255,238,207,.5);box-shadow:0 4px 18px rgba(211,101,130,.17)}
+.分享鈕{justify-self:end;border:1px solid rgba(255,255,255,.4);border-radius:22px;background:rgba(255,255,255,.12);color:var(--淺字);min-height:44px;padding:8px 18px;font-size:12px}
+.分享鈕:hover{background:#ffffff38}
+.頁面{position:relative;z-index:1;width:100%;max-width:1600px;margin:0 auto}
+.頁面[hidden]{display:none!important}
+.眉標{font-size:11px;letter-spacing:.27em;color:#ffbfd0;font-weight:600;line-height:1.8}
+.灰字{color:#ebe6edc9}
+.區段留白{margin:0 auto;padding:85px clamp(18px,6vw,96px)}
+.區段題頭{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:0 0 34px}
+.區段題頭 h2{font:400 clamp(31px,4vw,57px)/1.55 var(--襯線);letter-spacing:.04em;margin:8px 0 12px}
+.區段題頭 h2 span{color:#ffe9cc}.區段題頭 .灰字{font-size:14px;line-height:1.9}
+.線框按鈕{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.10);border:1px solid rgba(255,238,207,.54);border-radius:18px;color:#fff4e9;padding:11px 19px;min-height:45px;font-size:13px;white-space:nowrap;transition:background .2s,transform .2s,box-shadow .2s}
+.線框按鈕:hover{background:#ffeecf36;transform:translateY(-2px);box-shadow:0 8px 30px #08142a26}
+.柔霧按鈕{min-height:48px;border-radius:24px;border:1px solid #ffe2d8b3;color:#fffaf6;background:linear-gradient(110deg,rgba(211,101,130,.54),rgba(120,115,178,.36));padding:13px 27px;box-shadow:0 8px 28px #f7a6b62b,inset 0 1px #ffffff66;transition:transform .2s,background .2s,box-shadow .2s}
+.柔霧按鈕:hover{transform:translateY(-2px);box-shadow:0 10px 38px #f7a6b650}
+.柔霧按鈕 span:first-child{margin-right:8px}.柔霧按鈕 span:last-child{margin-left:18px}
+.英雄版{padding:0 clamp(13px,2.2vw,34px)}
+.英雄畫面{position:relative;min-height:clamp(620px,83svh,860px);border:1px solid rgba(255,255,255,.27);border-radius:32px;overflow:hidden;background:#24314a;isolation:isolate;box-shadow:0 28px 65px #10213d4f}
+.英雄人像{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(.78) contrast(.92)}
+.英雄濾鏡{position:absolute;inset:0;z-index:1;
+ background:
+  radial-gradient(ellipse at 84% 26%,rgba(255,221,197,.33),transparent 47%),
+  radial-gradient(ellipse at 64% 89%,rgba(211,101,130,.4),transparent 42%),
+  linear-gradient(90deg,rgba(15,31,61,.92),rgba(24,41,73,.57) 47%,rgba(37,60,120,.22) 100%),
+  linear-gradient(0deg,#11233cb3,transparent 48%);
+ -webkit-backdrop-filter:blur(1.1px);backdrop-filter:blur(1.1px)}
+.英雄文字{position:absolute;z-index:2;left:clamp(25px,7vw,110px);top:50%;transform:translateY(-47%);width:min(670px,calc(100% - 50px));text-shadow:0 2px 26px #111c3438}
+.英雄文字 .眉標{color:#f7c5cf}
+.主角簽名{font:400 17px var(--襯線);color:#fff1e5;letter-spacing:.32em;margin:23px 0 7px}
+.主角簽名 span{font:16px 'Cormorant Garamond',serif;letter-spacing:.24em;display:inline-block;margin-left:9px}
+.英雄文字 h1{font:400 clamp(43px,5.0vw,78px)/1.57 var(--襯線);letter-spacing:.045em;color:#fff5ec;margin:7px 0 24px}
+.英雄文字 h1 em,.內頁題頭 h1 em{font-style:normal;color:#ffe5d1}
+.英雄文字 .副標{color:#f7eced;line-height:2.3;font-size:15px;letter-spacing:.05em;margin-bottom:29px}
+.英雄頁碼{position:absolute;z-index:2;right:35px;bottom:27px;color:#f5e9e9bc;letter-spacing:.22em;font-size:10px}
+.兩欄曲{display:grid;grid-template-columns:1fr 1fr;gap:25px}
+.唱片卡{min-height:375px;display:flex;align-items:center;justify-content:space-around;gap:20px;overflow:hidden;padding:35px;background:linear-gradient(125deg,#ffe6cf29,#2b59c342)}
+.唱片外觀{flex:none;width:min(290px,38vw);height:min(290px,38vw);border-radius:100%;display:grid;place-items:center;box-shadow:12px 16px 30px #101b3059;background:repeating-radial-gradient(circle,#17253e 0 3px,#283752 4px 5px,#17243c 6px 8px)}
+.唱片內圈{width:31%;height:31%;border-radius:100%;background:radial-gradient(circle,#19243c 0 11%,#d36582 12% 17%,#ffe5ce 18% 77%,#253c78 78% 100%);box-shadow:0 0 0 2px #ffffff24}
+.唱片字{display:flex;flex-direction:column;gap:10px;min-width:120px}.唱片字 span{letter-spacing:.23em;font-size:11px;color:#ffb5ca}.唱片字 strong{font:400 clamp(19px,2vw,31px)/1.6 var(--襯線)}.唱片字 small{font-size:11px;letter-spacing:.14em;color:#f4e6e0b3}
+.曲目卡{padding:30px 36px;background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(253,212,207,.09))}
+.首頁歌曲 button{display:flex;align-items:center;gap:18px;width:100%;color:#fff3f4;background:transparent;border:0;border-bottom:1px solid #ffffff40;text-align:left;min-height:77px;padding:16px 4px;font:15px var(--襯線);transition:padding .2s,background .2s}
+.首頁歌曲 button:hover{padding-left:14px;background:#ffffff15}.首頁歌曲 button span:first-child{font:16px 'Cormorant Garamond';color:#ffc0c4}.首頁歌曲 button span:last-child{margin-left:auto;font:15px var(--無襯線)}
+.情緒章{min-height:500px;padding:80px clamp(32px,9vw,150px);position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(125deg,rgba(12,29,51,.8),rgba(37,60,120,.55));border-block:1px solid #ffffff21}
+.情緒章:before{content:'';z-index:-1;position:absolute;width:540px;height:500px;right:-100px;top:-60px;background:radial-gradient(circle,rgba(211,101,130,.26),transparent 65%);filter:blur(35px)}
+.情緒巨大字{position:absolute;right:-40px;top:-210px;font:500 560px var(--襯線);color:#ffffff06;pointer-events:none}
+.情緒內容{max-width:980px;position:relative}.情緒內容 blockquote{font:400 clamp(25px,3.1vw,48px)/2.0 var(--襯線);margin:26px 0 0;letter-spacing:.09em}
+.情緒內容 blockquote strong{color:#ee9ab2;font-weight:400}
+.首頁寫真格{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.形象小圖{height:clamp(230px,32vw,440px);position:relative;overflow:hidden;padding:0;border:1px solid #ffffff4d;border-radius:24px;background:#1e3455;box-shadow:0 16px 45px #10182b30}
+.形象小圖 img{height:100%;width:100%;object-fit:cover;object-position:top;filter:saturate(.82);transition:transform .65s}.形象小圖:hover img{transform:scale(1.045)}
+.形象小圖:after{content:'';position:absolute;inset:45% 0 0;background:linear-gradient(0deg,#12223bc9,transparent)}
+.形象小圖>span{position:absolute;left:22px;bottom:20px;z-index:1;color:white;letter-spacing:.18em;font-size:11px}
+.影片宣傳{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;min-height:400px;padding:35px;align-items:center}
+.影片敘事{padding:15px 28px}.影片敘事 h2{font:400 clamp(31px,4vw,53px)/1.5 var(--襯線);margin:20px 0}
+.影片敘事 p{line-height:2.1;color:#e9e6eeb5;font-size:14px}.影片敘事 .線框按鈕{margin-top:18px}
+.未公開標記{display:block;font-size:12px;letter-spacing:.15em;color:#fbb7ca;margin-top:26px}
+.影片預視{min-height:310px;position:relative;border:1px solid #ffffff55;border-radius:22px;overflow:hidden;background:#1d2942}
+.影片預視 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;filter:blur(1px) saturate(.75) brightness(.62)}
+.影片預視>span{position:absolute;bottom:22px;left:23px;letter-spacing:.15em;font:24px var(--襯線)}
+.未公開圓圈{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:86px;height:86px;border-radius:100%;border:1px solid #ffe7d3a1;background:#ffffff15;box-shadow:0 0 32px #f9d6d141;color:#fff0dc;font-size:34px;-webkit-backdrop-filter:blur(13px);backdrop-filter:blur(13px)}
+.尾聲{position:relative;text-align:center;padding:130px 20px 170px;min-height:480px;overflow:hidden;background:radial-gradient(ellipse at 50% 90%,rgba(255,192,151,.48),transparent 57%),radial-gradient(ellipse at 60% 85%,rgba(211,101,130,.4),transparent 61%),linear-gradient(155deg,#253c78,#3f3a63 65%,#574c63)}
+.尾聲 h2{font:400 clamp(36px,5vw,74px)/1.75 var(--襯線);letter-spacing:.11em;margin:20px 0}
+.尾聲>p:last-child{color:#f9dee1c7;letter-spacing:.06em}
+.內頁題頭{padding:clamp(48px,7vw,105px) clamp(20px,7vw,110px) 44px}
+.內頁題頭 h1{font:400 clamp(42px,5vw,72px)/1.5 var(--襯線);letter-spacing:.07em;margin:14px 0}
+.內頁題頭>p:last-child{color:#f0e8edce;line-height:2.2;font-size:15px}
+.音樂版{display:grid;grid-template-columns:minmax(250px,.84fr) minmax(430px,1.3fr);gap:28px;padding:0 clamp(20px,6vw,90px)}
+.專輯視覺{position:relative;overflow:hidden;min-height:460px}
+.專輯視覺 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
+.專輯視覺:after{content:'';position:absolute;inset:35% 0 0;background:linear-gradient(0deg,#101c3eac,transparent)}
+.專輯視覺>span{position:absolute;bottom:25px;left:25px;z-index:1;letter-spacing:.17em;font-size:11px}
+.音樂內容{padding:28px 32px;min-width:0}
+.音樂列表頭{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.本機鈕{cursor:pointer;font-size:12px}
+.歌曲列{display:grid;grid-template-columns:42px minmax(0,1fr) 82px 49px;align-items:center;gap:12px;min-height:93px;padding:12px 8px;border-bottom:1px solid #ffffff3d;border-radius:12px}
+.歌曲列.正在聽{background:rgba(255,238,207,.12)}
+.歌曲列 .序號{font:24px 'Cormorant Garamond',serif;color:#ffc9d5}
+.歌曲列 strong{display:block;font:400 clamp(14px,1.45vw,19px)/1.5 var(--襯線)}
+.歌曲列 small{display:block;font-size:11px;color:#f1dfe7ac;margin-top:5px}
+.歌曲列 .時長{font-size:11px;color:#f1dfe7a6}
+.歌曲列 button{width:45px;height:45px;border-radius:50%;border:1px solid #ffeacf99;color:#fff3e6;background:#ffffff1a;font-size:16px}
+.歌曲列 button:hover{background:#d3658280}
+.說明字{font-size:12px;line-height:2;color:#fff1eab0;margin:22px 0 0}
+.音效面板{display:grid;grid-template-columns:minmax(230px,.65fr) minmax(0,1.5fr);gap:30px;margin:28px clamp(20px,6vw,90px) 85px;padding:28px 35px;background:linear-gradient(130deg,rgba(255,255,255,.16),rgba(43,89,195,.17))}
+.音效說明 h2{font:400 27px/1.7 var(--襯線)}.音效說明 p{font-size:12px;line-height:2;color:#f4e6efb6}
+#頻譜畫布{width:100%;height:104px;display:block;border-radius:14px;background:linear-gradient(0deg,#12234650,transparent)}
+.等化控制{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:16px;align-items:end;margin-top:22px}
+.等化控制 label{display:grid;grid-template-columns:1fr auto;gap:7px;font-size:12px}.等化控制 label span{color:#ffbed0}
+.等化控制 input{grid-column:span 2}.等化控制 .線框按鈕{padding-inline:13px}
+input[type=range]{appearance:none;-webkit-appearance:none;background:transparent;height:26px;width:100%;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,#d36582,#ffeecf);border-radius:7px}
+input[type=range]::-moz-range-track{height:4px;background:linear-gradient(90deg,#d36582,#ffeecf);border-radius:7px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;border-radius:100%;background:#fff7ed;border:2px solid #d36582;margin-top:-6px;box-shadow:0 0 10px #d3658240}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:100%;background:#fff7ed;border:2px solid #d36582}
+.寫真控制{display:flex;justify-content:flex-start;gap:13px;flex-wrap:wrap;padding:0 clamp(20px,6vw,90px) 25px}
+.寫真控制 button{min-height:44px;border:1px solid #ffffff55;border-radius:22px;padding:9px 19px;background:#ffffff12;color:#fff0ea}
+.寫真控制 button.分類中{background:#d3658266;border-color:#ffecddc7}
+.相簿格{padding:0 clamp(20px,6vw,90px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.相片卡{position:relative;padding:0;height:400px;border:1px solid #ffffff5c;border-radius:22px;overflow:hidden;background:#253c78;box-shadow:0 12px 40px #0a1c3f3a;min-width:0}
+.相片卡 img{width:100%;height:100%;object-fit:cover;object-position:top;filter:saturate(.83);transition:transform .5s}
+.相片卡:hover img{transform:scale(1.045)}
+.相片卡:after{content:'';position:absolute;inset:48% 0 0;background:linear-gradient(0deg,#122340cb,transparent)}
+.相片卡>span{position:absolute;bottom:20px;left:20px;z-index:1;color:#fff7ef;letter-spacing:.13em;font-size:11px}
+.相片卡.大相片{grid-column:span 2}.相片卡.大相片 img{object-position:center 34%}
+.寫真預告{margin:30px clamp(20px,6vw,90px) 80px;padding:28px 35px}.寫真預告 h2{font:28px var(--襯線);font-weight:400}.寫真預告>p:last-child{font-size:14px;line-height:2.2;color:#f8e8e9bb}
+.照片燈箱{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:45px 65px;background:#0b1728ef;-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px)}
+.照片燈箱 figure{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:100%;max-height:100%}
+.照片燈箱 img{max-width:min(1100px,100%);max-height:calc(100dvh - 155px);object-fit:contain;box-shadow:0 22px 50px #0009}
+.照片燈箱 figcaption{margin-top:14px;font-size:13px;letter-spacing:.13em}
+.照片燈箱 button{position:absolute;z-index:1;min-height:48px;min-width:48px;border:1px solid #ffffff66;border-radius:100%;color:#fff;background:#ffffff24;font-size:27px}
+.燈箱關閉{top:25px;right:28px}.燈箱左{left:15px;top:50%;transform:translateY(-50%)}.燈箱右{right:15px;top:50%;transform:translateY(-50%)}
+.影片卡{margin:0 clamp(20px,6vw,90px) 80px;padding:26px}
+.影片外框{position:relative;aspect-ratio:16/9;background:#172642;border-radius:18px;overflow:hidden;border:1px solid #ffffff38}
+.影片外框>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.4) saturate(.65)}
+.影片外框 video{position:absolute;inset:0;width:100%;height:100%;background:#000;z-index:5}
+.影片敬請期待{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:11px}
+.影片敬請期待 .未公開圓圈{position:static;transform:none;width:74px;height:74px;font-size:25px;margin-bottom:6px}
+.影片敬請期待 h2{font:400 clamp(28px,4vw,50px)/1.4 var(--襯線);margin:6px 0}
+.影片敬請期待 p{font-size:13px;color:#ffdfdce0}.影片下註{color:#fff0ebc3;font-size:13px;line-height:2}
+.關於版{display:grid;grid-template-columns:minmax(280px,1fr) minmax(0,1fr);gap:30px;padding:65px clamp(20px,6vw,90px) 110px;align-items:stretch}
+.關於肖像{overflow:hidden;min-height:590px}.關於肖像 img{width:100%;height:100%;object-fit:cover;object-position:top}
+.關於文字{padding:clamp(28px,5vw,75px);display:flex;flex-direction:column;justify-content:center;align-items:start}
+.關於文字 h1{font:400 clamp(45px,4vw,70px)/1.6 var(--襯線);margin:14px 0 0}
+.英文名{font:28px 'Cormorant Garamond',serif;letter-spacing:.24em;color:#ffbed0;margin-bottom:28px}
+.關於文字 p:not(.眉標){line-height:2.5;font-size:15px;color:#fff2edcf;margin:9px 0}
+.關於文字 .柔霧按鈕{margin-top:30px}
+.播放器{position:fixed;z-index:70;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+ width:min(1090px,calc(100% - 34px));min-height:93px;display:grid;grid-template-columns:minmax(0,1fr) 1.3fr minmax(115px,.72fr);gap:15px;align-items:center;padding:13px 24px;border-radius:25px;
+ background:linear-gradient(115deg,rgba(27,49,92,.74),rgba(66,57,98,.65));box-shadow:0 20px 60px #06162d88,inset 0 1px #ffffff48}
+.現在歌曲{min-width:0;display:flex;align-items:center;gap:12px}.現在歌曲 img{width:58px;height:58px;border-radius:10px;border:1px solid #ffffff5c;object-fit:cover}
+.現在歌曲 div{min-width:0}.現在歌曲 strong{display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font:400 15px var(--襯線)}
+.現在歌曲 small{display:block;margin-top:6px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;color:#f6dce3bd;font-size:10px}
+.播放操作{min-width:0}.播放鍵組{display:flex;justify-content:center;align-items:center;gap:22px}
+.播放鍵組 button,.聲音控制 button{min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent;color:#ffeff0;font-size:18px}
+.播放鍵組 button:hover,.聲音控制 button:hover{background:#ffffff24}
+.播放鍵組 .播放主鍵{width:49px;height:49px;border:1px solid #ffe2e1b8;background:linear-gradient(130deg,#d36582bb,#c9a6906b);color:#fff;box-shadow:0 5px 25px #d3658260;font-size:18px}
+.進度組{display:flex;align-items:center;gap:7px;margin-top:3px}.進度組>span{min-width:36px;color:#ffede3be;font-size:10px;font-variant-numeric:tabular-nums}.進度組 span:last-child{text-align:right}
+.進度組>input{flex:1;min-width:0}
+.聲音控制{display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.聲音控制 .音量標籤{font-size:11px;white-space:nowrap}.聲音控制 input{width:85px;min-width:0}
+.手機音量{display:none}
+.訊息{position:fixed;z-index:130;bottom:140px;left:50%;transform:translateX(-50%);max-width:min(90vw,620px);color:#fff;background:#2a385c;border:1px solid #ffebe086;padding:13px 20px;border-radius:15px;text-align:center;font-size:13px;box-shadow:0 8px 30px #070e2170;display:none;line-height:1.65}
+.訊息.顯示{display:block}
+footer{position:relative;z-index:1;text-align:center;font-size:11px;letter-spacing:.17em;color:#fff0e69f;padding:30px 18px 45px}
+footer span{margin-inline:18px}
+@media(max-width:1050px){
+ .頂部{grid-template-columns:1fr auto;gap:9px}.導覽{grid-column:1/-1;grid-row:2;justify-content:space-around;width:100%}
+ .頂部{min-height:122px}.分享鈕{grid-column:2;grid-row:1}
+ .英雄畫面{min-height:690px}
+ .兩欄曲{grid-template-columns:1fr}.唱片卡{min-height:290px}
+ .音樂版{grid-template-columns:1fr 1.2fr}
+ .音效面板{grid-template-columns:1fr}.關於版{gap:15px}
+ .等化控制{grid-template-columns:repeat(3,1fr)}.等化控制 .線框按鈕{grid-column:1/-1}
+}
+@media(max-width:767px){
+ body{padding-bottom:175px}
+ .頂部{top:9px;width:calc(100% - 18px);margin:9px auto 12px;padding:8px 12px;min-height:105px;border-radius:22px;gap:3px}
+ .品牌 strong{font-size:18px;letter-spacing:.27em}.品牌 small{font-size:10px}
+ .分享鈕{padding:6px 14px;min-height:42px}
+ .導覽{gap:0;height:45px}.導覽 button{padding:8px 9px;font-size:11px;min-height:42px;border-radius:17px}
+ .英雄版{padding:0 9px}
+ .英雄畫面{min-height:max(620px,calc(80svh - 80px));border-radius:23px}
+ .英雄人像{object-position:59% center}
+ .英雄濾鏡{background:radial-gradient(ellipse at 76% 35%,rgba(255,210,201,.3),transparent 56%),linear-gradient(90deg,#14264bda,#2f427687 67%,#20386459),linear-gradient(0deg,#142c4c99,transparent 55%)}
+ .英雄文字{left:25px;top:49%;width:calc(100% - 50px);transform:translateY(-45%)}
+ .主角簽名{font-size:13px}.主角簽名 span{font-size:13px}
+ .英雄文字 h1{font-size:clamp(33px,8.4vw,52px);line-height:1.72;letter-spacing:.035em}
+ .英雄文字 .副標{font-size:13px;line-height:2.1}
+ .英雄頁碼{right:24px;bottom:20px}
+ .區段留白{padding:53px 20px}
+ .區段題頭{display:block}.區段題頭 h2{font-size:32px}.區段題頭 .線框按鈕{margin-top:8px}
+ .兩欄曲{gap:15px}
+ .唱片卡{min-height:225px;padding:20px;gap:12px}
+ .唱片外觀{width:156px;height:156px}.唱片字{min-width:100px}.唱片字 strong{font-size:20px}
+ .曲目卡{padding:22px}
+ .情緒章{min-height:400px;padding:75px 25px}.情緒內容 blockquote{font-size:clamp(23px,5.6vw,33px);line-height:2.0;letter-spacing:.06em}
+ .情緒巨大字{font-size:350px;top:-85px}
+ .首頁寫真格{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .形象小圖{height:270px;border-radius:18px}.形象小圖:last-child{grid-column:span 2;height:250px}
+ .形象小圖>span{left:14px;bottom:12px;font-size:10px}
+ .影片宣傳{grid-template-columns:1fr;padding:18px;gap:15px}.影片敘事{padding:10px 10px 0}.影片敘事 h2{font-size:30px}
+ .影片預視{min-height:220px}
+ .尾聲{padding:85px 20px 105px;min-height:350px}.尾聲 h2{font-size:clamp(31px,8vw,45px)}
+ .內頁題頭{padding:50px 22px 28px}.內頁題頭 h1{font-size:clamp(34px,8vw,47px)}
+ .音樂版{grid-template-columns:1fr;padding:0 18px;gap:17px}.專輯視覺{min-height:350px}
+ .音樂內容{padding:18px}.音樂列表頭{flex-wrap:wrap;gap:10px}
+ .歌曲列{grid-template-columns:27px minmax(0,1fr) 47px;gap:7px;min-height:82px;padding-inline:6px}
+ .歌曲列 strong{font-size:15px}.歌曲列 .時長{display:none}
+ .音效面板{margin:20px 18px 45px;padding:21px;gap:12px}.音效說明 h2{font-size:25px}
+ .等化控制{grid-template-columns:repeat(2,minmax(0,1fr))}.等化控制 .線框按鈕{grid-column:1/-1}
+ .寫真控制{padding:0 18px 20px;gap:8px}.寫真控制 button{padding:9px 15px}
+ .相簿格{grid-template-columns:repeat(2,minmax(0,1fr));padding:0 18px;gap:11px}
+ .相片卡{height:230px;border-radius:15px}.相片卡.大相片{grid-column:span 2;height:310px}
+ .相片卡>span{left:11px;bottom:12px;font-size:9px}
+ .寫真預告{margin:20px 18px 50px;padding:22px}.寫真預告 h2{font-size:23px}
+ .照片燈箱{padding:80px 15px}.照片燈箱 img{max-height:calc(100dvh - 180px)}.燈箱關閉{right:12px;top:16px}.燈箱左{left:5px}.燈箱右{right:5px}
+ .影片卡{margin:0 18px 60px;padding:10px}.影片外框{border-radius:12px}.影片敬請期待{gap:3px}.影片敬請期待 h2{font-size:23px}.影片敬請期待 .未公開圓圈{width:48px;height:48px}
+ .影片敬請期待 .眉標{font-size:8px}.影片敬請期待 p{font-size:10px}
+ .關於版{grid-template-columns:1fr;padding:35px 18px 60px}.關於肖像{min-height:440px;height:480px}.關於文字{padding:28px}.關於文字 h1{font-size:49px}
+ .播放器{bottom:calc(7px + env(safe-area-inset-bottom));width:calc(100% - 14px);min-height:116px;border-radius:20px;display:grid;
+   grid-template-columns:minmax(0,1fr) minmax(132px,.8fr);grid-template-rows:51px 29px;gap:7px;padding:10px 13px}
+ .現在歌曲{grid-column:1;grid-row:1;gap:7px}.現在歌曲 img{width:43px;height:43px;border-radius:9px}.現在歌曲 strong{font-size:12px}.現在歌曲 small{font-size:9px}
+ .播放操作{display:contents}.播放鍵組{grid-column:2;grid-row:1;gap:5px;justify-content:flex-end}
+ .播放鍵組 button{min-width:40px;min-height:44px;font-size:15px}.播放鍵組 .播放主鍵{width:45px;height:45px}
+ .進度組{grid-column:1/-1;grid-row:2;margin:0;gap:6px}.進度組 span{font-size:10px;min-width:31px}
+ .聲音控制{display:none}
+ .手機音量{display:none}
+ .訊息{bottom:calc(136px + env(safe-area-inset-bottom))}
+ footer span{display:block;margin:9px 0 0}
+}
+@media(max-width:374px){
+ .導覽 button{font-size:10px;padding:8px 6px}
+ .英雄文字 h1{font-size:32px}
+ .唱片外觀{width:118px;height:118px}
+ .播放鍵組 button{min-width:35px}.播放器{padding-inline:9px}.播放鍵組{gap:1px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

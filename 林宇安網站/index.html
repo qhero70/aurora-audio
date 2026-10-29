@@ -1,22 +1,177 @@
 <!doctype html>
-<html lang="zh-Hant-TW"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101922"><meta name="description" content="林宇安｜AI 虛擬女歌手官方音樂網站。以音樂收藏每一段情緒。">
-<meta property="og:title" content="林宇安｜把夜晚唱給你聽"><meta property="og:description" content="三首作品，一個關於陪伴與勇氣的聲音。"><meta property="og:image" content="./影像/封面舞台.webp">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="林宇安音樂">
-<title>林宇安｜官方音樂網站</title><link rel="manifest" href="./manifest.json"><link rel="icon" type="image/svg+xml" href="./圖示.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./樣式.css"><script defer src="./功能.js"></script></head><body>
-<a class="略過導覽" href="#主要">跳到主要內容</a>
-<header class="頂部"><a href="#首頁" class="品牌" data-導覽="首頁"><strong>林 宇 安</strong><small>LIN YU-AN · OFFICIAL</small></a>
-<nav aria-label="網站主要導覽" class="導覽"><button data-導覽="首頁" class="選中">首頁</button><button data-導覽="音樂">音樂</button><button data-導覽="寫真">寫真</button><button data-導覽="影像">影像 MV</button><button data-導覽="關於">關於</button></nav><button class="分享鈕" id="分享">分享 ↗</button></header>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#253C78">
+<meta name="description" content="林宇安官方音樂網站｜晨霧微光・電影敘事・柔霧玻璃。聽見三首原創音樂，收藏舞台與生活裡的光。">
+<meta property="og:title" content="林宇安｜夜深了，願你也慢慢靠岸">
+<meta property="og:description" content="有些話，適合留給夜深的時候。把沒說完的情緒，唱成一首歌。">
+<meta property="og:image" content="https://lin-yu-an-music.vercel.app/影像/封面舞台.webp">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="林宇安音樂">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="./圖示.svg">
+<link rel="apple-touch-icon" href="./圖示.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="./影像/封面舞台.webp" as="image">
+<link rel="stylesheet" href="./樣式.css?v=2.0.0">
+<script defer src="./功能.js?v=2.0.0"></script>
+<title>林宇安｜晨霧微光・官方音樂網站</title>
+</head>
+<body>
+<a class="略過導覽" href="#主要">跳至主要內容</a>
+<div class="背景光 背景光一" aria-hidden="true"></div>
+<div class="背景光 背景光二" aria-hidden="true"></div>
+<header class="頂部">
+  <a class="品牌" data-導覽="首頁" href="#首頁" aria-label="林宇安官方音樂網站首頁"><strong>林宇安</strong><small>LIN YU-AN · OFFICIAL</small></a>
+  <nav class="導覽" aria-label="網站主要導覽">
+    <button type="button" data-導覽="首頁" aria-current="page" class="選中">首頁</button>
+    <button type="button" data-導覽="音樂">音樂</button>
+    <button type="button" data-導覽="寫真">寫真</button>
+    <button type="button" data-導覽="影像">MV 影像</button>
+    <button type="button" data-導覽="關於">關於</button>
+  </nav>
+  <button type="button" class="分享鈕" id="分享" aria-label="分享林宇安音樂網站">分享 ↗</button>
+</header>
+
 <main id="主要">
-<section class="頁面 顯示" id="首頁"><div class="英雄版"><div class="英雄畫面"><img src="./影像/封面舞台.webp" alt="林宇安在金色燈光的劇院舞台上演唱" fetchpriority="high"><div class="暗角"></div><div class="英雄文字"><p class="英眉">A VOICE BETWEEN THE SILENCES</p><h1>林宇安<span>LIN YU-AN</span></h1><p>有些話，適合留給夜深的時候。<br>把沒說完的情緒，唱成一首歌。</p><button class="主鈕" data-導覽="音樂">▶　聽見我的聲音 <span>↗</span></button></div></div><div class="右介紹"><span class="小章">01 / FEATURED ARTIST</span><h2>把夜晚，<br><em>唱給你聽。</em></h2><p>一個由音樂與故事誕生的聲音。<br>Jazz-R&B × Rap，在旋律裡收好每份情緒。</p><div class="唱片"><div class="唱片芯"></div></div><span class="小章">LATEST RELEASES · 三首作品</span><div class="快捷曲目" id="首頁歌曲"></div><button class="文字鈕" data-導覽="音樂">前往完整音樂列表　→</button></div></div>
-<div class="底部序列"><div><span class="小章">02 / AWAY FROM THE SPOTLIGHT</span><h2>光影之外，<br>她也擁有日常。</h2><button class="文字鈕" data-導覽="寫真">探索生活寫真　↗</button></div><img src="./影像/墨鏡街拍風.webp" loading="lazy" alt="林宇安短髮墨鏡造型"><img src="./影像/紅色造型.webp" loading="lazy" alt="林宇安紅色造型肖像"><img src="./影像/舞台全身.webp" loading="lazy" alt="林宇安舞台全身寫真"></div></section>
-<section class="頁面" id="音樂" hidden><div class="頁首"><p class="小章">01 / MUSIC COLLECTION</p><h1>聽見每種情緒。</h1><p>首批三首原創作品，戴上耳機，讓旋律慢慢靠近。</p></div><div class="音樂版"><div class="專輯視覺"><img src="./影像/演唱近照.webp" alt="林宇安正在演唱"><div class="專輯角標">LIN YU-AN · VOL. 01</div></div><div class="音樂內容"><div class="功能標題"><span class="小章">THREE SONGS / 三首歌曲</span><label class="本機鈕">＋ 載入本機 MP3 <input id="本機檔案" type="file" accept="audio/mpeg,audio/mp3,audio/*" multiple hidden></label></div><div id="歌曲列表" class="歌曲列表"></div><p class="說明字">音樂來源：歌手創作的三首 MP3。如雲端音訊受到 Google Drive 存取限制，可按「載入本機 MP3」選擇同名歌曲播放。正式發布建議把三首 MP3 放在網站「音樂」資料夾以取得穩定播放。</p></div></div><div class="音效面板"><div><span class="小章">GT AUDIO · PLAYER STUDIO</span><h2>你的專屬聆聽空間</h2></div><div class="音效控制"><label>低音 <input id="低音" type="range" min="-12" max="12" value="0"><output id="低音值">0 dB</output></label><label>中音 <input id="中音" type="range" min="-12" max="12" value="0"><output id="中音值">0 dB</output></label><label>高音 <input id="高音" type="range" min="-12" max="12" value="0"><output id="高音值">0 dB</output></label><button id="重設音效" class="重設鈕">重設音效</button></div></div></section>
-<section class="頁面" id="寫真" hidden><div class="頁首"><p class="小章">02 / GALLERY</p><h1>鏡頭下的林宇安。</h1><p>舞台的光，與生活裡溫柔的片刻。</p></div><div class="相簿格"><figure class="寬照"><img src="./影像/舞台全身.webp" loading="lazy" alt="林宇安在華麗舞台"><figcaption>幕前 · THE STAGE</figcaption></figure><figure><img src="./影像/黑色套裝.webp" loading="lazy" alt="林宇安黑色套裝全身"><figcaption>經典黑 · PORTRAIT</figcaption></figure><figure><img src="./影像/墨鏡街拍風.webp" loading="lazy" alt="林宇安墨鏡時尚造型"><figcaption>城市 · DAYLIGHT</figcaption></figure><figure><img src="./影像/紅色造型.webp" loading="lazy" alt="林宇安紅色上衣"><figcaption>光線 · SOFT LIGHT</figcaption></figure><figure><img src="./影像/質感特寫.webp" loading="lazy" alt="林宇安短髮特寫"><figcaption>細節 · CLOSE-UP</figcaption></figure><figure><img src="./影像/演唱近照.webp" loading="lazy" alt="林宇安握著麥克風演唱"><figcaption>聲音 · IN CONCERT</figcaption></figure></div></section>
-<section class="頁面" id="影像" hidden><div class="頁首"><p class="小章">03 / FILMS</p><h1>把故事拍成影像。</h1><p>電影敘事與原創歌曲，讓畫面帶你走進她的世界。</p></div><div class="影片佔位"><img src="./影像/封面舞台.webp" alt="林宇安音樂錄影帶劇照"><div><span class="小章">COMING SOON</span><h2>音樂電影 · 製作中</h2><p>正式 MV 上架後將在這裡播放。現在可先聆聽三首作品。</p><button class="主鈕" data-導覽="音樂">先聽音樂 ↗</button></div></div></section>
-<section class="頁面" id="關於" hidden><div class="關於格"><div class="關於照片"><img src="./影像/黑色套裝.webp" alt="林宇安全身藝術照"></div><div class="關於內容"><span class="小章">04 / THE STORY</span><h1>林宇安。</h1><div class="英字">LIN YU-AN</div><p>林宇安，一位以人工智慧影像與原創音樂打造的虛擬女歌手。</p><p>她的音樂以 Jazz、R&B 與 Rap 為靈感，唱出關係裡的遺憾、分離之後的自我對話，以及重新走向光亮的勇氣。</p><p>這裡收藏她的歌曲、舞台影像與生活寫真。每一首歌，都是一段故事的延續。</p><button class="主鈕" data-導覽="音樂">走進她的音樂 ↗</button></div></div></section></main>
-<div class="播放器"><div class="現在歌曲"><img id="播放封面" src="./影像/演唱近照.webp" alt=""><div><strong id="播放標題">來安慰我吧</strong><small>林宇安 · LIN YU-AN</small></div></div><div class="播放操作"><div class="播放鍵組"><button aria-label="上一首" id="上一首">⏮</button><button aria-label="播放" id="播放切換" class="播放主鍵">▶</button><button aria-label="下一首" id="下一首">⏭</button></div><div class="進度組"><span id="現在時間">0:00</span><input type="range" aria-label="播放進度" id="進度條" min="0" max="100" value="0"><span id="歌曲時間">0:00</span></div></div><div class="聲音控制"><span>音量</span><input type="range" id="音量" aria-label="調整音量" min="0" max="100" value="80"><button id="開啟音樂" aria-label="開啟音樂頁面">♫</button></div></div>
-<audio id="播放器音訊" preload="metadata"></audio><div id="訊息" role="status" aria-live="polite"></div><footer>© 2026 林宇安 · AI ORIGINAL MUSIC / BUILT WITH MUSIC & MEMORY</footer></body></html>
+<section class="頁面 顯示" id="首頁" aria-labelledby="首頁標題">
+  <div class="英雄版">
+    <div class="英雄畫面">
+      <img class="英雄人像" src="./影像/封面舞台.webp" alt="林宇安在舞台燈光下手持麥克風的演唱劇照" fetchpriority="high" decoding="async">
+      <div class="英雄濾鏡" aria-hidden="true"></div>
+      <div class="英雄文字">
+        <p class="眉標">LIN YU-AN · UNTIL THE MORNING</p>
+        <p class="主角簽名">林宇安 <span>LIN YU-AN</span></p>
+        <h1 id="首頁標題">夜深了，<br><em>願你也慢慢靠岸。</em></h1>
+        <p class="副標">有些話，適合留給夜深的時候。<br>把沒說完的情緒，唱成一首歌。</p>
+        <button type="button" class="柔霧按鈕" data-導覽="音樂"><span aria-hidden="true">▶</span> 聽見我的聲音 <span aria-hidden="true">↗</span></button>
+      </div>
+      <div class="英雄頁碼" aria-hidden="true">01 / 05 &nbsp; ✦ &nbsp; MUSIC & MEMORIES</div>
+    </div>
+  </div>
+
+  <section class="首頁曲區 區段留白">
+    <div class="區段題頭">
+      <div><p class="眉標">01 / THE SONGS</p><h2>把夜晚，<span>唱給你聽。</span></h2><p class="灰字">三首歌，三個不同的停靠點。</p></div>
+      <button type="button" class="線框按鈕" data-導覽="音樂">探索全部音樂　↗</button>
+    </div>
+    <div class="兩欄曲">
+      <div class="唱片卡 霧玻璃">
+        <div class="唱片外觀" aria-hidden="true"><div class="唱片內圈"></div></div>
+        <div class="唱片字"><span>VOL. 01</span><strong>夜色裡的聲音</strong><small>JAZZ · R&B · RAP</small></div>
+      </div>
+      <div class="曲目卡 霧玻璃"><p class="眉標">LISTEN CLOSELY</p><div id="首頁歌曲" class="首頁歌曲"></div></div>
+    </div>
+  </section>
+
+  <section class="情緒章" aria-label="給夜晚的一段話">
+    <div class="情緒巨大字" aria-hidden="true">安</div>
+    <div class="情緒內容">
+      <p class="眉標">A NOTE TO THE NIGHT</p>
+      <blockquote>「不是每一個夜晚，都要找到答案。<br>有時候，只要有人陪你把這一段<br><strong>安靜地走完</strong>，就很好了。」</blockquote>
+    </div>
+  </section>
+
+  <section class="首頁寫真 區段留白">
+    <div class="區段題頭">
+      <div><p class="眉標">02 / BEYOND THE SPOTLIGHT</p><h2>光影之外，<span>也有日常。</span></h2><p class="灰字">一些舞台之外的片刻，留給你慢慢看。</p></div>
+      <button type="button" class="線框按鈕" data-導覽="寫真">瀏覽寫真　↗</button>
+    </div>
+    <div class="首頁寫真格">
+      <button type="button" data-導覽="寫真" class="形象小圖"><img src="./影像/墨鏡街拍風.webp" alt="林宇安墨鏡短髮人物寫真" loading="lazy" decoding="async"><span>PERSONAL STYLE</span></button>
+      <button type="button" data-導覽="寫真" class="形象小圖"><img src="./影像/舞台全身.webp" alt="林宇安全身舞台攝影" loading="lazy" decoding="async"><span>ON STAGE</span></button>
+      <button type="button" data-導覽="寫真" class="形象小圖"><img src="./影像/演唱近照.webp" alt="林宇安持金色麥克風演唱" loading="lazy" decoding="async"><span>MUSIC MOMENTS</span></button>
+    </div>
+  </section>
+
+  <section class="首頁MV 區段留白">
+    <div class="影片宣傳 霧玻璃">
+      <div class="影片敘事"><span class="眉標">03 / MOVING IMAGE</span><h2>讓畫面，<br>晚一點抵達。</h2><p>有些故事正在準備。<br>等它準備好了，再一起看。</p><span class="未公開標記">MV · 尚未公開</span><button type="button" class="線框按鈕" data-導覽="影像">前往影像專區　↗</button></div>
+      <div class="影片預視"><img src="./影像/紅色造型.webp" alt="林宇安音樂影像預告人物照片" loading="lazy"><div class="未公開圓圈" aria-hidden="true">✦</div><span>敬請期待</span></div>
+    </div>
+  </section>
+  <section class="尾聲" aria-label="結尾語"><p class="眉標">UNTIL THE MORNING</p><h2>夜深了，<br>願你也慢慢靠岸。</h2><p>謝謝你，把這段時間留給我的歌。</p></section>
+</section>
+
+<section class="頁面" id="音樂" hidden aria-labelledby="音樂標題">
+  <div class="內頁題頭"><p class="眉標">01 / MUSIC COLLECTION</p><h1 id="音樂標題">把夜晚，<br><em>唱給你聽。</em></h1><p>三首不同的心情。戴上耳機，讓聲音慢慢靠近。</p></div>
+  <div class="音樂版">
+    <div class="專輯視覺 霧玻璃"><img src="./影像/演唱近照.webp" alt="林宇安演唱近照" loading="lazy"><span>LIN YU-AN · ORIGINAL MUSIC</span></div>
+    <div class="音樂內容 霧玻璃"><div class="音樂列表頭"><span class="眉標">THREE SONGS / 三首歌曲</span><label class="線框按鈕 本機鈕">載入本機 MP3 <input id="本機檔案" type="file" accept="audio/mpeg,audio/mp3,audio/*" multiple hidden></label></div><div id="歌曲列表" class="歌曲列表"></div><p class="說明字">正式來源為三首已授權的原創 MP3。如遇網路限制，可選擇本機同名音檔播放；此操作只在你的裝置上生效。</p></div>
+  </div>
+  <div class="音效面板 霧玻璃">
+    <div class="音效說明"><span class="眉標">GT AUDIO · PLAYER STUDIO</span><h2>只為聲音，<br>留一點空間。</h2><p>播放時顯示真實音訊頻譜；停止時不模擬跳動。</p></div>
+    <div class="音效操作">
+      <canvas id="頻譜畫布" height="104" width="700" role="img" aria-label="音樂播放時的即時音訊頻譜"></canvas>
+      <div class="等化控制">
+        <label for="低音">低音 <span id="低音值">0 dB</span><input id="低音" type="range" min="-12" max="12" value="0"></label>
+        <label for="中音">中音 <span id="中音值">0 dB</span><input id="中音" type="range" min="-12" max="12" value="0"></label>
+        <label for="高音">高音 <span id="高音值">0 dB</span><input id="高音" type="range" min="-12" max="12" value="0"></label>
+        <button type="button" id="重設音效" class="線框按鈕">恢復原始音色</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="頁面" id="寫真" hidden aria-labelledby="寫真標題">
+  <div class="內頁題頭"><p class="眉標">02 / GALLERY</p><h1 id="寫真標題">把每一個片刻，<br><em>留在光裡。</em></h1><p>從舞台燈光到日常的安靜，收藏屬於林宇安的畫面。</p></div>
+  <div class="寫真控制" role="group" aria-label="寫真分類">
+    <button type="button" class="分類中" data-分類="全部" aria-pressed="true">全部</button>
+    <button type="button" data-分類="劇照" aria-pressed="false">劇照</button>
+    <button type="button" data-分類="寫真" aria-pressed="false">寫真</button>
+    <button type="button" data-分類="日常" aria-pressed="false">日常</button>
+  </div>
+  <div class="相簿格" id="相簿格">
+    <button class="相片卡 大相片" type="button" data-照片="0" data-類型="劇照"><img src="./影像/舞台全身.webp" alt="林宇安舞台全身演唱劇照" loading="lazy"><span>舞台 · THE STAGE</span></button>
+    <button class="相片卡" type="button" data-照片="1" data-類型="寫真"><img src="./影像/黑色套裝.webp" alt="林宇安黑色套裝攝影" loading="lazy"><span>黑色經典 · PORTRAIT</span></button>
+    <button class="相片卡" type="button" data-照片="2" data-類型="日常"><img src="./影像/墨鏡街拍風.webp" alt="林宇安短髮墨鏡造型" loading="lazy"><span>日光 · DAYLIGHT</span></button>
+    <button class="相片卡" type="button" data-照片="3" data-類型="寫真"><img src="./影像/紅色造型.webp" alt="林宇安暖色造型人物寫真" loading="lazy"><span>暖色 · SOFT LIGHT</span></button>
+    <button class="相片卡" type="button" data-照片="4" data-類型="寫真"><img src="./影像/質感特寫.webp" alt="林宇安臉部與髮型特寫" loading="lazy"><span>側影 · CLOSE-UP</span></button>
+    <button class="相片卡" type="button" data-照片="5" data-類型="劇照"><img src="./影像/演唱近照.webp" alt="林宇安握金色麥克風演唱" loading="lazy"><span>聲音 · IN CONCERT</span></button>
+    <button class="相片卡" type="button" data-照片="6" data-類型="寫真"><img src="./影像/封面舞台.webp" alt="林宇安舞台主視覺" loading="lazy"><span>微光 · THE LIGHT</span></button>
+  </div>
+  <div class="寫真預告 霧玻璃"><p class="眉標">LIFESTYLE SERIES · IN PROGRESS</p><h2>五個生活場景，正在準備。</h2><p>咖啡館的午後、都市街道、海邊微風、安靜書店與夜景陽台。新照片須確認人物臉型與髮型一致後才正式加入，不用其他人物充數。</p></div>
+</section>
+
+<section class="頁面" id="影像" hidden aria-labelledby="影像標題">
+  <div class="內頁題頭"><p class="眉標">03 / MOVING IMAGE</p><h1 id="影像標題">讓畫面，<br><em>晚一點抵達。</em></h1><p>電影敘事與原創歌曲，在畫面裡延續音樂的溫度。</p></div>
+  <div class="影片卡 霧玻璃"><div class="影片外框"><img id="預告封面" src="./影像/封面舞台.webp" alt="林宇安音樂錄影帶預告封面" loading="lazy"><video id="影片播放器" playsinline controls preload="metadata" poster="./影像/封面舞台.webp" hidden aria-label="林宇安音樂錄影帶"></video><div class="影片敬請期待" id="影片提示"><span class="未公開圓圈" aria-hidden="true">✦</span><span class="眉標">MUSIC FILM · COMING SOON</span><h2>敬請期待</h2><p>MV 尚未正式公開</p></div></div><p class="影片下註">待影片正式上架後支援 MP4／H.264、全螢幕與手機播放；播放影片時自動暫停背景歌曲。</p></div>
+</section>
+
+<section class="頁面" id="關於" hidden aria-labelledby="關於標題">
+  <div class="關於版">
+    <div class="關於肖像 霧玻璃"><img src="./影像/黑色套裝.webp" alt="林宇安穿著黑色套裝的人物攝影" loading="lazy"></div>
+    <div class="關於文字 霧玻璃"><p class="眉標">04 / THE STORY</p><h1 id="關於標題">林宇安。</h1><div class="英文名">LIN YU-AN</div><p>她是一位以 AI 影像與原創音樂打造的虛擬女歌手。</p><p>聲音偏低沉、帶一點沙啞。Jazz、R&B 與 Rap 交會的節奏，唱出遺憾、愛與和自己重新和解的時刻。</p><p>音樂不是急著回答，而是陪你待在問題旁邊。每一首歌，都從生活的細節開始。</p><button type="button" class="柔霧按鈕" data-導覽="音樂">走進她的音樂　↗</button></div>
+  </div>
+</section>
+</main>
+
+<div class="照片燈箱" id="照片燈箱" role="dialog" aria-modal="true" aria-label="照片放大預覽" hidden>
+  <button type="button" id="關閉燈箱" class="燈箱關閉" aria-label="關閉照片">×</button>
+  <button type="button" id="照片前一張" class="燈箱左" aria-label="上一張照片">‹</button>
+  <figure><img id="燈箱圖片" src="./影像/舞台全身.webp" alt=""><figcaption id="燈箱文字"></figcaption></figure>
+  <button type="button" id="照片下一張" class="燈箱右" aria-label="下一張照片">›</button>
+</div>
+
+<div class="播放器 霧玻璃" id="播放器面板" aria-label="固定音樂播放器">
+  <div class="現在歌曲"><img id="播放封面" src="./影像/封面舞台.webp" alt="目前播放歌曲封面"><div><strong id="播放標題">來安慰我吧</strong><small id="播放狀態">林宇安 · LIN YU-AN</small></div></div>
+  <div class="播放操作">
+    <div class="播放鍵組">
+      <button id="上一首" type="button" aria-label="上一首">⏮</button>
+      <button id="播放切換" type="button" class="播放主鍵" aria-label="播放">▶</button>
+      <button id="下一首" type="button" aria-label="下一首">⏭</button>
+    </div>
+    <div class="進度組"><span id="現在時間">0:00</span><input id="進度條" type="range" min="0" max="1000" value="0" aria-label="音樂播放進度"><span id="歌曲時間">0:00</span></div>
+  </div>
+  <div class="聲音控制"><button type="button" id="靜音切換" aria-label="靜音或恢復音量">♪</button><label class="音量標籤" for="音量">音量</label><input id="音量" type="range" min="0" max="100" value="80" aria-label="調整音樂音量"><button type="button" id="開啟音樂" aria-label="前往音樂頁">♫</button></div>
+  <div class="手機音量" id="手機音量面板" hidden><label for="手機音量範圍">音量</label><input id="手機音量範圍" type="range" min="0" max="100" value="80" aria-label="手機音量控制"></div>
+</div>
+<audio id="播放器音訊" preload="metadata"></audio>
+<div class="訊息" id="訊息" role="status" aria-live="polite"></div>
+<footer>林宇安 · OFFICIAL SITE <span>MADE OF NIGHT & MORNING</span> © 2026</footer>
+</body>
+</html>
