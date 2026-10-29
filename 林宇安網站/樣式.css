@@ -329,3 +329,6 @@ footer span{margin-inline:18px}
 @media(max-width:767px){.天籟工作站{margin:0 11px 45px;padding:13px}.天籟工作站頂{flex-direction:column;align-items:flex-start;gap:12px}.天籟鎖定{padding:9px 13px}.天籟內頁籤{gap:5px;padding:16px 0}.天籟內頁籤 button{min-height:72px;padding:9px 4px;display:flex;flex-direction:column;font-size:11px;line-height:1.5;border-radius:12px}.天籟內頁籤 button>span{font-size:17px}.天籟內容{min-height:0}.天籟播放格{grid-template-columns:1fr;gap:19px}.天籟唱片側{gap:8px}.天籟唱片{width:min(200px,50vw)}.天籟唱片側 h3{font-size:20px}.天籟視覺標頭{padding:9px 12px}.天籟頻譜選項{width:100%;justify-content:space-between}.天籟頻譜選項 button{padding:4px;font-size:10px}#頻譜畫布{height:170px}.天籟操作{padding:13px 12px}.天籟等化顯示{gap:2px;padding:20px 3px 17px;min-height:290px}.天籟頻段軌道{height:155px;width:9px}.天籟頻段游標{width:18px;height:13px}.天籟頻段值,.天籟頻段名稱{font-size:9px}.天籟處理格{grid-template-columns:1fr;gap:30px}.天籟工作站底{font-size:9px}}
 @media(max-width:374px){.天籟內頁籤 button{font-size:10px}.天籟頻段值,.天籟頻段名稱{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.天籟唱片.唱片運作 img{animation:none}}
+
+/* V2.1.2：工作站小螢幕觸控尺寸 */
+@media(max-width:767px){.天籟內頁籤 button,.天籟頻譜選項 button,.天籟播放按鍵 button{min-height:44px}}

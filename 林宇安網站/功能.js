@@ -126,9 +126,14 @@ function 初始化音效(){
  if(!建構){顯示訊息('目前瀏覽器不支援天籟 DSP 音效');return}
  try{
   const 環境=new 建構(),來源=環境.createMediaElementSource(音訊);
-  const 諧波=環境.createWaveShaper();諧波.curve=天籟諧波曲線(天籟參數.諧波);諧波.oversample='4x';
+  const 前級=環境.createGain();前級.gain.value=.63;
+  const 直通=環境.createGain();直通.gain.value=.72;
+  const 諧波濕聲=環境.createGain();諧波濕聲.gain.value=.28;
+  const 諧波合聲=環境.createGain();
+  const 諧波=環境.createWaveShaper();諧波.curve=天籟諧波曲線(天籟參數.諧波);諧波.oversample='2x';
   const 低通=環境.createBiquadFilter();低通.type='lowpass';低通.frequency.value=14000;
-  const 空間=環境.createStereoPanner();空間.pan.value=天籟參數.空間;
+  // 真正的音場擴寬使用 Mid/Side 矩陣，避免將聲像偏向單側。
+  const 空間=環境.createGain();
   const 濾鏡組=[];
   for(let i=0;i<天籟參數.頻率.length;i++){
    const 濾波=環境.createBiquadFilter();濾波.type=i===0?'lowshelf':i===9?'highshelf':'peaking';
@@ -138,14 +143,30 @@ function 初始化音效(){
   const 殘響=環境.createConvolver();殘響.buffer=天籟空間殘響(環境);
   const 乾=環境.createGain(),濕=環境.createGain();乾.gain.value=1-天籟參數.殘響*.5;濕.gain.value=天籟參數.殘響;
   const 壓縮=環境.createDynamicsCompressor();壓縮.threshold.value=-13;壓縮.knee.value=6;壓縮.ratio.value=8;壓縮.attack.value=.003;壓縮.release.value=.19;
-  const 預留=環境.createGain();預留.gain.value=.56;
+  const 預留=環境.createGain();預留.gain.value=.84;
+  const 音量增益=環境.createGain();音量增益.gain.value=Math.pow(上次音量/100,2);
   const 觀測=環境.createAnalyser();觀測.fftSize=2048;觀測.smoothingTimeConstant=.83;
-  來源.connect(諧波);諧波.connect(低通);低通.connect(空間);
+  來源.connect(前級);前級.connect(直通);前級.connect(諧波);
+  直通.connect(諧波合聲);諧波.connect(諧波濕聲);諧波濕聲.connect(諧波合聲);
+  諧波合聲.connect(低通);低通.connect(空間);
   let 末端=空間;for(const 濾波 of 濾鏡組){末端.connect(濾波);末端=濾波}
+  // 左右聲道 Mid/Side 擴寬，75% 設定對應 1.3 倍側向訊號。
+  const 分流=環境.createChannelSplitter(2),合流=環境.createChannelMerger(2);
+  const 寬度=1+天籟參數.空間*.4,同側=(1+寬度)/2,交叉=(1-寬度)/2;
+  const 混音=Array.from({length:4},()=>環境.createGain());
+  [同側,交叉,交叉,同側].forEach((數值,i)=>混音[i].gain.value=數值);
+  末端.connect(分流);
+  分流.connect(混音[0],0);混音[0].connect(合流,0,0);
+  分流.connect(混音[1],1);混音[1].connect(合流,0,0);
+  分流.connect(混音[2],0);混音[2].connect(合流,0,1);
+  分流.connect(混音[3],1);混音[3].connect(合流,0,1);
+  末端=合流;
   末端.connect(乾);末端.connect(殘響);殘響.connect(濕);
-  乾.connect(壓縮);濕.connect(壓縮);壓縮.connect(預留);預留.connect(觀測);觀測.connect(環境.destination);
-  音效環境=環境;濾鏡=濾鏡組;分析器=觀測;頻譜資料=new Uint8Array(觀測.frequencyBinCount);
-  工作站音效圖={來源,諧波,低通,空間,濾鏡組,殘響,乾,濕,壓縮,預留};
+  乾.connect(壓縮);濕.connect(壓縮);壓縮.connect(預留);預留.connect(音量增益);音量增益.connect(觀測);觀測.connect(環境.destination);
+  音效環境=環境;濾鏡陣列=濾鏡組;分析器=觀測;頻譜資料=new Uint8Array(觀測.frequencyBinCount);
+  工作站音效圖={來源,前級,直通,諧波,諧波濕聲,諧波合聲,低通,空間,濾鏡組,分流,合流,混音,殘響,乾,濕,壓縮,預留,音量增益};
+  try{音訊.volume=1}catch(錯誤){console.debug('音量改由音訊引擎管理',錯誤)}
+  找('天籟模式狀態').querySelector('small').textContent='專屬固定音色 · 已啟用';
  }catch(錯誤){console.error('天籟 DSP 初始化失敗',錯誤);顯示訊息('天籟音效無法啟動，請重新整理網站後再播放。')}
 }
 function 設定音效數值(){/* 音效已由固定十段天籟預設鎖定，禁止動態改變。 */}
@@ -213,7 +234,10 @@ function 建立固定等化顯示(){
 建立固定等化顯示();
 function 同步音量(數值){
   const 安全值=Math.max(0,Math.min(100,Number(數值)));
-  音訊.volume=安全值/100;
+  if(工作站音效圖&&音效環境){
+    音訊.volume=1;
+    工作站音效圖.音量增益.gain.setTargetAtTime(Math.pow(安全值/100,2),音效環境.currentTime,.05);
+  }else{try{音訊.volume=安全值/100}catch(錯誤){console.debug('請使用系統音量鍵',錯誤)}}
   音訊.muted=安全值===0;
   找('音量').value=安全值;
   找('手機音量範圍').value=安全值;
@@ -237,7 +261,7 @@ document.addEventListener('click',事件=>{
 });
 找('音量').addEventListener('input',事件=>同步音量(事件.target.value));
 找('手機音量範圍').addEventListener('input',事件=>同步音量(事件.target.value));
-找('靜音切換').addEventListener('click',()=>同步音量(音訊.muted||音訊.volume===0?上次音量:0));
+找('靜音切換').addEventListener('click',()=>同步音量(音訊.muted||Number(找('音量').value)===0?上次音量:0));
 同步音量(80);
 找('天籟音量').value=80;
 
@@ -305,13 +329,13 @@ document.querySelectorAll('[data-頻譜]').forEach(鈕=>鈕.addEventListener('cl
 }));
 function 同步天籟工作站(){
  const 播放中=!音訊.paused&&!音訊.ended;
- 找('天籟歌名').textContent=歌曲[目前].標題;
- 找('天籟封面').src='./'+歌曲[目前].封面;
+ 找('天籟歌名').textContent=歌曲[目前歌曲].標題;
+ 找('天籟封面').src='./'+歌曲[目前歌曲].封面;
  找('天籟播放').textContent=播放中?'❚❚':'▶';
  找('天籟播放').setAttribute('aria-label',播放中?'暫停':'播放');
  找('天籟唱片').classList.toggle('唱片運作',播放中);
- const 狀態=找('天籟模式狀態');狀態.classList.toggle('正在運作',播放中&&!!音效環境);
- 狀態.querySelector('small').textContent=播放中&&音效環境?'固定預設 · 音效運作中':'固定音效 · 播放啟動';
+ const 狀態=找('天籟模式狀態');狀態.classList.toggle('正在運作',播放中&&!!工作站音效圖);
+ 狀態.querySelector('small').textContent=播放中&&工作站音效圖?'固定預設 · 音效運作中':工作站音效圖?'固定預設 · 已啟用':'固定音效 · 播放啟動';
 }
 function 同步天籟時間(){
  找('天籟目前時間').textContent=時間顯示(音訊.currentTime);
@@ -319,8 +343,8 @@ function 同步天籟時間(){
  找('天籟進度').value=Number.isFinite(音訊.duration)&&音訊.duration>0?Math.round(音訊.currentTime/音訊.duration*1000):0;
 }
 找('天籟播放').addEventListener('click',播放切換);
-找('天籟上一首').addEventListener('click',()=>跳至歌曲(目前-1));
-找('天籟下一首').addEventListener('click',()=>跳至歌曲(目前+1));
+找('天籟上一首').addEventListener('click',()=>跳至歌曲(目前歌曲-1));
+找('天籟下一首').addEventListener('click',()=>跳至歌曲(目前歌曲+1));
 找('天籟進度').addEventListener('input',事件=>{if(Number.isFinite(音訊.duration)&&音訊.duration>0)音訊.currentTime=Number(事件.target.value)/1000*音訊.duration});
 找('天籟音量').addEventListener('input',事件=>同步音量(事件.target.value));
 找('天籟循環').addEventListener('click',()=>{
