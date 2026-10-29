@@ -1,4 +1,4 @@
-# 林宇安官方音樂網站 V2.1 — JI* GT AUDIO ULTRA
+# 林宇安官方音樂網站 V2.1.1 — JI* GT AUDIO ULTRA
 正式網站：https://lin-yu-an-music.vercel.app
 資料夾：林宇安網站
 日期：2026-10-29
