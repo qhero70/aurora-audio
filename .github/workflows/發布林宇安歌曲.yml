@@ -11,7 +11,7 @@ concurrency:
   group: 發布林宇安歌曲
   cancel-in-progress: false
 jobs:
-  正式歌曲入庫:
+  publish_music:
     if: github.repository == 'qhero70/aurora-audio'
     runs-on: ubuntu-latest
     timeout-minutes: 15
