@@ -1,0 +1,87 @@
+name: 發布林宇安三首正式歌曲
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/發布林宇安歌曲.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: 發布林宇安歌曲
+  cancel-in-progress: false
+jobs:
+  正式歌曲入庫:
+    if: github.repository == 'qhero70/aurora-audio'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+      - name: 驗證並下載三首原始 MP3
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import urllib.request
+          import urllib.error
+          import os
+          歌單 = [
+              ("來安慰我吧.mp3", "1BRLERb96A_NniaT5NyjntRmszpt5iS0z", 7462080),
+              ("把心門打開混音版.mp3", "1ED5bgS4HnJbQrh88pKxn85pDawtw7fw5", 7588049),
+              ("把心門關起來_processed.mp3", "1xel9dinrUjJafD4cEGtK3eDvjRBVxVVH", 4824293),
+          ]
+          目錄 = Path("林宇安網站/音樂")
+          目錄.mkdir(parents=True, exist_ok=True)
+          for 名稱, 編號, 應有大小 in 歌單:
+              路徑 = 目錄 / 名稱
+              if 路徑.exists() and 路徑.stat().st_size == 應有大小:
+                  print("已存在，略過：" + 名稱)
+                  continue
+              來源 = [
+                  f"https://drive.usercontent.google.com/download?id={編號}&export=download&confirm=t",
+                  f"https://drive.google.com/uc?export=download&id={編號}",
+              ]
+              成功 = False
+              for 網址 in 來源:
+                  try:
+                      請求=urllib.request.Request(網址, headers={"User-Agent":"Mozilla/5.0 (compatible; SingerWebsite/1.0)"})
+                      with urllib.request.urlopen(請求, timeout=120) as 回應:
+                          with open(路徑, "wb") as 檔案:
+                              while True:
+                                  區塊=回應.read(512*1024)
+                                  if not 區塊: break
+                                  檔案.write(區塊)
+                                  if 檔案.tell() > 應有大小:
+                                      raise ValueError("音檔超出原始大小")
+                      資料 = 路徑.read_bytes()
+                      if len(資料) != 應有大小:
+                          raise ValueError(f"音檔大小不符，取得 {len(資料)}，預期 {應有大小}")
+                      if not (資料[:3] == b"ID3" or (len(資料)>1 and 資料[0]==255 and (資料[1]&224)==224)):
+                          raise ValueError("下載內容不是 MP3")
+                      print(f"已完成：{名稱} / {len(資料)} bytes")
+                      成功 = True
+                      break
+                  except Exception as 錯誤:
+                      print(f"下載來源失敗：{名稱} / {type(錯誤).__name__}: {錯誤}")
+                      路徑.unlink(missing_ok=True)
+              if not 成功:
+                  raise RuntimeError(f"無法取得原始音檔：{名稱}；請維持原始 Google Drive 共用連結可讀")
+          PY
+      - name: 將歌曲加入指定網站資料夾
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '林宇安網站/音樂/來安慰我吧.mp3' '林宇安網站/音樂/把心門打開混音版.mp3' '林宇安網站/音樂/把心門關起來_processed.mp3'
+          if git diff --cached --quiet; then
+            echo '歌曲已存在且內容一致，無需再次提交'
+          else
+            git commit -m '加入林宇安三首正式 MP3 原始音檔'
+            git push origin HEAD:main
+          fi
