@@ -349,3 +349,6 @@ footer span{margin-inline:18px}
 .影片外框 video:focus-visible{outline:3px solid #d36582;outline-offset:-3px}
 .影片狀態訊息{font-size:12px;letter-spacing:.04em;color:#ffeecfc4;line-height:2;margin:10px 2px 2px}
 @media(max-width:600px){.影片作品標頭{padding:0 0 17px}.影片作品標頭 h2{font-size:27px}.影片卡{padding:14px}.影片外框{border-radius:13px}}
+
+/* V2.1.4 補強：強制遵守 hidden，避免舊的 MV 預告遮罩遮擋正式影片。 */
+.影片敬請期待[hidden],.影片外框 video[hidden],.影片外框 img[hidden]{display:none!important}
