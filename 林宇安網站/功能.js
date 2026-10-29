@@ -351,26 +351,39 @@ function 建立曲目列表(){
     const 箭頭=document.createElement('span');箭頭.textContent='↗';
     首頁鈕.append(小序,名稱,箭頭);
     首頁鈕.addEventListener('click',()=>{顯示頁面('音樂');跳至歌曲(索引)});
-    首頁容器.appendChild(首頁鈕);
+    if(索引<3)首頁容器.appendChild(首頁鈕);
   });
   設定播放狀態();
 }
+/* 支援正式三首同名音檔替換與臨時本機音檔，無需另外建立雲端歌曲。 */
 找('本機檔案').addEventListener('change',事件=>{
-  let 已配對=0;
-  const 清理=檔名=>檔名.toLowerCase().replace(/\.(mp3|m4a|wav)$/,'').replace(/[\s｜_\-]/g,'');
+  let 已載入=0;
+  const 清理=檔名=>檔名.toLowerCase().replace(/\.(mp3|m4a|wav|mp4)$/,'').replace(/[\s｜_\-]/g,'');
   for(const 檔 of Array.from(事件.target.files||[])){
-    const 索引=歌曲.findIndex(曲=>清理(檔.name)===清理(曲.原檔));
-    if(索引<0)continue;
+    if(!/\.(mp3|wav|m4a|mp4)$/i.test(檔.name)||檔.size===0)continue;
+    const 同名歌曲=歌曲.slice(0,3).findIndex(曲=>清理(曲.原檔)===清理(檔.name));
+    const 索引=同名歌曲>=0?同名歌曲:歌曲.length;
     const 舊連結=本機歌曲.get(索引);
     if(舊連結)URL.revokeObjectURL(舊連結);
     本機歌曲.set(索引,URL.createObjectURL(檔));
-    已配對++;
+    if(同名歌曲<0)歌曲.push({
+      標題:檔.name.replace(/\.[^/.]+$/,''),
+      原檔:檔.name,
+      副標:'本機 '+檔.name.split('.').pop().toUpperCase()+' · 不上傳',
+      封面:'影像/封面舞台.webp'
+    });
+    已載入++;
   }
-  if(已配對){
-    載入歌曲(目前歌曲);
-    顯示訊息('已載入 '+已配對+' 首本機歌曲，可直接播放。');
-  }else 顯示訊息('歌曲檔名未符合三首正式作品，請選擇原始 MP3。');
+  if(已載入){
+    找('歌曲列表').replaceChildren();
+    找('首頁歌曲').replaceChildren();
+    建立曲目列表();
+    顯示訊息('已載入 '+已載入+' 首本機音樂。可從播放清單選取；目前播放不會中斷。');
+  }else 顯示訊息('未選到可支援的 MP3／WAV／M4A／MP4 音檔。');
   事件.target.value='';
+});
+window.addEventListener('pagehide',()=>{
+  for(const 網址 of 本機歌曲.values())URL.revokeObjectURL(網址);
 });
 if('mediaSession' in navigator){
   try{
