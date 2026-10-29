@@ -264,3 +264,68 @@ footer span{margin-inline:18px}
  .手機音量:not([hidden]){position:absolute;bottom:calc(100% + 9px);right:4px;z-index:2;display:flex;gap:14px;align-items:center;min-height:58px;width:min(290px,calc(100vw - 28px));padding:12px 19px;background:rgba(33,48,94,.93);border:1px solid rgba(255,255,255,.44);border-radius:18px;box-shadow:0 12px 25px #09182e8c;-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
  .手機音量 label{white-space:nowrap;font-size:12px}.手機音量 input{flex:1;min-width:0}
 }
+
+
+/* V2.1 JI* GT AUDIO ULTRA：保持官網既有色系，專業工作站採玫瑰粉柔霧玻璃。 */
+.天籟工作站{margin:0 clamp(13px,5vw,85px) 75px;padding:clamp(15px,2.8vw,31px);background:linear-gradient(135deg,rgba(27,32,33,.88),rgba(48,52,63,.82),rgba(137,2,62,.25));border-color:#ffd9da47;color:#FFD9DA;box-shadow:0 25px 60px #10152877}
+.天籟工作站頂{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:19px;border-bottom:1px solid #ffd9da29}
+.天籟工作站頂 h2{font:500 clamp(21px,2.7vw,34px)/1.5 var(--襯線);margin:8px 0;color:#ffe8e6}
+.天籟工作站頂 p:last-child{font-size:12px;color:#ffd9da99}
+.天籟鎖定{display:flex;align-items:center;gap:13px;padding:13px 17px;border:1px solid #EA638C77;border-radius:25px;background:linear-gradient(130deg,#EA638C44,#89023E55);box-shadow:0 10px 30px #EA638C29;white-space:nowrap}
+.天籟鎖定>span:first-child{font-size:26px;color:#FCA17D}.天籟鎖定>span:last-child{font-size:17px}.天籟鎖定 div{font-size:14px;font-weight:700}.天籟鎖定 small{display:block;font-size:10px;margin-top:3px;font-weight:400;color:#ffd9daae}
+.天籟鎖定.正在運作{border-color:#FCA17D;box-shadow:0 0 28px #EA638C55}
+.天籟內頁籤{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:22px 0}
+.天籟內頁籤 button{display:flex;gap:8px;align-items:center;justify-content:center;min-height:74px;padding:12px;border-radius:17px;border:1px solid #FFD9DA36;color:#ffe4e4c4;background:rgba(48,52,63,.55);font-size:14px;transition:background .2s,transform .2s}
+.天籟內頁籤 button>span{font-size:23px;color:#FCA17D}
+.天籟內頁籤 button:hover{transform:translateY(-2px);background:#EA638C33}
+.天籟內頁籤 button.天籟選中{background:linear-gradient(135deg,#EA638C44,#89023E66);border-color:#EA638C;color:#fff4f1;box-shadow:0 0 20px #EA638C26}
+.天籟內容{min-height:455px}.天籟播放格{display:grid;grid-template-columns:minmax(200px,.77fr) minmax(0,1.27fr);gap:clamp(16px,3vw,35px);align-items:center}
+.天籟唱片側{display:flex;flex-direction:column;align-items:center;gap:15px;min-width:0}
+.天籟唱片{width:min(100%,285px);aspect-ratio:1;position:relative;border-radius:100%;padding:8px;border:1px solid #EA638C77;background:radial-gradient(circle at 27% 24%,#fff5,transparent 49%),#1B2021;box-shadow:inset 0 0 22px #fff3,0 0 30px #EA638C33,0 17px 35px #0008;overflow:hidden}
+.天籟唱片 img{width:100%;height:100%;border-radius:100%;object-fit:cover;filter:saturate(.84) brightness(.8);border:5px solid #30343F}
+.天籟唱片.唱片運作 img{animation:天籟旋轉 12s linear infinite}
+@keyframes 天籟旋轉{to{transform:rotate(360deg)}}
+.天籟唱盤軸{position:absolute;width:65px;height:65px;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;background:#30343fe8;border:1px solid #fff4;display:grid;place-items:center;color:#EA638C;box-shadow:inset 0 0 20px #0008}
+.天籟唱片側 h3{font:400 clamp(18px,2.1vw,27px)/1.6 var(--襯線);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.天籟唱片側 p{font-size:12px;color:#EA638C;letter-spacing:.14em}
+.天籟控制側{display:grid;gap:15px;min-width:0}
+.天籟視覺,.天籟操作{background:rgba(27,32,33,.76);border-color:#ffd9da2d;overflow:hidden;border-radius:20px}
+.天籟視覺標頭{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #ffd9da28}
+.天籟視覺標頭>span{font-size:12px;letter-spacing:.04em}
+.天籟頻譜選項{display:flex;flex-wrap:wrap;gap:3px}.天籟頻譜選項 button{border:1px solid transparent;border-radius:9px;background:transparent;color:#ffd9daba;min-height:35px;padding:5px 7px;font-size:11px}
+.天籟頻譜選項 button.天籟選中{color:#FCA17D;border-color:#EA638C77;background:#EA638C26}
+#頻譜畫布{width:100%;height:230px;display:block;border-radius:0;background:linear-gradient(0deg,#89023e22,transparent),#1B2021}
+.天籟頻譜說明{font-size:10px;color:#FFD9DA8c;margin:0;padding:6px 15px 10px}
+.天籟操作{padding:16px 18px}
+.天籟時間{display:flex;gap:11px;align-items:center;font-size:11px;color:#FFD9DAaa;font-variant-numeric:tabular-nums}
+.天籟時間 input{flex:1;min-width:0}
+.天籟操作下{display:grid;grid-template-columns:minmax(0,.9fr) auto minmax(55px,.5fr);align-items:center;gap:8px;margin-top:12px}
+.天籟音量{display:flex;align-items:center;gap:8px;min-width:0}.天籟音量 label{font-size:11px}.天籟音量 input{min-width:0;flex:1}
+.天籟播放按鍵{display:flex;align-items:center;gap:10px}.天籟播放按鍵 button{min-width:44px;min-height:44px;background:#ffd9da0d;color:#ffd9da;border:0;border-radius:100%;font-size:18px}
+.天籟播放按鍵 button.天籟主播放{width:59px;height:59px;background:linear-gradient(130deg,#FCA17D,#EA638C,#89023E);box-shadow:0 0 25px #EA638C61;color:#fff;font-size:22px}
+#天籟循環{min-height:44px;min-width:52px;justify-self:end;padding:8px;border:1px solid #ffd9da3d;border-radius:16px;background:#ffd9da0d;color:#ffd9da;font-size:12px}
+#天籟循環.啟用循環{color:#FCA17D;background:#EA638C38}
+.天籟說明列{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:4px 0 24px}
+.天籟說明列 h3,.天籟處理格 h3{font:400 27px var(--襯線);margin:10px 0}.天籟說明列 p:last-child{font-size:12px;color:#ffd9dab1}
+.天籟說明列>span{border-radius:20px;background:#EA638C25;border:1px solid #EA638C77;padding:10px 17px;font-size:12px}
+.天籟等化顯示{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;align-items:end;padding:30px 11px 23px;min-height:310px;border-radius:20px;background:#1B2021bf;border:1px solid #ffd9da2a}
+.天籟頻段{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;min-width:0;min-height:252px}
+.天籟頻段值{font-size:11px;color:#FCA17D;white-space:nowrap}
+.天籟頻段軌道{height:180px;width:12px;background:#ffd9da16;border-radius:9px;border:1px solid #ffd9da37;position:relative}
+.天籟頻段軌道:after{content:'';height:1px;background:#ffd9da7a;position:absolute;left:-6px;right:-6px;top:50%}
+.天籟頻段游標{position:absolute;left:50%;transform:translate(-50%,-50%);width:26px;height:17px;border-radius:6px;background:#EA638C;border:1px solid #ffd9da99;box-shadow:0 0 13px #EA638C80;z-index:1}
+.天籟頻段名稱{font-size:11px;white-space:nowrap}
+.天籟處理格{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.天籟參數卡{display:flex;flex-direction:column;gap:8px;border:1px solid #ffd9da25;background:#1B2021ab;border-radius:16px;padding:15px 18px;margin-top:13px}
+.天籟參數卡 strong{font-size:14px;font-weight:500}.天籟參數卡 span{color:#FCA17D;font-size:14px}.天籟參數卡 small{color:#FFD9DA99;line-height:1.7;font-size:11px}
+.天籟清單 .歌曲列{grid-template-columns:32px minmax(0,1fr) 48px}.天籟清單 .歌曲列 .時長{display:none}
+.天籟清單說明{margin-top:15px;font-size:12px;color:#FFD9DA9c;line-height:1.9}
+.天籟工作站底{border-top:1px solid #ffd9da22;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:28px;padding-top:19px;color:#ffd9da91;font-size:10px;letter-spacing:.14em}
+.天籟工作站 input[type=range]::-webkit-slider-runnable-track{height:7px;background:#ffd9da3d}
+.天籟工作站 input[type=range]::-webkit-slider-thumb{height:20px;width:20px;margin-top:-7px;background:#EA638C;border:2px solid #FFD9DA;box-shadow:0 0 13px #EA638C88}
+.天籟工作站 input[type=range]::-moz-range-track{height:7px;background:#ffd9da3d}
+.天籟工作站 input[type=range]::-moz-range-thumb{height:20px;width:20px;background:#EA638C;border:2px solid #FFD9DA}
+@media(max-width:900px){.天籟播放格{grid-template-columns:minmax(175px,.6fr) minmax(0,1fr)}.天籟唱片{max-width:225px}.天籟操作下{grid-template-columns:1fr}.天籟播放按鍵{justify-content:center}.天籟音量{width:55%;margin:0 auto;order:2}#天籟循環{position:absolute;right:15px;bottom:17px}.天籟操作{position:relative}}
+@media(max-width:767px){.天籟工作站{margin:0 11px 45px;padding:13px}.天籟工作站頂{flex-direction:column;align-items:flex-start;gap:12px}.天籟鎖定{padding:9px 13px}.天籟內頁籤{gap:5px;padding:16px 0}.天籟內頁籤 button{min-height:72px;padding:9px 4px;display:flex;flex-direction:column;font-size:11px;line-height:1.5;border-radius:12px}.天籟內頁籤 button>span{font-size:17px}.天籟內容{min-height:0}.天籟播放格{grid-template-columns:1fr;gap:19px}.天籟唱片側{gap:8px}.天籟唱片{width:min(200px,50vw)}.天籟唱片側 h3{font-size:20px}.天籟視覺標頭{padding:9px 12px}.天籟頻譜選項{width:100%;justify-content:space-between}.天籟頻譜選項 button{padding:4px;font-size:10px}#頻譜畫布{height:170px}.天籟操作{padding:13px 12px}.天籟等化顯示{gap:2px;padding:20px 3px 17px;min-height:290px}.天籟頻段軌道{height:155px;width:9px}.天籟頻段游標{width:18px;height:13px}.天籟頻段值,.天籟頻段名稱{font-size:9px}.天籟處理格{grid-template-columns:1fr;gap:30px}.天籟工作站底{font-size:9px}}
+@media(max-width:374px){.天籟內頁籤 button{font-size:10px}.天籟頻段值,.天籟頻段名稱{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.天籟唱片.唱片運作 img{animation:none}}

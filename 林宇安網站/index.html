@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" href="./影像/封面舞台.webp" as="image">
-<link rel="stylesheet" href="./樣式.css?v=2.0.0">
-<script defer src="./功能.js?v=2.0.0"></script>
+<link rel="stylesheet" href="./樣式.css?v=2.1.0">
+<script defer src="./功能.js?v=2.1.0"></script>
 <title>林宇安｜晨霧微光・官方音樂網站</title>
 </head>
 <body>
@@ -98,25 +98,28 @@
 </section>
 
 <section class="頁面" id="音樂" hidden aria-labelledby="音樂標題">
-  <div class="內頁題頭"><p class="眉標">01 / MUSIC COLLECTION</p><h1 id="音樂標題">把夜晚，<br><em>唱給你聽。</em></h1><p>三首不同的心情。戴上耳機，讓聲音慢慢靠近。</p></div>
-  <div class="音樂版">
-    <div class="專輯視覺 霧玻璃"><img src="./影像/演唱近照.webp" alt="林宇安演唱近照" loading="lazy"><span>LIN YU-AN · ORIGINAL MUSIC</span></div>
-    <div class="音樂內容 霧玻璃"><div class="音樂列表頭"><span class="眉標">THREE SONGS / 三首歌曲</span><label class="線框按鈕 本機鈕">載入本機 MP3 <input id="本機檔案" type="file" accept="audio/mpeg,audio/mp3,audio/*" multiple hidden></label></div><div id="歌曲列表" class="歌曲列表"></div><p class="說明字">正式來源為三首已授權的原創 MP3。如遇網路限制，可選擇本機同名音檔播放；此操作只在你的裝置上生效。</p></div>
+<div class="內頁題頭"><p class="眉標">JI* GT AUDIO ULTRA · LIN YU-AN EDITION</p><h1 id="音樂標題">聽見每種情緒，<br><em>也聽見聲音的細節。</em></h1><p>三首原創音樂，全程固定「一鍵天籟」音效預設。</p></div>
+<div class="天籟工作站 霧玻璃">
+ <div class="天籟工作站頂"><div><p class="眉標">JI* GT AUDIO ULTRA</p><h2>林宇安｜發燒音訊工作站</h2><p>10 段等化 · 殘響 · 諧波 · 空間定位</p></div><div class="天籟鎖定" id="天籟模式狀態" role="status"><span>✦</span><div>一鍵天籟<small>固定音效 · 播放啟動</small></div><span>🔒</span></div></div>
+ <nav class="天籟內頁籤" aria-label="音訊工作站頁籤">
+  <button type="button" data-工作站="控制" class="天籟選中" aria-pressed="true"><span>◉</span>播放控制與視覺</button>
+  <button type="button" data-工作站="等化" aria-pressed="false"><span>≋</span>聲學等化器</button>
+  <button type="button" data-工作站="處理" aria-pressed="false"><span>✧</span>DSP 音效與清單</button>
+ </nav>
+ <div class="天籟內容" data-工作站內容="控制">
+  <div class="天籟播放格">
+   <div class="天籟唱片側"><div class="天籟唱片"><img id="天籟封面" src="./影像/封面舞台.webp" alt="正在播放的唱片封面"><span class="天籟唱盤軸" aria-hidden="true">●</span></div><h3 id="天籟歌名">來安慰我吧</h3><p>林宇安 · LIN YU-AN</p></div>
+   <div class="天籟控制側">
+    <div class="天籟視覺 霧玻璃"><div class="天籟視覺標頭"><span>真實音訊 RTA 頻譜</span><div class="天籟頻譜選項" role="group" aria-label="頻譜樣式"><button type="button" data-頻譜="柱狀" class="天籟選中" aria-pressed="true">柱狀</button><button type="button" data-頻譜="波形" aria-pressed="false">波形</button><button type="button" data-頻譜="圓環" aria-pressed="false">圓環</button><button type="button" data-頻譜="矩陣" aria-pressed="false">矩陣</button><button type="button" data-頻譜="光譜" aria-pressed="false">光譜</button></div></div><canvas id="頻譜畫布" width="700" height="260" role="img" aria-label="由實際播放音訊分析出的頻譜"></canvas><p class="天籟頻譜說明">頻譜取自目前真實音訊，暫停時不模擬動態。</p></div>
+    <div class="天籟操作 霧玻璃"><div class="天籟時間"><span id="天籟目前時間">0:00</span><input type="range" id="天籟進度" min="0" max="1000" value="0" aria-label="播放進度"><span id="天籟總時間">0:00</span></div><div class="天籟操作下"><div class="天籟音量"><label for="天籟音量">音量</label><input id="天籟音量" type="range" min="0" max="100" value="80"></div><div class="天籟播放按鍵"><button id="天籟上一首" type="button" aria-label="上一首">⏮</button><button id="天籟播放" type="button" class="天籟主播放" aria-label="播放">▶</button><button id="天籟下一首" type="button" aria-label="下一首">⏭</button></div><button id="天籟循環" type="button" aria-pressed="false" aria-label="單曲循環">↻ 循環</button></div></div>
+   </div>
   </div>
-  <div class="音效面板 霧玻璃">
-    <div class="音效說明"><span class="眉標">GT AUDIO · PLAYER STUDIO</span><h2>只為聲音，<br>留一點空間。</h2><p>播放時顯示真實音訊頻譜；停止時不模擬跳動。</p></div>
-    <div class="音效操作">
-      <canvas id="頻譜畫布" height="104" width="700" role="img" aria-label="音樂播放時的即時音訊頻譜"></canvas>
-      <div class="等化控制">
-        <label for="低音">低音 <span id="低音值">0 dB</span><input id="低音" type="range" min="-12" max="12" value="0"></label>
-        <label for="中音">中音 <span id="中音值">0 dB</span><input id="中音" type="range" min="-12" max="12" value="0"></label>
-        <label for="高音">高音 <span id="高音值">0 dB</span><input id="高音" type="range" min="-12" max="12" value="0"></label>
-        <button type="button" id="重設音效" class="線框按鈕">恢復原始音色</button>
-      </div>
-    </div>
-  </div>
+ </div>
+ <div class="天籟內容" data-工作站內容="等化" hidden><div class="天籟說明列"><div><p class="眉標">TEN-BAND IIR EQUALIZER</p><h3>十段聲學等化器</h3><p>32Hz 至 16kHz，固定使用一鍵天籟參數，不開放手動修改。</p></div><span>🔒 鎖定音色</span></div><div id="天籟等化顯示" class="天籟等化顯示"></div></div>
+ <div class="天籟內容" data-工作站內容="處理" hidden><div class="天籟處理格"><div><p class="眉標">DSP · HEAVENLY</p><h3>天籟音效處理鏈</h3><div class="天籟參數卡"><strong>空間定位</strong><span>+75% · 立體聲向右定位</span><small>不是實際的多聲道 3D 環繞</small></div><div class="天籟參數卡"><strong>柔和空間殘響</strong><span>開啟 · 35% 濕聲</span></div><div class="天籟參數卡"><strong>真空管諧波</strong><span>開啟 · 驅動 45</span></div><div class="天籟參數卡"><strong>峰值保護</strong><span>壓縮處理 + 輸出預留</span></div></div><div><p class="眉標">ORIGINAL MUSIC · 3 TRACKS</p><h3>林宇安原創播放清單</h3><div class="歌曲列表 天籟清單" id="歌曲列表"></div><label class="線框按鈕 本機鈕">＋ 載入本機 MP3 <input id="本機檔案" type="file" accept="audio/mpeg,audio/mp3,audio/*" multiple hidden></label><p class="天籟清單說明">如雲端歌曲無法播放，可選擇同名 MP3。本機音樂不會上傳伺服器。</p></div></div></div>
+ <div class="天籟工作站底"><span>JI* GT AUDIO ULTRA</span><span>HEAVENLY PRESET · LOCKED</span><span>LIN YU-AN ORIGINAL MUSIC</span></div>
+</div>
 </section>
-
 <section class="頁面" id="寫真" hidden aria-labelledby="寫真標題">
   <div class="內頁題頭"><p class="眉標">02 / GALLERY</p><h1 id="寫真標題">把每一個片刻，<br><em>留在光裡。</em></h1><p>從舞台燈光到日常的安靜，收藏屬於林宇安的畫面。</p></div>
   <div class="寫真控制" role="group" aria-label="寫真分類">

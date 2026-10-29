@@ -106,35 +106,49 @@ function 載入歌曲(索引) {
     })}catch(錯誤){console.debug('媒體資訊不支援',錯誤)}
   }
 }
+const 天籟參數=Object.freeze({等化:Object.freeze([7,5,2,0,1.5,3.5,4.5,3,1,-3]),頻率:Object.freeze([32,64,125,250,500,1000,2000,4000,8000,16000]),空間:.75,殘響:.35,諧波:45});
+let 工作站音效圖=null;
+function 天籟諧波曲線(驅動){
+ const n=8192,曲線=new Float32Array(n),倍率=1+驅動/100*3,標準=Math.atan(倍率);
+ for(let i=0;i<n;i++){let x=i*2/(n-1)-1;曲線[i]=Math.atan(x*倍率)/標準}
+ return 曲線;
+}
+function 天籟空間殘響(環境){
+ const 時長=2.4,長度=Math.floor(環境.sampleRate*時長),衝擊=環境.createBuffer(2,長度,環境.sampleRate);
+ for(let channel=0;channel<2;channel++){const 資料=衝擊.getChannelData(channel);let 前=0;
+  for(let i=0;i<長度;i++){前=(Math.random()*2-1+前*.78)/1.78;資料[i]=前*Math.pow(1-i/長度,2.5)}
+ }
+ return 衝擊;
+}
 function 初始化音效(){
-  if(音效環境)return;
-  const 建構 = window.AudioContext || window.webkitAudioContext;
-  if(!建構)return;
-  try{
-    const 環境 = new 建構();
-    const 來源 = 環境.createMediaElementSource(音訊);
-    const 低 = 環境.createBiquadFilter();
-    低.type='lowshelf';低.frequency.value=190;
-    const 中 = 環境.createBiquadFilter();
-    中.type='peaking';中.frequency.value=1150;中.Q.value=.85;
-    const 高 = 環境.createBiquadFilter();
-    高.type='highshelf';高.frequency.value=4900;
-    const 觀測 = 環境.createAnalyser();
-    觀測.fftSize=2048;
-    觀測.smoothingTimeConstant=.82;
-    來源.connect(低);低.connect(中);中.connect(高);高.connect(觀測);觀測.connect(環境.destination);
-    音效環境=環境;音訊來源節點=來源;濾鏡陣列=[低,中,高];分析器=觀測;
-    頻譜資料 = new Uint8Array(觀測.frequencyBinCount);
-    設定音效數值();
-  }catch(錯誤){console.warn('音效處理無法初始化；使用原生播放器',錯誤)}
-}
-function 設定音效數值(){
-  for(const [索引,名稱] of ['低音','中音','高音'].entries()){
-    const 數值=Number(找(名稱).value);
-    找(名稱+'值').textContent=(數值>0?'+':'')+數值+' dB';
-    if(濾鏡陣列&&音效環境)濾鏡陣列[索引].gain.setTargetAtTime(數值,音效環境.currentTime,.035);
+ if(音效環境)return;
+ const 建構=window.AudioContext||window.webkitAudioContext;
+ if(!建構){顯示訊息('目前瀏覽器不支援天籟 DSP 音效');return}
+ try{
+  const 環境=new 建構(),來源=環境.createMediaElementSource(音訊);
+  const 諧波=環境.createWaveShaper();諧波.curve=天籟諧波曲線(天籟參數.諧波);諧波.oversample='4x';
+  const 低通=環境.createBiquadFilter();低通.type='lowpass';低通.frequency.value=14000;
+  const 空間=環境.createStereoPanner();空間.pan.value=天籟參數.空間;
+  const 濾鏡組=[];
+  for(let i=0;i<天籟參數.頻率.length;i++){
+   const 濾波=環境.createBiquadFilter();濾波.type=i===0?'lowshelf':i===9?'highshelf':'peaking';
+   濾波.frequency.value=天籟參數.頻率[i];濾波.Q.value=.8;濾波.gain.value=天籟參數.等化[i];
+   濾鏡組.push(濾波);
   }
+  const 殘響=環境.createConvolver();殘響.buffer=天籟空間殘響(環境);
+  const 乾=環境.createGain(),濕=環境.createGain();乾.gain.value=1-天籟參數.殘響*.5;濕.gain.value=天籟參數.殘響;
+  const 壓縮=環境.createDynamicsCompressor();壓縮.threshold.value=-13;壓縮.knee.value=6;壓縮.ratio.value=8;壓縮.attack.value=.003;壓縮.release.value=.19;
+  const 預留=環境.createGain();預留.gain.value=.56;
+  const 觀測=環境.createAnalyser();觀測.fftSize=2048;觀測.smoothingTimeConstant=.83;
+  來源.connect(諧波);諧波.connect(低通);低通.connect(空間);
+  let 末端=空間;for(const 濾波 of 濾鏡組){末端.connect(濾波);末端=濾波}
+  末端.connect(乾);末端.connect(殘響);殘響.connect(濕);
+  乾.connect(壓縮);濕.connect(壓縮);壓縮.connect(預留);預留.connect(觀測);觀測.connect(環境.destination);
+  音效環境=環境;濾鏡=濾鏡組;分析器=觀測;頻譜資料=new Uint8Array(觀測.frequencyBinCount);
+  工作站音效圖={來源,諧波,低通,空間,濾鏡組,殘響,乾,濕,壓縮,預留};
+ }catch(錯誤){console.error('天籟 DSP 初始化失敗',錯誤);顯示訊息('天籟音效無法啟動，請重新整理網站後再播放。')}
 }
+function 設定音效數值(){/* 音效已由固定十段天籟預設鎖定，禁止動態改變。 */}
 function 準備播放(){
   // iPhone Safari 要求在使用者的點擊事件內呼叫 play() 與 resume()。
   if(!音訊.src)載入歌曲(目前歌曲);
@@ -184,17 +198,26 @@ function 跳至歌曲(索引){
   const 原因=代碼===2?'網路連線中斷':代碼===3?'音訊解碼失敗':代碼===4?'音樂來源無法取得':'未知錯誤';
   顯示訊息(原因+'：請稍後重試，或在音樂頁載入原始 MP3。',7600);
 });
-['低音','中音','高音'].forEach(名稱=>找(名稱).addEventListener('input',()=>{初始化音效();設定音效數值()}));
-找('重設音效').addEventListener('click',()=>{
-  ['低音','中音','高音'].forEach(名稱=>找(名稱).value=0);
-  設定音效數值();顯示訊息('已恢復原始音色');
-});
+/* 十段天籟 EQ 固定顯示，不讓前端滑桿覆蓋預設值。 */
+function 建立固定等化顯示(){
+ const 容器=找('天籟等化顯示');
+ 天籟參數.頻率.forEach((頻率,i)=>{
+  const 值=天籟參數.等化[i],欄=document.createElement('div');欄.className='天籟頻段';
+  const 數值=document.createElement('span');數值.className='天籟頻段值';數值.textContent=(值>0?'+':'')+值+' dB';
+  const 軌道=document.createElement('div');軌道.className='天籟頻段軌道';軌道.setAttribute('role','img');軌道.setAttribute('aria-label',頻率+'赫茲，'+數值.textContent);
+  const 游標=document.createElement('div');游標.className='天籟頻段游標';游標.style.top=(50-值/12*44)+'%';軌道.appendChild(游標);
+  const 標籤=document.createElement('span');標籤.className='天籟頻段名稱';標籤.textContent=頻率>=1000?(頻率/1000+'k'):String(頻率);
+  欄.append(數值,軌道,標籤);容器.append(欄);
+ });
+}
+建立固定等化顯示();
 function 同步音量(數值){
   const 安全值=Math.max(0,Math.min(100,Number(數值)));
   音訊.volume=安全值/100;
   音訊.muted=安全值===0;
   找('音量').value=安全值;
   找('手機音量範圍').value=安全值;
+  找('天籟音量').value=安全值;
   找('靜音切換').textContent=安全值===0?'♩':'♪';
   找('靜音切換').setAttribute('aria-label',安全值===0?'恢復音量':'靜音');
   if(安全值>0)上次音量=安全值;
@@ -216,42 +239,47 @@ document.addEventListener('click',事件=>{
 找('手機音量範圍').addEventListener('input',事件=>同步音量(事件.target.value));
 找('靜音切換').addEventListener('click',()=>同步音量(音訊.muted||音訊.volume===0?上次音量:0));
 同步音量(80);
+找('天籟音量').value=80;
 
+let 頻譜樣式='柱狀',工作站頁籤='控制',循環歌曲=false;
+function 頻譜可見(){return !找('音樂').hidden&&工作站頁籤==='控制'}
 function 繪製頻譜(){
-  const 寬=畫布.clientWidth;
-  const 高=畫布.clientHeight;
-  const 像素比例=Math.min(2,window.devicePixelRatio||1);
-  const 目標寬=Math.max(1,Math.floor(寬*像素比例));
-  const 目標高=Math.max(1,Math.floor(高*像素比例));
-  if(畫布.width!==目標寬||畫布.height!==目標高){
-    畫布.width=目標寬;畫布.height=目標高;
-  }
-  繪圖.setTransform(像素比例,0,0,像素比例,0,0);
-  繪圖.clearRect(0,0,寬,高);
-  if(!分析器||音訊.paused||找('音樂').hidden)return;
-  分析器.getByteFrequencyData(頻譜資料);
-  const 欄數=Math.max(12,Math.min(58,Math.floor(寬/9)));
-  const 間距=3;
-  const 欄寬=(寬-(欄數-1)*間距)/欄數;
-  for(let 欄=0;欄<欄數;欄++){
-    const 比例=欄/欄數;
-    const 取樣=Math.min(頻譜資料.length-1,Math.floor(Math.pow(比例,1.7)*(頻譜資料.length*.6)));
-    const 強度=頻譜資料[取樣]/255;
-    const 高度=強度<.015?0:Math.max(2,Math.pow(強度,.82)*(高-10));
-    if(高度<=0)continue;
-    繪圖.fillStyle=欄%3===0?'rgba(255,238,207,.83)':欄%3===1?'rgba(211,101,130,.79)':'rgba(191,183,238,.78)';
-    繪圖.fillRect(欄*(欄寬+間距),高-高度,欄寬,高度);
-  }
+ const 寬=畫布.clientWidth,高=畫布.clientHeight,比例=Math.min(2,window.devicePixelRatio||1);
+ if(!寬||!高)return;
+ if(畫布.width!==Math.round(寬*比例)||畫布.height!==Math.round(高*比例)){畫布.width=Math.round(寬*比例);畫布.height=Math.round(高*比例)}
+ 繪圖.setTransform(比例,0,0,比例,0,0);繪圖.clearRect(0,0,寬,高);
+ if(!分析器||音訊.paused||!頻譜可見())return;
+ if(頻譜樣式==='波形'){
+  const 波形=new Uint8Array(分析器.fftSize);分析器.getByteTimeDomainData(波形);
+  繪圖.strokeStyle='#EA638C';繪圖.lineWidth=2.5;繪圖.beginPath();
+  for(let i=0;i<波形.length;i++){const x=i/(波形.length-1)*寬,y=高/2+(波形[i]-128)/128*高*.43;if(i===0)繪圖.moveTo(x,y);else 繪圖.lineTo(x,y)}
+  繪圖.stroke();return;
+ }
+ 分析器.getByteFrequencyData(頻譜資料);
+ const 讀取=(i,n)=>頻譜資料[Math.min(頻譜資料.length-1,Math.max(1,Math.floor(Math.pow(i/n,1.7)*頻譜資料.length*.6)))]/255;
+ if(頻譜樣式==='柱狀'){
+  const n=55,間=2,寬度=(寬-間*(n-1))/n;
+  for(let i=0;i<n;i++){let h=Math.pow(讀取(i,n),1.25)*高*.92;if(h<1)continue;繪圖.fillStyle=i>n*.7?'#FCA17D':'#EA638C';繪圖.fillRect(i*(寬度+間),高-h,Math.max(1,寬度),h)}
+ }else if(頻譜樣式==='圓環'){
+  const n=72,r=Math.min(寬,高)*.23;
+  for(let i=0;i<n;i++){const t=i/n*Math.PI*2,h=讀取(i,n)*r;繪圖.beginPath();繪圖.moveTo(寬/2+Math.cos(t)*r,高/2+Math.sin(t)*r);繪圖.lineTo(寬/2+Math.cos(t)*(r+h),高/2+Math.sin(t)*(r+h));繪圖.lineWidth=3;繪圖.strokeStyle=i%3===0?'#FCA17D':'#EA638C';繪圖.stroke()}
+ }else if(頻譜樣式==='矩陣'){
+  const n=32,m=14,cw=寬/n,ch=高/m;
+  for(let i=0;i<n;i++)for(let j=0;j<Math.floor(讀取(i,n)*m);j++){繪圖.fillStyle=j>m*.7?'#FCA17D':'#EA638C';繪圖.fillRect(i*cw+2,高-(j+1)*ch+2,Math.max(1,cw-4),Math.max(1,ch-4))}
+ }else if(頻譜樣式==='光譜'){
+  const n=40,cw=寬/n;
+  for(let i=0;i<n;i++){const h=Math.pow(讀取(i,n),1.2)*高;if(h<1)continue;const g=繪圖.createLinearGradient(0,高,0,高-h);g.addColorStop(0,'rgba(137,2,62,0)');g.addColorStop(1,'#36C9C6');繪圖.fillStyle=g;繪圖.beginPath();繪圖.moveTo(i*cw,高);繪圖.lineTo((i+.5)*cw,高-h);繪圖.lineTo((i+1)*cw,高);繪圖.fill()}
+ }
 }
 function 頻譜迴圈(時間){
-  if(音訊.paused||找('音樂').hidden){頻譜幀=0;return}
+  if(音訊.paused||!頻譜可見()){頻譜幀=0;return}
   if(時間-上次頻譜>=(減少動態.matches?120:35)){
     繪製頻譜();上次頻譜=時間;
   }
   頻譜幀=requestAnimationFrame(頻譜迴圈);
 }
 function 開始頻譜(){
-  if(頻譜幀||音訊.paused||找('音樂').hidden)return;
+  if(頻譜幀||音訊.paused||!頻譜可見())return;
   頻譜幀=requestAnimationFrame(頻譜迴圈);
 }
 function 停止頻譜(){
@@ -262,6 +290,47 @@ document.addEventListener('visibilitychange',()=>{
   if(document.hidden)停止頻譜();
   else if(!音訊.paused)開始頻譜();
 });
+/* 工作站與既有底部播放器共用同一音訊元素 */
+function 設定工作站頁籤(名稱){
+ 工作站頁籤=名稱;
+ document.querySelectorAll('[data-工作站]').forEach(鈕=>{let 啟用=鈕.dataset.工作站===名稱;鈕.classList.toggle('天籟選中',啟用);鈕.setAttribute('aria-pressed',String(啟用))});
+ document.querySelectorAll('[data-工作站內容]').forEach(面板=>面板.hidden=面板.dataset.工作站內容!==名稱);
+ if(名稱==='控制'&&!音訊.paused)開始頻譜();else 停止頻譜();
+}
+document.querySelectorAll('[data-工作站]').forEach(鈕=>鈕.addEventListener('click',()=>設定工作站頁籤(鈕.dataset.工作站)));
+document.querySelectorAll('[data-頻譜]').forEach(鈕=>鈕.addEventListener('click',()=>{
+ 頻譜樣式=鈕.dataset.頻譜;
+ document.querySelectorAll('[data-頻譜]').forEach(按=>{const 啟用=按===鈕;按.classList.toggle('天籟選中',啟用);按.setAttribute('aria-pressed',String(啟用))});
+ if(!音訊.paused)繪製頻譜();
+}));
+function 同步天籟工作站(){
+ const 播放中=!音訊.paused&&!音訊.ended;
+ 找('天籟歌名').textContent=歌曲[目前].標題;
+ 找('天籟封面').src='./'+歌曲[目前].封面;
+ 找('天籟播放').textContent=播放中?'❚❚':'▶';
+ 找('天籟播放').setAttribute('aria-label',播放中?'暫停':'播放');
+ 找('天籟唱片').classList.toggle('唱片運作',播放中);
+ const 狀態=找('天籟模式狀態');狀態.classList.toggle('正在運作',播放中&&!!音效環境);
+ 狀態.querySelector('small').textContent=播放中&&音效環境?'固定預設 · 音效運作中':'固定音效 · 播放啟動';
+}
+function 同步天籟時間(){
+ 找('天籟目前時間').textContent=時間顯示(音訊.currentTime);
+ 找('天籟總時間').textContent=時間顯示(音訊.duration);
+ 找('天籟進度').value=Number.isFinite(音訊.duration)&&音訊.duration>0?Math.round(音訊.currentTime/音訊.duration*1000):0;
+}
+找('天籟播放').addEventListener('click',播放切換);
+找('天籟上一首').addEventListener('click',()=>跳至歌曲(目前-1));
+找('天籟下一首').addEventListener('click',()=>跳至歌曲(目前+1));
+找('天籟進度').addEventListener('input',事件=>{if(Number.isFinite(音訊.duration)&&音訊.duration>0)音訊.currentTime=Number(事件.target.value)/1000*音訊.duration});
+找('天籟音量').addEventListener('input',事件=>同步音量(事件.target.value));
+找('天籟循環').addEventListener('click',()=>{
+ 循環歌曲=!循環歌曲;音訊.loop=循環歌曲;
+ 找('天籟循環').classList.toggle('啟用循環',循環歌曲);
+ 找('天籟循環').setAttribute('aria-pressed',String(循環歌曲));
+});
+for(const 名稱 of ['play','pause','ended','loadedmetadata','durationchange'])音訊.addEventListener(名稱,()=>{同步天籟工作站();同步天籟時間()});
+音訊.addEventListener('timeupdate',同步天籟時間);
+new MutationObserver(()=>同步天籟工作站()).observe(找('播放標題'),{childList:true,characterData:true,subtree:true});
 function 建立曲目列表(){
   const 容器=找('歌曲列表');
   const 首頁容器=找('首頁歌曲');
