@@ -255,3 +255,12 @@ footer span{margin-inline:18px}
 @media(prefers-reduced-motion:reduce){
  *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* V2.0 手機版音量浮層：不擠壓播放與進度操作 */
+.手機音量鈕{display:none;align-items:center;justify-content:center;flex:0 0 auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:50%;width:42px;height:42px}
+@media(max-width:767px){
+ .手機音量鈕{display:inline-flex;width:34px;height:42px;font-size:17px;margin-left:auto;min-width:34px}
+ .現在歌曲>div{flex:1;min-width:0}
+ .手機音量:not([hidden]){position:absolute;bottom:calc(100% + 9px);right:4px;z-index:2;display:flex;gap:14px;align-items:center;min-height:58px;width:min(290px,calc(100vw - 28px));padding:12px 19px;background:rgba(33,48,94,.93);border:1px solid rgba(255,255,255,.44);border-radius:18px;box-shadow:0 12px 25px #09182e8c;-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
+ .手機音量 label{white-space:nowrap;font-size:12px}.手機音量 input{flex:1;min-width:0}
+}

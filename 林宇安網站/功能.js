@@ -56,7 +56,7 @@ function 顯示頁面(名稱,寫入歷史=true) {
   else 停止頻譜();
 }
 document.querySelectorAll('[data-導覽]').forEach(按鈕=>按鈕.addEventListener('click',事件=>{
-  event?.preventDefault?.();
+  事件.preventDefault();
   顯示頁面(按鈕.dataset.導覽);
 }));
 window.addEventListener('popstate',()=>{const 名稱=decodeURIComponent(location.hash.substring(1))||'首頁';顯示頁面(標籤.includes(名稱)?名稱:'首頁',false)});
@@ -199,6 +199,19 @@ function 同步音量(數值){
   找('靜音切換').setAttribute('aria-label',安全值===0?'恢復音量':'靜音');
   if(安全值>0)上次音量=安全值;
 }
+找('手機音量鈕').addEventListener('click',()=>{
+  const 面板=找('手機音量面板');
+  const 開啟=面板.hidden;
+  面板.hidden=!開啟;
+  找('手機音量鈕').setAttribute('aria-expanded',String(開啟));
+});
+document.addEventListener('click',事件=>{
+  const 面板=找('手機音量面板');
+  if(!面板.hidden&&!事件.target.closest('#手機音量面板')&&!事件.target.closest('#手機音量鈕')){
+    面板.hidden=true;
+    找('手機音量鈕').setAttribute('aria-expanded','false');
+  }
+});
 找('音量').addEventListener('input',事件=>同步音量(事件.target.value));
 找('手機音量範圍').addEventListener('input',事件=>同步音量(事件.target.value));
 找('靜音切換').addEventListener('click',()=>同步音量(音訊.muted||音訊.volume===0?上次音量:0));
@@ -292,7 +305,7 @@ function 建立曲目列表(){
 });
 if('mediaSession' in navigator){
   try{
-    navigator.mediaSession.setActionHandler('play',播放切換);
+    navigator.mediaSession.setActionHandler('play',()=>{if(音訊.paused)準備播放()});
     navigator.mediaSession.setActionHandler('pause',()=>音訊.pause());
     navigator.mediaSession.setActionHandler('previoustrack',()=>跳至歌曲(目前歌曲-1));
     navigator.mediaSession.setActionHandler('nexttrack',()=>跳至歌曲(目前歌曲+1));
@@ -352,7 +365,7 @@ document.addEventListener('keydown',事件=>{
     const 按鈕=[找('關閉燈箱'),找('照片前一張'),找('照片下一張')];
     const 目前位置=按鈕.indexOf(document.activeElement);
     const 下一個=(目前位置+(事件.shiftKey?-1:1)+按鈕.length)%按鈕.length;
-    event?.preventDefault?.();按鈕[下一個].focus();
+    事件.preventDefault();按鈕[下一個].focus();
   }
 });
 const 影片=找('影片播放器');
