@@ -10,15 +10,16 @@
 <meta property="og:image" content="https://lin-yu-an-music.vercel.app/影像/封面舞台.webp">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="林宇安音樂">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/svg+xml" href="./圖示.svg">
-<link rel="apple-touch-icon" sizes="192x192" href="./圖示-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./圖示-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./圖示-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" href="./影像/封面舞台.webp" as="image">
-<link rel="stylesheet" href="./樣式.css?v=2.1.3">
-<script defer src="./功能.js?v=2.1.3"></script>
+<link rel="stylesheet" href="./樣式.css?v=2.1.4">
+<script defer src="./功能.js?v=2.1.4"></script>
 <title>林宇安｜晨霧微光・官方音樂網站</title>
 </head>
 <body>
@@ -149,7 +150,26 @@
 
 <section class="頁面" id="影像" hidden aria-labelledby="影像標題">
   <div class="內頁題頭"><p class="眉標">03 / MOVING IMAGE</p><h1 id="影像標題">讓畫面，<br><em>晚一點抵達。</em></h1><p>電影敘事與原創歌曲，在畫面裡延續音樂的溫度。</p></div>
-  <div class="影片卡 霧玻璃"><div class="影片外框"><img id="預告封面" src="./影像/封面舞台.webp" alt="林宇安音樂錄影帶預告封面" loading="lazy"><video id="影片播放器" playsinline controls preload="metadata" poster="./影像/封面舞台.webp" hidden aria-label="林宇安音樂錄影帶"></video><div class="影片敬請期待" id="影片提示"><span class="未公開圓圈" aria-hidden="true">✦</span><span class="眉標">MUSIC FILM · COMING SOON</span><h2>敬請期待</h2><p>MV 尚未正式公開</p></div></div><p class="影片下註">待影片正式上架後支援 MP4／H.264、全螢幕與手機播放；播放影片時自動暫停背景歌曲。</p></div>
+  <div class="影片卡 霧玻璃">
+    <div class="影片作品標頭">
+      <span class="眉標">NEW VIDEO · LIN YU-AN</span>
+      <h2>走向你，唱進故事裡。</h2>
+      <p>林宇安・2026 年 10 月｜15.5 秒電影感短片</p>
+    </div>
+    <div class="影片外框">
+      <img id="預告封面" src="./影像/林宇安_MV_初登場_封面.webp" alt="林宇安手持金色麥克風，走過兩側歌迷掌聲迎接的畫面" loading="lazy" hidden>
+      <video id="影片播放器" playsinline webkit-playsinline controls preload="metadata" poster="./影像/林宇安_MV_初登場_封面.webp" aria-label="林宇安走向鏡頭與歌迷互動的十五秒短片" width="896" height="512">
+        您的瀏覽器無法播放此影片，請使用最新版 Safari 或 Chrome。
+      </video>
+      <div class="影片敬請期待" id="影片提示" hidden>
+        <span class="未公開圓圈" aria-hidden="true">✦</span>
+        <h2>影片暫時無法載入</h2>
+        <p>請重新整理頁面，或稍後再試。</p>
+      </div>
+    </div>
+    <p class="影片下註">點擊影片播放鍵即可欣賞。支援 iPhone、Android 與桌機全螢幕，播放影片會自動暫停背景歌曲。</p>
+    <p class="影片狀態訊息" id="影片載入狀態" role="status" aria-live="polite">影片準備就緒 · H.264／AAC</p>
+  </div>
 </section>
 
 <section class="頁面" id="關於" hidden aria-labelledby="關於標題">

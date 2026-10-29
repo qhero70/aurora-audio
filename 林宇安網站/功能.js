@@ -52,6 +52,8 @@ function 顯示頁面(名稱,寫入歷史=true) {
   }
   if(寫入歷史 && location.hash !== '#' + encodeURIComponent(名稱)) history.pushState({頁面:名稱},'', '#' + encodeURIComponent(名稱));
   window.scrollTo({top:0,behavior:'auto'});
+  // 離開影像頁籤即暫停影片，避免背景仍繼續播放聲音。
+  if(名稱!=='影像' && document.getElementById('影片播放器') && !找('影片播放器').paused)找('影片播放器').pause();
   if (名稱 === '音樂' && !音訊.paused) 開始頻譜();
   else 停止頻譜();
 }
@@ -475,13 +477,29 @@ document.addEventListener('keydown',事件=>{
   }
 });
 const 影片=找('影片播放器');
-影片.addEventListener('play',()=>{if(!音訊.paused)音訊.pause()});
-/** 當影片檔真正存在時，由站內設定提供 MP4 路徑；未公開時絕不顯示假播放按鈕。 */
-const 已公開影片 = '';
-if(已公開影片){
-  影片.src=已公開影片;影片.hidden=false;
-  找('預告封面').hidden=true;找('影片提示').hidden=true;
-}
+const 影片來源='./影片/林宇安_MV_初登場.mp4';
+影片.src=影片來源;
+// 主播放鍵由瀏覽器控制，不啟用自動播放，以遵守 iPhone Safari 手勢限制。
+影片.addEventListener('play',()=>{
+  if(!音訊.paused)音訊.pause();
+  找('影片載入狀態').textContent='影片播放中 · 林宇安';
+});
+影片.addEventListener('pause',()=>{
+  if(!影片.ended)找('影片載入狀態').textContent='影片已暫停';
+});
+影片.addEventListener('ended',()=>{找('影片載入狀態').textContent='影片播放結束 · 感謝觀看'});
+影片.addEventListener('loadedmetadata',()=>{
+  const 秒=Math.round(影片.duration*10)/10;
+  找('影片載入狀態').textContent='影片已載入 · '+秒+' 秒 · 可點擊播放';
+});
+影片.addEventListener('error',()=>{
+  const 代碼=影片.error?.code;
+  const 原因=代碼===2?'網路連線中斷':代碼===3?'影片解碼失敗':代碼===4?'影片來源無法開啟':'影片發生未知錯誤';
+  找('影片載入狀態').textContent=原因+'，請稍後重新整理';
+  顯示訊息(原因+'，請稍後重新整理網站。',6500);
+});
+// 如聽眾改按音樂播放器，暫停 MV 避免雙音源重疊。
+音訊.addEventListener('play',()=>{if(!影片.paused)影片.pause()});
 找('分享').addEventListener('click',async()=>{
   try{
     if(navigator.share)await navigator.share({title:'林宇安｜官方音樂網站',url:location.href});

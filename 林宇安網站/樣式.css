@@ -340,3 +340,12 @@ footer span{margin-inline:18px}
 .相片卡.全身照{background:linear-gradient(145deg,#d1c7be,#8e8490);}
 .相片卡.新寫真:focus-visible{outline:3px solid #FFEECF;outline-offset:3px;}
 @media(max-width:767px){.相片卡.新寫真:before{top:8px;right:8px;font-size:8px;padding:4px 7px}}
+
+/* 林宇安 V2.1.4：已公開影片、內嵌播放器與狀態提示 */
+.影片作品標頭{padding:10px 2px 22px}
+.影片作品標頭 h2{font:400 clamp(26px,3.6vw,48px)/1.5 var(--襯線);margin:10px 0;color:#fff2e7}
+.影片作品標頭 p{font-size:13px;color:#ffead5b3;line-height:1.8}
+.影片外框 video{aspect-ratio:16/9;object-fit:contain;background:#101829}
+.影片外框 video:focus-visible{outline:3px solid #d36582;outline-offset:-3px}
+.影片狀態訊息{font-size:12px;letter-spacing:.04em;color:#ffeecfc4;line-height:2;margin:10px 2px 2px}
+@media(max-width:600px){.影片作品標頭{padding:0 0 17px}.影片作品標頭 h2{font-size:27px}.影片卡{padding:14px}.影片外框{border-radius:13px}}
