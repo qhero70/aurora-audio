@@ -422,6 +422,16 @@ if('mediaSession' in navigator){
 }
 
 /** 相簿分類與可鍵盤操作的全螢幕燈箱。 */
+
+/* WebGL 只在訪客開啟 3D 相簿時載入，歌曲與原有相簿持續運作。 */
+let 立體模組=null;
+找('開啟立體寫真').addEventListener('click',async()=>{
+ const 按鈕=找('開啟立體寫真');按鈕.disabled=true;
+ try{if(!立體模組)立體模組=await import('./立體寫真.js?v=2.2.0');await 立體模組.開啟立體寫真()}
+ catch(錯誤){console.error('3D 寫真啟動失敗',錯誤);顯示訊息('3D 相簿無法啟動，請使用下方原有寫真相簿。')}
+ finally{按鈕.disabled=false}
+});
+
 const 照片元素=Array.from(document.querySelectorAll('.相片卡'));
 function 可見相片(){return 照片元素.filter(照片=>!照片.hidden)}
 function 變更分類(分類){

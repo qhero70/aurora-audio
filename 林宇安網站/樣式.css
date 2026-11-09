@@ -352,3 +352,27 @@ footer span{margin-inline:18px}
 
 /* V2.1.4 補強：強制遵守 hidden，避免舊的 MV 預告遮罩遮擋正式影片。 */
 .影片敬請期待[hidden],.影片外框 video[hidden],.影片外框 img[hidden]{display:none!important}
+
+
+/* V2.2 · 晨霧微光 3D 寫真星球 */
+.立體入口{margin:0 clamp(20px,6vw,90px) 28px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:25px;border-radius:24px;background:linear-gradient(120deg,#253c78cc,#d3658244)}
+.立體入口 h2{font:400 clamp(23px,3vw,35px)/1.55 var(--襯線);margin:7px 0;color:#fff1e9}
+.立體入口 p:last-child{font-size:13px;line-height:1.8;color:#fff2e9d0}
+.立體入口鈕{flex-shrink:0;min-height:51px;padding:13px 22px;border-radius:16px;border:1px solid #ffe7c8a8;background:linear-gradient(115deg,#d36582a8,#c9a69099);color:white;font-size:13px}
+.立體入口鈕:disabled{opacity:.5}.立體入口鈕:hover{background:#d36582}
+.立體視窗{position:fixed;inset:0;z-index:200;background:radial-gradient(circle,#293d6c,#0b1224 70%);overflow:hidden}
+.立體視窗[hidden],.立體圖片框[hidden]{display:none!important}
+.立體頂欄{position:absolute;z-index:5;top:calc(12px + env(safe-area-inset-top));left:14px;right:14px;min-height:76px;display:flex;gap:16px;align-items:center;justify-content:space-between;padding:12px 18px;border-radius:20px;background:#253c787d}
+.立體頂欄 div{display:flex;flex-direction:column;gap:6px}.立體頂欄 small{font-size:10px;letter-spacing:.15em;color:#e9baca}
+.立體頂欄 strong{font:400 20px var(--襯線);color:#fff0e7}.立體頂欄 span{font-size:11px;color:#ffe6e1c0}
+.立體頂欄 button{min-width:48px;min-height:48px;border:1px solid #ffffff6e;background:#ffffff23;color:white;border-radius:50%;font-size:28px}
+.立體畫面{position:absolute;inset:0;touch-action:none}.立體畫面 canvas{display:block;width:100%;height:100%;touch-action:none}
+.立體提示{position:absolute;bottom:calc(25px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:#fff4e9d5;pointer-events:none}
+.立體圖片框{position:absolute;z-index:12;inset:0;background:#0b152aef;display:flex;align-items:center;justify-content:center;padding:75px 65px;backdrop-filter:blur(16px)}
+.立體圖片框 figure{max-width:100%;max-height:100%;margin:0;display:flex;align-items:center;flex-direction:column;gap:12px}
+.立體圖片框 img{display:block;max-width:min(1080px,100%);max-height:calc(100dvh - 170px);object-fit:contain;border-radius:12px;box-shadow:0 20px 60px #0008}
+.立體圖片框 figcaption{font-size:12px;color:#fff1e5;text-align:center}
+.立體圖片框 button{position:absolute;min-width:48px;min-height:48px;background:#ffffff22;border:1px solid #ffffff70;color:white;border-radius:50%;font-size:28px}
+.立體照片關閉{right:20px;top:calc(22px + env(safe-area-inset-top))}
+.立體照片前{left:8px;top:50%;transform:translateY(-50%)}.立體照片後{right:8px;top:50%;transform:translateY(-50%)}
+@media(max-width:767px){.立體入口{padding:19px;flex-direction:column;align-items:stretch;gap:12px}.立體入口鈕{width:100%}.立體頂欄{padding:9px 12px;min-height:60px}.立體頂欄 span{display:none}.立體頂欄 strong{font-size:16px}.立體頂欄 small{font-size:9px}.立體圖片框{padding:75px 15px 50px}.立體提示{font-size:10px}}

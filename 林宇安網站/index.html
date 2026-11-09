@@ -18,9 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" href="./影像/封面舞台.webp" as="image">
-<link rel="stylesheet" href="./樣式.css?v=2.1.5">
-<script defer src="./功能.js?v=2.1.5"></script>
+<link rel="stylesheet" href="./樣式.css?v=2.2.0">
+<script defer src="./功能.js?v=2.2.0"></script>
 <title>林宇安｜晨霧微光・官方音樂網站</title>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
 <a class="略過導覽" href="#主要">跳至主要內容</a>
@@ -129,7 +130,10 @@
     <button type="button" data-分類="寫真" aria-pressed="false">寫真</button>
     <button type="button" data-分類="日常" aria-pressed="false">日常</button>
   </div>
-  <div class="相簿格" id="相簿格">
+  
+  <div class="立體入口 霧玻璃"><div><p class="眉標">IMMERSIVE GALLERY · 3D</p><h2>把回憶，藏進星球裡。</h2><p>用手指旋轉 14 張林宇安官方寫真，雙指縮放，點擊照片欣賞原圖。</p></div>
+  <button id="開啟立體寫真" class="立體入口鈕" type="button">✦　開啟 3D 寫真星球　↗</button></div>
+<div class="相簿格" id="相簿格">
     <button class="相片卡 大相片" type="button" data-照片="0" data-類型="劇照"><img src="./影像/舞台全身.webp" alt="林宇安舞台全身演唱劇照" loading="lazy"><span>舞台 · THE STAGE</span></button>
     <button class="相片卡" type="button" data-照片="1" data-類型="寫真"><img src="./影像/黑色套裝.webp" alt="林宇安黑色套裝攝影" loading="lazy"><span>黑色經典 · PORTRAIT</span></button>
     <button class="相片卡" type="button" data-照片="2" data-類型="日常"><img src="./影像/墨鏡街拍風.webp" alt="林宇安短髮墨鏡造型" loading="lazy"><span>日光 · DAYLIGHT</span></button>
@@ -180,6 +184,20 @@
 </section>
 </main>
 
+
+<div id="立體視窗" class="立體視窗" hidden role="dialog" aria-modal="true" aria-labelledby="立體視窗標題">
+  <div class="立體頂欄 霧玻璃"><div><small>LIN YU-AN · IMMERSIVE GALLERY</small><strong id="立體視窗標題">林宇安 · 寫真星球</strong></div>
+    <span id="立體訊息" role="status">旋轉 · 縮放 · 點選照片</span><button type="button" id="關閉立體視窗" aria-label="關閉立體相簿">×</button>
+  </div>
+  <div id="立體畫面" class="立體畫面"></div>
+  <div class="立體提示">拖曳旋轉 · 雙指縮放 · 輕觸照片放大</div>
+  <div id="立體圖片框" class="立體圖片框" hidden>
+    <button id="關閉立體照片" type="button" class="立體照片關閉" aria-label="返回寫真星球">×</button>
+    <button id="立體照片前" type="button" class="立體照片前" aria-label="上一張">‹</button>
+    <figure><img id="立體大圖" alt=""><figcaption id="立體大圖說明"></figcaption></figure>
+    <button id="立體照片後" type="button" class="立體照片後" aria-label="下一張">›</button>
+  </div>
+</div>
 <div class="照片燈箱" id="照片燈箱" role="dialog" aria-modal="true" aria-label="照片放大預覽" hidden>
   <button type="button" id="關閉燈箱" class="燈箱關閉" aria-label="關閉照片">×</button>
   <button type="button" id="照片前一張" class="燈箱左" aria-label="上一張照片">‹</button>
