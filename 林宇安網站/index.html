@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#253C78">
-<meta name="description" content="林宇安官方音樂網站｜晨霧微光・電影敘事・柔霧玻璃。聽見三首原創音樂，收藏舞台與生活裡的光。">
+<meta name="description" content="林宇安官方音樂網站｜晨霧微光・電影敘事・柔霧玻璃。聽見六首原創音樂，收藏舞台與生活裡的光。">
 <meta property="og:title" content="林宇安｜夜深了，願你也慢慢靠岸">
 <meta property="og:description" content="有些話，適合留給夜深的時候。把沒說完的情緒，唱成一首歌。">
 <meta property="og:image" content="https://lin-yu-an-music.vercel.app/影像/封面舞台.webp">
@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" href="./影像/封面舞台.webp" as="image">
-<link rel="stylesheet" href="./樣式.css?v=2.2.0">
-<script defer src="./功能.js?v=2.2.0"></script>
+<link rel="stylesheet" href="./樣式.css?v=2.3.0">
+<script defer src="./功能.js?v=2.3.0"></script>
 <title>林宇安｜晨霧微光・官方音樂網站</title>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -58,7 +58,7 @@
 
   <section class="首頁曲區 區段留白">
     <div class="區段題頭">
-      <div><p class="眉標">01 / THE SONGS</p><h2>把夜晚，<span>唱給你聽。</span></h2><p class="灰字">三首歌，三個不同的停靠點。</p></div>
+      <div><p class="眉標">01 / THE SONGS</p><h2>把夜晚，<span>唱給你聽。</span></h2><p class="灰字">六首歌，六個不同的停靠點。</p></div>
       <button type="button" class="線框按鈕" data-導覽="音樂">探索全部音樂　↗</button>
     </div>
     <div class="兩欄曲">
@@ -100,7 +100,7 @@
 </section>
 
 <section class="頁面" id="音樂" hidden aria-labelledby="音樂標題">
-<div class="內頁題頭"><p class="眉標">JI* GT AUDIO ULTRA · LIN YU-AN EDITION</p><h1 id="音樂標題">聽見每種情緒，<br><em>也聽見聲音的細節。</em></h1><p>三首原創音樂，全程固定「一鍵天籟」音效預設。</p></div>
+<div class="內頁題頭"><p class="眉標">JI* GT AUDIO ULTRA · LIN YU-AN EDITION</p><h1 id="音樂標題">聽見每種情緒，<br><em>也聽見聲音的細節。</em></h1><p>六首原創音樂，全程固定「一鍵天籟」音效預設。</p></div>
 <div class="天籟工作站 霧玻璃">
  <div class="天籟工作站頂"><div><p class="眉標">JI* GT AUDIO ULTRA</p><h2>林宇安｜發燒音訊工作站</h2><p>10 段等化 · 殘響 · 諧波 · 空間定位</p></div><div class="天籟鎖定" id="天籟模式狀態" role="status"><span>✦</span><div>一鍵天籟<small>固定音效 · 播放啟動</small></div><span>🔒</span></div></div>
  <nav class="天籟內頁籤" aria-label="音訊工作站頁籤">
@@ -118,7 +118,7 @@
   </div>
  </div>
  <div class="天籟內容" data-工作站內容="等化" hidden><div class="天籟說明列"><div><p class="眉標">TEN-BAND IIR EQUALIZER</p><h3>十段聲學等化器</h3><p>32Hz 至 16kHz，固定使用一鍵天籟參數，不開放手動修改。</p></div><span>🔒 鎖定音色</span></div><div id="天籟等化顯示" class="天籟等化顯示"></div></div>
- <div class="天籟內容" data-工作站內容="處理" hidden><div class="天籟處理格"><div><p class="眉標">DSP · HEAVENLY</p><h3>天籟音效處理鏈</h3><div class="天籟參數卡"><strong>立體聲寬度</strong><span>75% · 左右聲場擴寬</span><small>Mid/Side 雙聲道處理，並非多聲道環繞</small></div><div class="天籟參數卡"><strong>柔和空間殘響</strong><span>開啟 · 35% 濕聲</span></div><div class="天籟參數卡"><strong>真空管諧波</strong><span>開啟 · 驅動 45</span></div><div class="天籟參數卡"><strong>峰值保護</strong><span>壓縮處理 + 輸出預留</span></div></div><div><p class="眉標">ORIGINAL MUSIC · 3 TRACKS</p><h3>林宇安原創播放清單</h3><div class="歌曲列表 天籟清單" id="歌曲列表"></div><label class="線框按鈕 本機鈕">＋ 載入本機 MP3／WAV／MP4 <input id="本機檔案" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/mp4,video/mp4,.mp3,.wav,.m4a,.mp4" multiple hidden></label><p class="天籟清單說明">可選擇本機 MP3、WAV、M4A 或 MP4 音軌，本機音樂不會上傳伺服器，也不會成為正式曲目。</p></div></div></div>
+ <div class="天籟內容" data-工作站內容="處理" hidden><div class="天籟處理格"><div><p class="眉標">DSP · HEAVENLY</p><h3>天籟音效處理鏈</h3><div class="天籟參數卡"><strong>立體聲寬度</strong><span>75% · 左右聲場擴寬</span><small>Mid/Side 雙聲道處理，並非多聲道環繞</small></div><div class="天籟參數卡"><strong>柔和空間殘響</strong><span>開啟 · 35% 濕聲</span></div><div class="天籟參數卡"><strong>真空管諧波</strong><span>開啟 · 驅動 45</span></div><div class="天籟參數卡"><strong>峰值保護</strong><span>壓縮處理 + 輸出預留</span></div></div><div><p class="眉標">ORIGINAL MUSIC · 6 TRACKS</p><h3>林宇安原創播放清單</h3><div class="歌曲列表 天籟清單" id="歌曲列表"></div><label class="線框按鈕 本機鈕">＋ 載入本機 MP3／WAV／MP4 <input id="本機檔案" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/mp4,video/mp4,.mp3,.wav,.m4a,.mp4" multiple hidden></label><p class="天籟清單說明">可選擇本機 MP3、WAV、M4A 或 MP4 音軌，本機音樂不會上傳伺服器，也不會成為正式曲目。</p></div></div></div>
  <div class="天籟工作站底"><span>JI* GT AUDIO ULTRA</span><span>HEAVENLY PRESET · LOCKED</span><span>LIN YU-AN ORIGINAL MUSIC</span></div>
 </div>
 </section>

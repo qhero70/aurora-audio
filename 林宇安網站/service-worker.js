@@ -1,10 +1,10 @@
 /* 林宇安 V2.0 離線基本殼與更新策略，音訊串流及 Range 由網路直接處理。 */
-const 版本='林宇安離線介面_v2.2.0';
+const 版本='林宇安離線介面_v2.3.0';
 const 必要資源=[
   './',
   './index.html',
-  './樣式.css?v=2.2.0',
-  './功能.js?v=2.2.0',
+  './樣式.css?v=2.3.0',
+  './功能.js?v=2.3.0',
   './manifest.json',
   './圖示-180.png',
   './圖示-192.png',
@@ -33,7 +33,7 @@ self.addEventListener('fetch',事件=>{
   if(請求.method!=='GET')return;
   const 路徑=new URL(請求.url);
   if(路徑.origin!==self.location.origin)return;
-  if(請求.destination==='audio'||請求.destination==='video'||請求.headers.has('range')||路徑.pathname.includes('/api/')||/\.(mp3|m4a|mp4|wav)$/i.test(路徑.pathname))return;
+  if(請求.destination==='audio'||請求.destination==='video'||請求.headers.has('range')||路徑.pathname.includes('/api/')||路徑.pathname.includes('/音訊片段/')||/\.(mp3|m4a|mp4|wav)$/i.test(路徑.pathname))return;
   if(請求.mode==='navigate'){
     事件.respondWith((async()=>{
       try{
